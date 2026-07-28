@@ -1,0 +1,73 @@
+/* Language Switcher — labeled dropdown styled like the nav submenu cards.
+   Palette + shadow tokens come from the active theme; sensible fallbacks
+   keep it usable on any theme (Compat contract). */
+.ajr-lang-switch {
+	position: relative;
+}
+
+.ajr-lang-switch summary {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 0.92rem;
+	color: var(--wp--preset--color--ink, #0f172a);
+	padding: 0.45rem 0.6rem;
+	border-radius: 0.4rem;
+}
+
+.ajr-lang-switch summary::-webkit-details-marker {
+	display: none;
+}
+
+.ajr-lang-switch summary:hover {
+	color: var(--wp--preset--color--primary, #0f766e);
+	background-color: var(--wp--preset--color--surface, #f8fafc);
+}
+
+.ajr-lang-switch__chev {
+	transition: transform 0.15s ease;
+}
+
+.ajr-lang-switch[open] .ajr-lang-switch__chev {
+	transform: rotate(180deg);
+}
+
+.ajr-lang-switch img {
+	border-radius: 2px;
+}
+
+.ajr-lang-switch__list {
+	list-style: none;
+	margin: 0;
+	position: absolute;
+	right: 0;
+	top: calc(100% + 0.5rem);
+	min-width: 10rem;
+	background-color: var(--wp--preset--color--bg, #fff);
+	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
+	border-top: 3px solid var(--wp--preset--color--primary, #0f766e);
+	border-radius: 0.5rem;
+	box-shadow: var(--wp--custom--shadow--dropdown, 0 14px 34px -14px rgba(15, 23, 42, 0.28));
+	padding: 0.4rem;
+	z-index: 60;
+}
+
+.ajr-lang-switch__list a {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.35rem;
+	color: var(--wp--preset--color--ink, #0f172a);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.92rem;
+}
+
+.ajr-lang-switch__list a:hover {
+	background-color: var(--wp--preset--color--surface, #f8fafc);
+	color: var(--wp--preset--color--primary, #0f766e);
+}
