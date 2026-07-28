@@ -116,29 +116,6 @@
 	margin-top: 1.25rem;
 }
 
-.ajr-tslider__arrow {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
-	background: var(--wp--preset--color--bg, #fff);
-	color: var(--wp--preset--color--primary, #0f766e);
-	cursor: pointer;
-	transition: background 150ms ease;
-}
-
-.ajr-tslider__arrow:hover {
-	background: var(--wp--preset--color--surface, #f8fafc);
-}
-
-.ajr-tslider__arrow[disabled] {
-	opacity: 0.35;
-	cursor: default;
-}
-
 .ajr-tslider__dots {
 	display: flex;
 	gap: 0.5rem;

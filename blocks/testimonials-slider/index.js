@@ -4,15 +4,36 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	RangeControl,
+	ToggleControl,
+	FormTokenField,
+} from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 import ServerSideRender from '@wordpress/server-side-render';
 import metadata from './block.json';
 import './style.css';
 
 registerBlockType( metadata.name, {
 	edit: ( { attributes, setAttributes } ) => {
-		const { perView, count, showRating } = attributes;
+		const { perView, count, showRating, tags } = attributes;
 		const blockProps = useBlockProps();
+		const terms = useSelect( ( select ) => {
+			const records = select( coreStore ).getEntityRecords(
+				'taxonomy',
+				'testimonial_tag',
+				{ per_page: 50, hide_empty: false }
+			);
+			return records || [];
+		}, [] );
+		const slugByName = Object.fromEntries(
+			terms.map( ( t ) => [ t.name, t.slug ] )
+		);
+		const nameBySlug = Object.fromEntries(
+			terms.map( ( t ) => [ t.slug, t.name ] )
+		);
 		return (
 			<>
 				<InspectorControls>
@@ -47,6 +68,24 @@ registerBlockType( metadata.name, {
 							onChange={ ( value ) =>
 								setAttributes( { showRating: value } )
 							}
+						/>
+						<FormTokenField
+							label={ __(
+								'Filter by service tags',
+								'ajrwebdesign-core'
+							) }
+							value={ tags.map(
+								( slug ) => nameBySlug[ slug ] || slug
+							) }
+							suggestions={ terms.map( ( t ) => t.name ) }
+							onChange={ ( names ) =>
+								setAttributes( {
+									tags: names.map(
+										( name ) => slugByName[ name ] || name
+									),
+								} )
+							}
+							__experimentalExpandOnFocus
 						/>
 					</PanelBody>
 				</InspectorControls>

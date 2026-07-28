@@ -12,7 +12,8 @@
 	"attributes": {
 		"perView": { "type": "number", "default": 2 },
 		"count": { "type": "number", "default": 0 },
-		"showRating": { "type": "boolean", "default": true }
+		"showRating": { "type": "boolean", "default": true },
+		"tags": { "type": "array", "default": [], "items": { "type": "string" } }
 	},
 	"supports": {
 		"html": false,
