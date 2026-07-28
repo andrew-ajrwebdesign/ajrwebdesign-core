@@ -1,0 +1,10 @@
+/* Responsive Image — frontend + editor. */
+.wp-block-ajrwebdesign-core-responsive-image {
+	margin: 0;
+}
+
+.ajr-responsive-image__img {
+	display: block;
+	width: 100%;
+	height: auto;
+}

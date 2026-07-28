@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/post-callout",
+	"version": "1.0.0",
+	"title": "Post Callout",
+	"category": "theme",
+	"icon": "megaphone",
+	"description": "Highlight box for single posts, sourced from the post's callout fields (label, title, text).",
+	"keywords": [ "callout", "highlight", "aside" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": true }
+	},
+	"usesContext": [ "postId", "postType" ],
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,62 @@
+name: Build release zip
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the pushed commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build blocks
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install production dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Stage the plugin folder
+        run: |
+          mkdir -p dist/ajrwebdesign-core
+          rsync -a ./ dist/ajrwebdesign-core/ \
+            --exclude='.git' --exclude='.github' --exclude='.claude' \
+            --exclude='node_modules' --exclude='dist' --exclude='*.zip' \
+            --exclude='blocks' --exclude='tests' --exclude='phpunit.xml.dist' \
+            --exclude='phpcs.xml' --exclude='package.json' --exclude='package-lock.json' \
+            --exclude='.env' --exclude='.env.*' --exclude='.gitignore'
+
+      - name: Create the zip
+        run: cd dist && zip -rq ../ajrwebdesign-core.zip ajrwebdesign-core
+
+      - name: Publish versioned release (on vX.Y.Z tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" ajrwebdesign-core.zip --title "${GITHUB_REF_NAME}" --generate-notes \
+          || gh release upload "${GITHUB_REF_NAME}" ajrwebdesign-core.zip --clobber
+
+      - name: Refresh rolling latest build (on push to main)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest ajrwebdesign-core.zip --clobber
+          else
+            gh release create latest ajrwebdesign-core.zip --title "Latest build (main)" --notes "Auto-built from the newest push to main." --prerelease
+          fi

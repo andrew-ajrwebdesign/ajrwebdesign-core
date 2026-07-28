@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/post-intro",
+	"version": "1.0.0",
+	"title": "Post Intro",
+	"category": "theme",
+	"icon": "editor-paragraph",
+	"description": "Styled intro paragraph for single posts, sourced from the post's intro field.",
+	"keywords": [ "intro", "lead", "standfirst" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": true },
+		"typography": { "fontSize": true },
+		"color": { "text": true, "background": false }
+	},
+	"usesContext": [ "postId", "postType" ],
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

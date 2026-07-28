@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/responsive-image",
+	"version": "1.0.0",
+	"title": "Responsive Image",
+	"category": "media",
+	"icon": "format-image",
+	"description": "Art-directed image: separate desktop and mobile assets with lazy-loading and fetch-priority controls.",
+	"keywords": [ "image", "picture", "responsive", "hero" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"desktopImageId": { "type": "number", "default": 0 },
+		"mobileImageId": { "type": "number", "default": 0 },
+		"alt": { "type": "string", "default": "" },
+		"breakpoint": { "type": "number", "default": 760 },
+		"loading": { "type": "string", "default": "lazy", "enum": [ "lazy", "eager" ] },
+		"fetchPriority": { "type": "string", "default": "auto", "enum": [ "auto", "high", "low" ] },
+		"borderRadius": { "type": "number", "default": 10 }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

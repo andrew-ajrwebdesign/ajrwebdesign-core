@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the pushed commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: PHP lint
+        run: find ajrwebdesign-core.php src blocks -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: PHPCS
+        run: vendor/bin/phpcs
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit
+
+  blocks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the pushed commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build blocks
+        run: npm run build

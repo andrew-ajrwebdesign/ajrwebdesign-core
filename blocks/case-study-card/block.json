@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/case-study-card",
+	"version": "1.0.0",
+	"title": "Case Study Card",
+	"category": "widgets",
+	"icon": "analytics",
+	"description": "Full case-study showcase: mobile/desktop score circles, Core Web Vitals metrics, impact tiles, and summary with tags.",
+	"keywords": [ "case study", "results", "performance", "core web vitals" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"caseStudyId": { "type": "number", "default": 0 },
+		"layoutDirection": { "type": "string", "default": "stats-left", "enum": [ "stats-left", "text-left" ] }
+	},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}

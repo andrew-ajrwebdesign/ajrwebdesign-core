@@ -1,0 +1,14 @@
+/* Post Intro — lead paragraph styling. */
+.ajr-post-intro {
+	font-size: 1.125rem;
+	line-height: 1.7;
+	color: var(--wp--preset--color--muted, #64748b);
+}
+
+.ajr-post-intro p {
+	margin: 0 0 1rem;
+}
+
+.ajr-post-intro p:last-child {
+	margin-bottom: 0;
+}

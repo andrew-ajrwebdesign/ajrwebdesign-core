@@ -1,0 +1,34 @@
+/* Post Callout — ported verbatim from the legacy theme style.css.
+   The blue scheme is the article-UI accent (matches breadcrumb links);
+   ink/slate greys map to palette tokens where slugs exist. */
+.ajr-post-callout {
+	margin: 2rem 0;
+	padding: 1.5rem;
+	border: 1px solid #bfdbfe;
+	border-left: 4px solid #2563eb;
+	border-radius: 16px;
+	background: linear-gradient(135deg, #eff6ff, #fff);
+}
+
+.ajr-post-callout__label {
+	margin: 0 0 0.35rem;
+	color: #2563eb;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.ajr-post-callout__title {
+	margin: 0 0 0.5rem;
+	color: var(--wp--preset--color--ink, #0f172a);
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.35;
+}
+
+.ajr-post-callout__text {
+	margin: 0;
+	color: #475569;
+	line-height: 1.6;
+}

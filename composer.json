@@ -1,0 +1,30 @@
+{
+    "name": "ajrwebdesign/ajrwebdesign-core",
+    "description": "Core functionality for ajrwebdesign.com — custom blocks, case studies, analytics, and multilingual helpers.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "AJR\\SiteCore\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.1",
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^2.0"
+    },
+    "scripts": {
+        "lint": "phpcs",
+        "lint:fix": "phpcbf",
+        "test": "phpunit"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

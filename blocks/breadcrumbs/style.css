@@ -1,0 +1,42 @@
+/* Post Breadcrumbs — ported verbatim from the legacy theme style.css.
+   The blue link colours are deliberate (article-UI accent, not in the
+   theme palette); muted grey maps to the palette token. */
+.ajr-breadcrumbs {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	column-gap: 0.5rem;
+	row-gap: 0.25rem;
+	margin-bottom: 1.25rem;
+	color: var(--wp--preset--color--muted, #64748b);
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1;
+}
+
+.ajr-breadcrumbs a,
+.ajr-breadcrumbs span {
+	display: inline-flex;
+	align-items: center;
+	line-height: 1;
+}
+
+.ajr-breadcrumbs a {
+	color: #2563eb;
+	text-decoration: none;
+}
+
+.ajr-breadcrumbs a:hover {
+	color: #1d4ed8;
+	text-decoration: underline;
+}
+
+.ajr-breadcrumb-separator {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: #94a3b8;
+	font-size: 1rem;
+	line-height: 1;
+	transform: translateY(-0.02em);
+}

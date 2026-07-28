@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/case-study-mini-card",
+	"version": "1.0.0",
+	"title": "Case Study Mini Card",
+	"category": "widgets",
+	"icon": "analytics",
+	"description": "Compact case-study result card: eyebrow, title, summary, performance score and LCP improvement with count-up animation.",
+	"keywords": [ "case study", "results", "performance" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"caseStudyId": { "type": "number", "default": 0 }
+	},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}

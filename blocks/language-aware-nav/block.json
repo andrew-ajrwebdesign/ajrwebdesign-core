@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/language-aware-nav",
+	"version": "1.0.0",
+	"title": "Language-Aware Navigation",
+	"category": "theme",
+	"icon": "translation",
+	"description": "Renders the navigation menu matching the current Polylang language, resolved by slug convention ({menuSlug}-{lang}). Lets one header/footer template part serve every language.",
+	"keywords": [ "navigation", "menu", "polylang", "language" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"menuSlug": { "type": "string", "default": "primary" },
+		"navAttrs": { "type": "object", "default": {} }
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

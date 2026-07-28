@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/breadcrumbs",
+	"version": "1.0.0",
+	"title": "Post Breadcrumbs",
+	"category": "theme",
+	"icon": "admin-links",
+	"description": "Home › Blog › Category trail for single posts. Language-aware: every link resolves for the visitor's Polylang language.",
+	"keywords": [ "breadcrumbs", "navigation", "trail" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"separator": { "type": "string", "default": "›" },
+		"showHome": { "type": "boolean", "default": true }
+	},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": true },
+		"typography": { "fontSize": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
