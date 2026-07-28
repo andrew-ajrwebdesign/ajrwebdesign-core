@@ -26,6 +26,7 @@ class PostType {
 	public const RATING    = 'ajrwd_t_rating';
 	public const QUOTE_DE  = 'ajrwd_t_quote_de';
 	public const ROLE_DE   = 'ajrwd_t_role_de';
+	public const LOGO_ID   = 'ajrwd_t_logo_id';
 
 	/**
 	 * Hooks registration.
@@ -128,6 +129,19 @@ class PostType {
 				'single'            => true,
 				'default'           => '',
 				'sanitize_callback' => 'sanitize_text_field',
+				'show_in_rest'      => true,
+				'auth_callback'     => $auth,
+			)
+		);
+
+		register_post_meta(
+			self::POST_TYPE,
+			self::LOGO_ID,
+			array(
+				'type'              => 'integer',
+				'single'            => true,
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
 				'show_in_rest'      => true,
 				'auth_callback'     => $auth,
 			)

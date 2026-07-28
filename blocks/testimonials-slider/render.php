@@ -118,6 +118,21 @@ $ajrwd_has_nav = $ajrwd_total > $ajrwd_per_view;
 								<p class="ajr-tslider__role"><?php echo esc_html( $ajrwd_role ); ?></p>
 							<?php endif; ?>
 						</div>
+						<?php
+						$ajrwd_logo_id = (int) get_post_meta( $ajrwd_id, PostType::LOGO_ID, true );
+						if ( $ajrwd_logo_id > 0 ) {
+							echo wp_get_attachment_image(
+								$ajrwd_logo_id,
+								'medium',
+								false,
+								array(
+									'class'   => 'ajr-tslider__logo',
+									'alt'     => '',
+									'loading' => 'lazy',
+								)
+							);
+						}
+						?>
 					</footer>
 				</article>
 			</li>

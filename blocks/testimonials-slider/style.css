@@ -108,6 +108,16 @@
 	color: var(--wp--preset--color--muted, #64748b);
 }
 
+/* Source logo — bottom-right corner of the card. */
+.ajr-tslider__logo {
+	margin-left: auto;
+	align-self: flex-end;
+	height: 26px;
+	width: auto;
+	max-width: 110px;
+	opacity: 0.85;
+}
+
 .ajr-tslider__nav {
 	display: flex;
 	align-items: center;
