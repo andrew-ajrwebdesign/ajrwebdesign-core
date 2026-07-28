@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajrwebdesign-core/testimonials-slider",
+	"version": "1.0.0",
+	"title": "Testimonials Slider",
+	"category": "widgets",
+	"icon": "format-quote",
+	"description": "Scroll-snap slider of testimonials from the Testimonials post type: star rating, quote, avatar, name and role. Language-aware via Polylang.",
+	"keywords": [ "testimonials", "reviews", "slider", "carousel" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"perView": { "type": "number", "default": 2 },
+		"count": { "type": "number", "default": 0 },
+		"showRating": { "type": "boolean", "default": true }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
