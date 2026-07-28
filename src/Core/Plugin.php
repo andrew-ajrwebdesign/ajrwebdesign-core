@@ -83,6 +83,7 @@ class Plugin {
 		if ( $this->settings->is_enabled( 'case_studies_cpt' ) ) {
 			$modules[] = new PostType();
 			$modules[] = new Meta();
+			$modules[] = new \AJR\SiteCore\CaseStudies\Metabox();
 			$modules[] = new Migration();
 		}
 

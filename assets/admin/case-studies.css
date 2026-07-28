@@ -1,0 +1,107 @@
+.ajr-case-study-meta-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.ajr-case-study-meta-section {
+	padding: 16px;
+	margin-bottom: 16px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+	border-radius: 8px;
+}
+
+.ajr-case-study-meta-section h3 {
+	margin-top: 0;
+	margin-bottom: 12px;
+}
+
+.ajr-case-study-field {
+	margin: 0 0 14px;
+}
+
+.ajr-case-study-field label {
+	display: block;
+	margin-bottom: 6px;
+}
+
+.ajr-case-study-result-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+.ajr-case-study-before-after-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.ajr-case-study-before-column,
+.ajr-case-study-after-column {
+	padding: 14px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.ajr-case-study-before-column h4,
+.ajr-case-study-after-column h4 {
+	margin: 0 0 14px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #dcdcde;
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.ajr-case-study-before-column h4 {
+	color: #ff4a1c;
+}
+
+.ajr-case-study-after-column h4 {
+	color: #39a935;
+}
+
+.ajr-case-study-field--before label strong {
+	color: #ff4a1c;
+}
+
+.ajr-case-study-field--after label strong {
+	color: #39a935;
+}
+
+.ajr-case-study-field--before input {
+	border-color: rgba(255, 74, 28, 0.35);
+}
+
+.ajr-case-study-field--after input {
+	border-color: rgba(57, 169, 53, 0.35);
+}
+
+.ajr-case-study-field--before input:focus {
+	border-color: #ff4a1c;
+	box-shadow: 0 0 0 1px #ff4a1c;
+}
+
+.ajr-case-study-field--after input:focus {
+	border-color: #39a935;
+	box-shadow: 0 0 0 1px #39a935;
+}
+
+@media (max-width: 782px) {
+	.ajr-case-study-before-after-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 782px) {
+	.ajr-case-study-meta-grid,
+	.ajr-case-study-result-row {
+		grid-template-columns: 1fr;
+	}
+}
