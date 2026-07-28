@@ -1,6 +1,6 @@
-/* Post Breadcrumbs — ported verbatim from the legacy theme style.css.
-   The blue link colours are deliberate (article-UI accent, not in the
-   theme palette); muted grey maps to the palette token. */
+/* Post Breadcrumbs — brand tokens with portable fallbacks (the fallback
+   values are the plugin's only sanctioned raw colors: they keep the block
+   usable on themes that don't define the ajrwebdesign palette). */
 .ajr-breadcrumbs {
 	display: inline-flex;
 	flex-wrap: wrap;
@@ -22,12 +22,12 @@
 }
 
 .ajr-breadcrumbs a {
-	color: #2563eb;
+	color: var(--wp--preset--color--primary, #0f766e);
 	text-decoration: none;
 }
 
 .ajr-breadcrumbs a:hover {
-	color: #1d4ed8;
+	color: var(--wp--preset--color--accent-dark, #06634c);
 	text-decoration: underline;
 }
 
@@ -35,7 +35,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	color: #94a3b8;
+	color: var(--wp--preset--color--muted-light, #94a3b8);
 	font-size: 1rem;
 	line-height: 1;
 	transform: translateY(-0.02em);

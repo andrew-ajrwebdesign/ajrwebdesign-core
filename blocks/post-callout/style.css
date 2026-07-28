@@ -1,18 +1,17 @@
-/* Post Callout — ported verbatim from the legacy theme style.css.
-   The blue scheme is the article-UI accent (matches breadcrumb links);
-   ink/slate greys map to palette tokens where slugs exist. */
+/* Post Callout — brand tokens with portable fallbacks (see breadcrumbs
+   note: fallbacks are the plugin's only sanctioned raw colors). */
 .ajr-post-callout {
 	margin: 2rem 0;
 	padding: 1.5rem;
-	border: 1px solid #bfdbfe;
-	border-left: 4px solid #2563eb;
+	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
+	border-left: 4px solid var(--wp--preset--color--primary, #0f766e);
 	border-radius: 16px;
-	background: linear-gradient(135deg, #eff6ff, #fff);
+	background: linear-gradient(135deg, var(--wp--preset--color--accent-tint, #e9f4ec), var(--wp--preset--color--bg, #fff));
 }
 
 .ajr-post-callout__label {
 	margin: 0 0 0.35rem;
-	color: #2563eb;
+	color: var(--wp--preset--color--primary, #0f766e);
 	font-size: 0.8rem;
 	font-weight: 700;
 	letter-spacing: 0.04em;
@@ -29,6 +28,6 @@
 
 .ajr-post-callout__text {
 	margin: 0;
-	color: #475569;
+	color: var(--wp--preset--color--muted, #64748b);
 	line-height: 1.6;
 }
