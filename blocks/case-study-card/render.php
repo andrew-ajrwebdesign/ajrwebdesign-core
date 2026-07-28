@@ -22,6 +22,10 @@ if ( ! in_array( $layout_direction, array( 'stats-left', 'text-left' ), true ) )
 }
 
 $case_study_id = isset( $attributes['caseStudyId'] ) ? absint( $attributes['caseStudyId'] ) : 0;
+if ( ! $case_study_id && isset( $block->context['postId'] ) ) {
+	// Template context: with no explicit selection, render the current post.
+	$case_study_id = (int) $block->context['postId'];
+}
 if ( ! $case_study_id || PostType::POST_TYPE !== get_post_type( $case_study_id ) ) {
 	return;
 }
