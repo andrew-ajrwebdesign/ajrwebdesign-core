@@ -72,6 +72,7 @@ class Plugin {
 
 		$modules = array(
 			new Registrar(),
+			new \AJR\SiteCore\Blocks\ImageSizes(),
 			new ThemeSupport(),
 			new Strings(),
 			new PostsMeta(),
