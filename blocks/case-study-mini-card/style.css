@@ -108,6 +108,7 @@
 
 .ajr-case-study-mini-card__result-inner {
 	background: var(--wp--preset--color--surface, #f8fafc);
+	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
 	border-radius: var(--wp--custom--radius--md, 12px);
 	display: flex;
 	flex-direction: column;
