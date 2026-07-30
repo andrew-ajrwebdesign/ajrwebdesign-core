@@ -8,8 +8,11 @@
 
 .ajr-tslider__track {
 	list-style: none;
-	margin: 0;
-	padding: 0.5rem;
+	/* Room for the cards' soft shadow — overflow-x:auto clips anything
+	   outside the track, which was cutting the shadow off hard at the
+	   edges. Negative margins cancel the extra space in the layout. */
+	margin: -0.5rem -1rem -2.25rem;
+	padding: 0.5rem 1rem 2.25rem;
 	display: grid;
 	grid-auto-flow: column;
 	grid-auto-columns: calc((100% - (var(--ajr-tslider-per-view, 2) - 1) * var(--ajr-tslider-gap)) / var(--ajr-tslider-per-view, 2));
