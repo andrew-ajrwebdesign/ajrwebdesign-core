@@ -16,6 +16,7 @@ use AJR\SiteCore\CaseStudies\PostType;
 use AJR\SiteCore\Compat\ThemeSupport;
 use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
+use AJR\SiteCore\Schema\Faq;
 use AJR\SiteCore\Testimonials\PostType as Testimonials;
 
 defined( 'ABSPATH' ) || exit;
@@ -76,6 +77,7 @@ class Plugin {
 			new ThemeSupport(),
 			new Strings(),
 			new PostsMeta(),
+			new Faq(),
 			new Testimonials(),
 			new GA4( $this->settings ),
 		);

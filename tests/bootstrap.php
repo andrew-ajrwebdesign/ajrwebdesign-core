@@ -63,4 +63,13 @@ function get_the_terms( $post_id, $taxonomy ) {
 function is_wp_error( $thing ) {
 	return false;
 }
+
+function wp_strip_all_tags( $text, $remove_breaks = false ) {
+	$text = preg_replace( '@<(script|style)[^>]*?>.*?</\1>@si', '', (string) $text );
+	$text = strip_tags( $text );
+	if ( $remove_breaks ) {
+		$text = preg_replace( '/[\r\n\t ]+/', ' ', $text );
+	}
+	return trim( $text );
+}
 // phpcs:enable
