@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AJRWD_CORE_VERSION', '1.1.0' );
+define( 'AJRWD_CORE_VERSION', '1.1.1' );
 define( 'AJRWD_CORE_FILE', __FILE__ );
 define( 'AJRWD_CORE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AJRWD_CORE_URL', plugin_dir_url( __FILE__ ) );
