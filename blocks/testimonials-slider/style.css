@@ -47,7 +47,10 @@
 	flex-direction: column;
 	width: 100%;
 	background: var(--wp--preset--color--bg, #fff);
-	border-radius: var(--wp--custom--radius--lg, 20px);
+	/* Site card language — identical to the case-study/service cards:
+	   token border + radius-md + soft shadow. */
+	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
+	border-radius: var(--wp--custom--radius--md, 12px);
 	box-shadow: var(--wp--preset--shadow--soft, 0 12px 30px -12px rgba(15, 23, 42, 0.18));
 	padding: 2rem;
 }
