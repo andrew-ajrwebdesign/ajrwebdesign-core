@@ -32,6 +32,12 @@
 	display: flex;
 }
 
+/* The last slide snaps to the END, so an odd card count cannot leave a
+   half-width empty gap beside the final card at the scroll extreme. */
+.ajr-tslider__slide:last-child {
+	scroll-snap-align: end;
+}
+
 .ajr-tslider__card {
 	display: flex;
 	flex-direction: column;
