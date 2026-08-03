@@ -73,6 +73,36 @@ class GA4 {
 		});
 		gtag('js', new Date());
 		gtag('config', <?php echo wp_json_encode( $id ); ?>);
+
+		/* Consent Mode updates. Complianz fires cmplz_fire_categories on
+		   accept/save and cmplz_revoke on withdrawal; without these the
+		   defaults above stay denied forever and nothing is ever measured.
+		   Wired here rather than relying on Complianz's own statistics
+		   integration, so the tag stays correct whatever that is set to. */
+		document.addEventListener('cmplz_fire_categories', function (e) {
+			var cats = (e.detail && e.detail.categories) ? e.detail.categories : [];
+			var has = function (c) { return cats.indexOf(c) !== -1; };
+			var marketing = has('marketing') ? 'granted' : 'denied';
+			gtag('consent', 'update', {
+				security_storage: 'granted',
+				functionality_storage: 'granted',
+				personalization_storage: has('preferences') ? 'granted' : 'denied',
+				analytics_storage: has('statistics') ? 'granted' : 'denied',
+				ad_storage: marketing,
+				ad_user_data: marketing,
+				ad_personalization: marketing
+			});
+		});
+
+		document.addEventListener('cmplz_revoke', function () {
+			gtag('consent', 'update', {
+				personalization_storage: 'denied',
+				analytics_storage: 'denied',
+				ad_storage: 'denied',
+				ad_user_data: 'denied',
+				ad_personalization: 'denied'
+			});
+		});
 		</script>
 		<?php
 	}
