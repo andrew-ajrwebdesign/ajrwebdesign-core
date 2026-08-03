@@ -105,6 +105,7 @@ $ajrwd_has_nav = $ajrwd_total > $ajrwd_per_view;
 								'thumbnail',
 								array(
 									'class'   => 'ajr-tslider__avatar',
+									'alt'     => $ajrwd_name,
 									'loading' => 'lazy',
 								)
 							);
@@ -127,7 +128,6 @@ $ajrwd_has_nav = $ajrwd_total > $ajrwd_per_view;
 								false,
 								array(
 									'class'   => 'ajr-tslider__logo',
-									'alt'     => '',
 									'loading' => 'lazy',
 								)
 							);
