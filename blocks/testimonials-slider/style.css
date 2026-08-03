@@ -19,6 +19,10 @@
 	gap: var(--ajr-tslider-gap);
 	overflow-x: auto;
 	scroll-snap-type: x mandatory;
+	/* Snap positions must respect the shadow padding above, otherwise the
+	   browser snaps cards to the border edge and the whole slider sits
+	   1rem left of the page content column. */
+	scroll-padding-inline: 1rem;
 	scrollbar-width: none;
 	-webkit-overflow-scrolling: touch;
 }
