@@ -25,8 +25,8 @@ if ( ! $case_study_id || PostType::POST_TYPE !== get_post_type( $case_study_id )
 	return;
 }
 
-$case_title = get_the_title( $case_study_id );
 $case_meta  = Cards::get_case_meta( $case_study_id );
+$case_title = $case_meta['title'];
 
 $mobile_before_score = $case_meta['metrics']['mobile']['before']['score'];
 $mobile_after_score  = $case_meta['metrics']['mobile']['after']['score'];
@@ -54,7 +54,7 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-case-
 
 	<div class="ajr-case-study-mini-card__result">
 		<div class="ajr-case-study-mini-card__result-inner">
-			<div class="ajr-case-study-mini-card__result-label">Performance Score</div>
+			<div class="ajr-case-study-mini-card__result-label"><?php echo esc_html( Cards::ui_label( 'Performance Score' ) ); ?></div>
 
 			<div class="ajr-case-study-mini-card__score">
 				<span class="ajr-case-study-mini-card__score-before"><?php echo esc_html( $mobile_before_score ); ?></span>
@@ -66,7 +66,7 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-case-
 
 			<?php if ( '' !== $lcp_improvement ) : ?>
 				<div class="ajr-case-study-mini-card__improvement">
-					<div class="ajr-case-study-mini-card__result-label">LCP Improvement</div>
+					<div class="ajr-case-study-mini-card__result-label"><?php echo esc_html( Cards::ui_label( 'LCP Improvement' ) ); ?></div>
 					<div class="ajr-case-study-mini-card__improvement-value">
 						<?php echo Cards::render_count_value( $lcp_improvement, 'ajr-case-study-mini-card__improvement-number' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>

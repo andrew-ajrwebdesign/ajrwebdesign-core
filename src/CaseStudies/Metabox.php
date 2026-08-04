@@ -145,18 +145,31 @@ class Metabox {
 	public function render( \WP_Post $post ): void {
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD );
 
-		$eyebrow = (string) get_post_meta( $post->ID, Meta::EYEBROW, true );
-		$summary = (string) get_post_meta( $post->ID, Meta::SUMMARY, true );
-		$metrics = get_post_meta( $post->ID, Meta::METRICS, true );
-		$metrics = is_array( $metrics ) ? array_replace_recursive( Meta::empty_metrics(), $metrics ) : Meta::empty_metrics();
-		$impact  = get_post_meta( $post->ID, Meta::IMPACT, true );
-		$impact  = is_array( $impact ) ? array_merge( Meta::empty_impact(), $impact ) : Meta::empty_impact();
+		$eyebrow    = (string) get_post_meta( $post->ID, Meta::EYEBROW, true );
+		$summary    = (string) get_post_meta( $post->ID, Meta::SUMMARY, true );
+		$title_de   = (string) get_post_meta( $post->ID, Meta::TITLE_DE, true );
+		$eyebrow_de = (string) get_post_meta( $post->ID, Meta::EYEBROW_DE, true );
+		$summary_de = (string) get_post_meta( $post->ID, Meta::SUMMARY_DE, true );
+		$metrics    = get_post_meta( $post->ID, Meta::METRICS, true );
+		$metrics    = is_array( $metrics ) ? array_replace_recursive( Meta::empty_metrics(), $metrics ) : Meta::empty_metrics();
+		$impact     = get_post_meta( $post->ID, Meta::IMPACT, true );
+		$impact     = is_array( $impact ) ? array_merge( Meta::empty_impact(), $impact ) : Meta::empty_impact();
 		?>
 		<div class="ajr-case-study-meta-section">
 			<h3><?php esc_html_e( 'Overview', 'ajrwebdesign-core' ); ?></h3>
 			<?php
 			$this->field( 'ajrwd_cs_eyebrow', __( 'Category / Eyebrow', 'ajrwebdesign-core' ), $eyebrow, 'ECOMMERCE' );
 			$this->field( 'ajrwd_cs_summary', __( 'Short Summary', 'ajrwebdesign-core' ), $summary, __( 'The client’s store was slow, with poor Core Web Vitals…', 'ajrwebdesign-core' ) );
+			?>
+		</div>
+
+		<div class="ajr-case-study-meta-section">
+			<h3><?php esc_html_e( 'German Translation (Deutsch)', 'ajrwebdesign-core' ); ?></h3>
+			<p class="description"><?php esc_html_e( 'Used on German pages instead of the English title, eyebrow, and summary. An empty field falls back to English. Metrics and impact tiles are shared between languages.', 'ajrwebdesign-core' ); ?></p>
+			<?php
+			$this->field( 'ajrwd_cs_title_de', __( 'Title (DE)', 'ajrwebdesign-core' ), $title_de );
+			$this->field( 'ajrwd_cs_eyebrow_de', __( 'Category / Eyebrow (DE)', 'ajrwebdesign-core' ), $eyebrow_de );
+			$this->field( 'ajrwd_cs_summary_de', __( 'Short Summary (DE)', 'ajrwebdesign-core' ), $summary_de );
 			?>
 		</div>
 
@@ -208,6 +221,17 @@ class Metabox {
 		}
 		if ( isset( $_POST['ajrwd_cs_summary'] ) ) {
 			update_post_meta( $post_id, Meta::SUMMARY, sanitize_text_field( wp_unslash( $_POST['ajrwd_cs_summary'] ) ) );
+		}
+
+		$german_fields = array(
+			'ajrwd_cs_title_de'   => Meta::TITLE_DE,
+			'ajrwd_cs_eyebrow_de' => Meta::EYEBROW_DE,
+			'ajrwd_cs_summary_de' => Meta::SUMMARY_DE,
+		);
+		foreach ( $german_fields as $input_name => $meta_key ) {
+			if ( isset( $_POST[ $input_name ] ) ) {
+				update_post_meta( $post_id, $meta_key, sanitize_text_field( wp_unslash( $_POST[ $input_name ] ) ) );
+			}
 		}
 
 		if ( isset( $_POST['ajrwd_cs'] ) && is_array( $_POST['ajrwd_cs'] ) ) {

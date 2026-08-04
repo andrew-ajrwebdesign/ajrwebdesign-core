@@ -16,7 +16,9 @@ use PHPUnit\Framework\TestCase;
 class CardsTest extends TestCase {
 
 	protected function setUp(): void {
-		$GLOBALS['ajrwd_test_meta'] = array();
+		$GLOBALS['ajrwd_test_meta']   = array();
+		$GLOBALS['ajrwd_test_titles'] = array();
+		$GLOBALS['ajrwd_test_lang']   = '';
 	}
 
 	public function test_parse_count_value(): void {
@@ -57,5 +59,42 @@ class CardsTest extends TestCase {
 		$data = Cards::get_case_meta( 5 );
 		$this->assertSame( 'LEGACY', $data['eyebrow'] );
 		$this->assertSame( '42', $data['metrics']['mobile']['before']['score'] );
+	}
+
+	public function test_get_case_meta_ignores_german_fields_on_english_pages(): void {
+		$GLOBALS['ajrwd_test_titles'][7] = 'English Title';
+		update_post_meta( 7, 'ajrwd_cs_eyebrow', 'ECOMMERCE' );
+		update_post_meta( 7, 'ajrwd_cs_title_de', 'Deutscher Titel' );
+		update_post_meta( 7, 'ajrwd_cs_eyebrow_de', 'E-COMMERCE' );
+
+		$data = Cards::get_case_meta( 7 );
+		$this->assertSame( 'English Title', $data['title'] );
+		$this->assertSame( 'ECOMMERCE', $data['eyebrow'] );
+	}
+
+	public function test_get_case_meta_uses_german_fields_with_english_fallback(): void {
+		$GLOBALS['ajrwd_test_lang']      = 'de';
+		$GLOBALS['ajrwd_test_titles'][7] = 'English Title';
+		update_post_meta( 7, 'ajrwd_cs_eyebrow', 'ECOMMERCE' );
+		update_post_meta( 7, 'ajrwd_cs_summary', 'English summary.' );
+		update_post_meta( 7, 'ajrwd_cs_title_de', 'Deutscher Titel' );
+		update_post_meta( 7, 'ajrwd_cs_eyebrow_de', 'E-COMMERCE' );
+		// summary_de deliberately empty: must fall back to English.
+
+		$data = Cards::get_case_meta( 7 );
+		$this->assertSame( 'Deutscher Titel', $data['title'] );
+		$this->assertSame( 'E-COMMERCE', $data['eyebrow'] );
+		$this->assertSame( 'English summary.', $data['summary'] );
+	}
+
+	public function test_ui_label_translates_only_on_german_pages(): void {
+		$this->assertSame( 'Before', Cards::ui_label( 'Before' ) );
+
+		$GLOBALS['ajrwd_test_lang'] = 'de';
+		$this->assertSame( 'Vorher', Cards::ui_label( 'Before' ) );
+		$this->assertSame( 'Bestanden', Cards::ui_label( 'Passed' ) );
+		// Terms used untranslated in German pass through.
+		$this->assertSame( 'Core Web Vitals', Cards::ui_label( 'Core Web Vitals' ) );
+		$this->assertSame( 'Desktop', Cards::ui_label( 'Desktop' ) );
 	}
 }

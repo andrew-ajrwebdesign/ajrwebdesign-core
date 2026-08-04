@@ -23,6 +23,13 @@ class Meta {
 	public const METRICS = 'ajrwd_cs_metrics';
 	public const IMPACT  = 'ajrwd_cs_impact';
 
+	// German translations — testimonials single-entry model: one post serves
+	// both languages, the card blocks pick these on German pages and fall
+	// back to the English fields when empty. Metrics/impact stay shared.
+	public const TITLE_DE   = 'ajrwd_cs_title_de';
+	public const EYEBROW_DE = 'ajrwd_cs_eyebrow_de';
+	public const SUMMARY_DE = 'ajrwd_cs_summary_de';
+
 	/**
 	 * The metric keys tracked per device/phase.
 	 *
@@ -45,7 +52,7 @@ class Meta {
 			return current_user_can( 'edit_posts' );
 		};
 
-		foreach ( array( self::EYEBROW, self::SUMMARY ) as $key ) {
+		foreach ( array( self::EYEBROW, self::SUMMARY, self::TITLE_DE, self::EYEBROW_DE, self::SUMMARY_DE ) as $key ) {
 			register_post_meta(
 				PostType::POST_TYPE,
 				$key,

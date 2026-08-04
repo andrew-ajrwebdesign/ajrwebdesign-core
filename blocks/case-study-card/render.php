@@ -30,13 +30,13 @@ if ( ! $case_study_id || PostType::POST_TYPE !== get_post_type( $case_study_id )
 	return;
 }
 
-$case_title = get_the_title( $case_study_id );
 $case_meta  = Cards::get_case_meta( $case_study_id );
+$case_title = $case_meta['title'];
 $metrics    = $case_meta['metrics'];
 $impact     = $case_meta['impact'];
 
 $lcp_value = Cards::render_change_value( $metrics['mobile']['before']['lcp'], $metrics['mobile']['after']['lcp'] );
-$cwv_value = Cards::render_change_value( $impact['cwv_before'], $impact['cwv_after'], 'status' );
+$cwv_value = Cards::render_change_value( Cards::ui_label( $impact['cwv_before'] ), Cards::ui_label( $impact['cwv_after'] ), 'status' );
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array( 'class' => 'ajr-case-study-card ajr-case-study-card--' . $layout_direction )
@@ -45,8 +45,8 @@ $wrapper_attributes = get_block_wrapper_attributes(
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="ajr-case-study-card__left">
 		<?php
-		echo Cards::device_panel( 'Mobile', 'device-mobile', $metrics['mobile'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo Cards::device_panel( 'Desktop', 'device-desktop', $metrics['desktop'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Cards::device_panel( Cards::ui_label( 'Mobile' ), 'device-mobile', $metrics['mobile'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Cards::device_panel( Cards::ui_label( 'Desktop' ), 'device-desktop', $metrics['desktop'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 	</div>
 
@@ -69,10 +69,10 @@ $wrapper_attributes = get_block_wrapper_attributes(
 
 		<div class="ajr-case-study-card__tiles">
 			<?php
-			echo Cards::tile( 'gauge', 'Largest Contentful Paint', $lcp_value, 'purple' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo Cards::tile( 'core-web-vitals', 'Core Web Vitals', $cwv_value, 'green' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo Cards::tile( 'cube', 'Requests Removed', Cards::render_count_value( $impact['requests_removed'], '', 'ajr-case-study-card__count' ), 'blue' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo Cards::tile( 'page-size-reduced', 'Page Size Reduced', Cards::render_count_value( $impact['page_size_reduced'], '', 'ajr-case-study-card__count' ), 'purple' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Cards::tile( 'gauge', Cards::ui_label( 'Largest Contentful Paint' ), $lcp_value, 'purple' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Cards::tile( 'core-web-vitals', Cards::ui_label( 'Core Web Vitals' ), $cwv_value, 'green' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Cards::tile( 'cube', Cards::ui_label( 'Requests Removed' ), Cards::render_count_value( $impact['requests_removed'], '', 'ajr-case-study-card__count' ), 'blue' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo Cards::tile( 'page-size-reduced', Cards::ui_label( 'Page Size Reduced' ), Cards::render_count_value( $impact['page_size_reduced'], '', 'ajr-case-study-card__count' ), 'purple' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 	</div>

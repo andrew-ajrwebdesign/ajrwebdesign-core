@@ -8,6 +8,7 @@
 namespace AJR\SiteCore\Blocks;
 
 use AJR\SiteCore\CaseStudies\Meta;
+use AJR\SiteCore\Core\Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,8 +46,55 @@ class Cards {
 	private static array $icon_cache = array();
 
 	/**
+	 * German versions of the cards' fixed interface strings. Terms that are
+	 * used untranslated in German (LCP, CLS, INP, Core Web Vitals, Desktop)
+	 * have no entry and pass through unchanged.
+	 *
+	 * @var array<string,string>
+	 */
+	private const LABELS_DE = array(
+		'Mobile'            => 'Mobil',
+		'Before'            => 'Vorher',
+		'After'             => 'Nachher',
+		'Requests Removed'  => 'Requests entfernt',
+		'Page Size Reduced' => 'Seitengröße reduziert',
+		'Performance Score' => 'Performance-Score',
+		'LCP Improvement'   => 'LCP-Verbesserung',
+		'Case study tags'   => 'Fallstudien-Schlagwörter',
+		'Passed'            => 'Bestanden',
+		'Failed'            => 'Nicht bestanden',
+	);
+
+	/**
+	 * Whether the current request renders a German page.
+	 */
+	public static function is_de(): bool {
+		return 'de' === Utils::current_language();
+	}
+
+	/**
+	 * Returns a card interface string in the visitor's language.
+	 *
+	 * The cards' fixed strings can't go through gettext (the plugin ships no
+	 * catalogs); like the testimonials slider, they switch on the Polylang
+	 * language directly. English (and any unmapped string) passes through.
+	 *
+	 * @param string $text English source string.
+	 */
+	public static function ui_label( string $text ): string {
+		if ( self::is_de() && isset( self::LABELS_DE[ $text ] ) ) {
+			return self::LABELS_DE[ $text ];
+		}
+		return $text;
+	}
+
+	/**
 	 * Returns a flattened, legacy-compatible meta view of a case study:
-	 * eyebrow, summary, metrics[device][phase][metric], impact[...].
+	 * title, eyebrow, summary, metrics[device][phase][metric], impact[...].
+	 *
+	 * On German pages the title/eyebrow/summary come from the *_de meta
+	 * fields when filled (testimonials single-entry model); empty German
+	 * fields fall back to the English values. Metrics are shared.
 	 *
 	 * @param int $post_id Case study ID.
 	 * @return array<string,mixed>
@@ -58,6 +106,7 @@ class Cards {
 		$impact  = is_array( $impact ) ? array_merge( Meta::empty_impact(), $impact ) : Meta::empty_impact();
 
 		$data = array(
+			'title'   => (string) get_the_title( $post_id ),
 			'eyebrow' => (string) get_post_meta( $post_id, Meta::EYEBROW, true ),
 			'summary' => (string) get_post_meta( $post_id, Meta::SUMMARY, true ),
 			'metrics' => $metrics,
@@ -90,6 +139,22 @@ class Cards {
 		foreach ( $legacy_impact as $new_key => $legacy_key ) {
 			if ( '' === $data['impact'][ $new_key ] ) {
 				$data['impact'][ $new_key ] = (string) get_post_meta( $post_id, $legacy_key, true );
+			}
+		}
+
+		// German pages: overlay the translated fields, keeping the English
+		// value wherever a translation hasn't been filled in yet.
+		if ( self::is_de() ) {
+			$german = array(
+				'title'   => Meta::TITLE_DE,
+				'eyebrow' => Meta::EYEBROW_DE,
+				'summary' => Meta::SUMMARY_DE,
+			);
+			foreach ( $german as $field => $meta_key ) {
+				$value = trim( (string) get_post_meta( $post_id, $meta_key, true ) );
+				if ( '' !== $value ) {
+					$data[ $field ] = $value;
+				}
 			}
 		}
 
@@ -311,7 +376,7 @@ class Cards {
 
 			<div class="ajr-case-study-card__score-flow">
 				<div class="ajr-case-study-card__score-block">
-					<div class="ajr-case-study-card__score-kicker ajr-case-study-card__score-kicker--before">Before</div>
+					<div class="ajr-case-study-card__score-kicker ajr-case-study-card__score-kicker--before"><?php echo esc_html( self::ui_label( 'Before' ) ); ?></div>
 					<div
 						class="ajr-case-study-card__score-circle ajr-case-study-card__score-circle--before"
 						style="--score: <?php echo esc_attr( (string) $before_score_value ); ?>;"
@@ -326,7 +391,7 @@ class Cards {
 				</div>
 
 				<div class="ajr-case-study-card__score-block">
-					<div class="ajr-case-study-card__score-kicker ajr-case-study-card__score-kicker--after">After</div>
+					<div class="ajr-case-study-card__score-kicker ajr-case-study-card__score-kicker--after"><?php echo esc_html( self::ui_label( 'After' ) ); ?></div>
 					<div
 						class="ajr-case-study-card__score-circle ajr-case-study-card__score-circle--after"
 						style="--score: <?php echo esc_attr( (string) $after_score_value ); ?>;"
@@ -459,7 +524,7 @@ class Cards {
 		}
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( $base_class ); ?>__tags" aria-label="<?php esc_attr_e( 'Case study tags', 'ajrwebdesign-core' ); ?>">
+		<div class="<?php echo esc_attr( $base_class ); ?>__tags" aria-label="<?php echo esc_attr( self::ui_label( 'Case study tags' ) ); ?>">
 			<?php foreach ( $terms as $term ) : ?>
 				<span class="<?php echo esc_attr( $base_class ); ?>__tag">
 					<span class="<?php echo esc_attr( $base_class ); ?>__tag-icon" aria-hidden="true">

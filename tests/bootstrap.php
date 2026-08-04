@@ -60,6 +60,18 @@ function get_the_terms( $post_id, $taxonomy ) {
 	return array();
 }
 
+// Per-test titles + Polylang language (empty string = Polylang inactive).
+$GLOBALS['ajrwd_test_titles'] = array();
+$GLOBALS['ajrwd_test_lang']   = '';
+
+function get_the_title( $post = 0 ) {
+	return $GLOBALS['ajrwd_test_titles'][ $post ] ?? '';
+}
+
+function pll_current_language( $field = 'slug' ) {
+	return $GLOBALS['ajrwd_test_lang'];
+}
+
 function is_wp_error( $thing ) {
 	return false;
 }
