@@ -18,7 +18,6 @@ use AJR\SiteCore\Compat\ThemeSupport;
 use AJR\SiteCore\I18n\Hreflang;
 use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
-use AJR\SiteCore\Schema\Breadcrumbs;
 use AJR\SiteCore\Schema\Business;
 use AJR\SiteCore\Schema\Faq;
 use AJR\SiteCore\Testimonials\PostType as Testimonials;
@@ -84,7 +83,6 @@ class Plugin {
 			new PostsMeta(),
 			new Faq(),
 			new Business(),
-			new Breadcrumbs(),
 			new DisableComments(),
 			new Testimonials(),
 			new GA4( $this->settings ),
