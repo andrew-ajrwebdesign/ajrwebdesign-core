@@ -84,4 +84,21 @@ function wp_strip_all_tags( $text, $remove_breaks = false ) {
 	}
 	return trim( $text );
 }
+
+// Per-test logged-in state + filter callbacks (hook name => callable).
+$GLOBALS['ajrwd_test_logged_in'] = false;
+$GLOBALS['ajrwd_test_filters']   = array();
+
+function is_user_logged_in() {
+	return ! empty( $GLOBALS['ajrwd_test_logged_in'] );
+}
+
+function wp_json_encode( $data, $options = 0, $depth = 512 ) {
+	return json_encode( $data, $options, $depth );
+}
+
+function apply_filters( $hook_name, $value, ...$args ) {
+	$cb = $GLOBALS['ajrwd_test_filters'][ $hook_name ] ?? null;
+	return $cb ? $cb( $value, ...$args ) : $value;
+}
 // phpcs:enable

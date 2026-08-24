@@ -3,7 +3,7 @@
  * Plugin Name:       AJR Web Design Core
  * Plugin URI:        https://github.com/andrew-ajrwebdesign/ajrwebdesign-core
  * Description:       Core functionality for ajrwebdesign.com — custom blocks, case studies, analytics, and multilingual helpers. Companion to the ajrwebdesign-theme FSE theme.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Requires at least: 6.9
  * Requires PHP:      8.0
  * Author:            AJR Web Design
@@ -18,7 +18,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AJRWD_CORE_VERSION', '1.3.0' );
+// Version is read from the plugin header above — never repeated as a literal,
+// so a release bump is one edit and the two can never drift apart.
+$ajrwd_core_header = get_file_data( __FILE__, array( 'Version' => 'Version' ) );
+define( 'AJRWD_CORE_VERSION', $ajrwd_core_header['Version'] );
 define( 'AJRWD_CORE_FILE', __FILE__ );
 define( 'AJRWD_CORE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AJRWD_CORE_URL', plugin_dir_url( __FILE__ ) );
