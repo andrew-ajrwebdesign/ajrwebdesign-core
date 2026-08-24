@@ -76,6 +76,7 @@ class Plugin {
 		$this->settings->register();
 
 		$modules = array(
+			new \AJR\SiteCore\Admin\AgentAccess(),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),
 			new ThemeSupport(),

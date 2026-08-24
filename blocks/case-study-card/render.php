@@ -184,5 +184,10 @@ else :
 			echo Cards::tile( 'page-size-reduced', Cards::ui_label( 'Page Size Reduced' ), Cards::render_count_value( $impact['page_size_reduced'], '', 'ajr-case-study-card__count' ), 'purple' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
+
+		<?php if ( $card_link ) : ?>
+			<?php // The visible affordance for the stretched link: the bento-card read-more language (mask arrow, 4px hover slide). A span, not a second anchor — the whole card is already the link. ?>
+			<span class="ajr-case-study-card__read"><?php echo esc_html( Cards::ui_label( 'Read the case study' ) ); ?> <?php echo Cards::icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+		<?php endif; ?>
 	</div>
 </section>

@@ -66,6 +66,11 @@ else :
 		<?php if ( '' !== $case_meta['summary'] ) : ?>
 			<p class="ajr-case-study-mini-card__summary"><?php echo esc_html( $case_meta['summary'] ); ?></p>
 		<?php endif; ?>
+
+		<?php if ( $card_link ) : ?>
+			<?php // Visible affordance for the stretched link — bento read-more language; a span, the whole card is already the anchor. ?>
+			<span class="ajr-case-study-mini-card__read"><?php echo esc_html( Cards::ui_label( 'Read the case study' ) ); ?> <?php echo Cards::icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+		<?php endif; ?>
 	</div>
 
 	<div class="ajr-case-study-mini-card__result">

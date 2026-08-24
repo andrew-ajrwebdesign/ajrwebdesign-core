@@ -251,3 +251,21 @@
 .ajr-case-study-card--linked,.ajr-case-study-mini-card--linked{transition:none}
 .ajr-case-study-card--linked:hover,.ajr-case-study-card--linked:focus-within,.ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{transform:none}
 }
+
+/* --- v1.5.1: read-affordance as a compact OUTLINE button (Andrew-directed
+   variant, smaller than the site primary spec): sm/600, .5rem x 1.15rem,
+   2px accent-dark outline; hover fills accent-dark with white text, arrow
+   slides 4px; full-width on mobile. A span, not a second anchor - the
+   whole card is the link. --- */
+.ajr-case-study-mini-card__read{align-items:center;background:transparent;border:2px solid var(--wp--preset--color--accent-dark,#06634c);border-radius:var(--wp--custom--radius--md,12px);color:var(--wp--preset--color--accent-dark,#06634c);display:inline-flex;font-size:var(--wp--preset--font-size--sm,.875rem);font-weight:600;gap:8px;justify-content:center;margin-top:18px;padding:.5rem 1.15rem;transition:background-color .18s ease,color .18s ease;width:fit-content}
+.ajr-case-study-mini-card__read svg{display:block;height:16px;transition:transform .18s ease;width:16px}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read{background-color:var(--wp--preset--color--accent-dark,#06634c);color:var(--wp--preset--color--bg,#fff)}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read svg,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read svg{transform:translateX(4px)}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__title-link,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__title-link{color:var(--wp--preset--color--accent-dark,#06634c)}
+@media (max-width:781px){
+.ajr-case-study-mini-card__read{width:100%}
+}
+@media (prefers-reduced-motion: reduce){
+.ajr-case-study-mini-card__read,.ajr-case-study-mini-card__read svg{transition:none}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read svg,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read svg{transform:none}
+}

@@ -61,6 +61,7 @@ class Cards {
 		'Performance Score' => 'Performance-Score',
 		'LCP Improvement'   => 'LCP-Verbesserung',
 		'Case study tags'   => 'Fallstudien-Schlagwörter',
+		'Read the case study' => 'Fallstudie lesen',
 		'Passed'            => 'Bestanden',
 		'Failed'            => 'Nicht bestanden',
 	);
