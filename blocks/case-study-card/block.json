@@ -11,7 +11,12 @@
 	"textdomain": "ajrwebdesign-core",
 	"attributes": {
 		"caseStudyId": { "type": "number", "default": 0 },
-		"layoutDirection": { "type": "string", "default": "stats-left", "enum": [ "stats-left", "text-left" ] }
+		"layoutDirection": { "type": "string", "default": "stats-left", "enum": [ "stats-left", "text-left" ] },
+		"variant": { "type": "string", "default": "default", "enum": [ "default", "hero" ] },
+		"ctaUrl": { "type": "string", "default": "" },
+		"ctaLabel": { "type": "string", "default": "" },
+		"ctaSecondaryUrl": { "type": "string", "default": "" },
+		"ctaSecondaryLabel": { "type": "string", "default": "" }
 	},
 	"supports": {
 		"html": false,

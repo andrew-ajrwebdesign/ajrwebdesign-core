@@ -20,6 +20,7 @@ use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
 use AJR\SiteCore\Schema\Business;
 use AJR\SiteCore\Schema\Faq;
+use AJR\SiteCore\Seo\CaseStudies as CaseStudiesSeo;
 use AJR\SiteCore\Testimonials\PostType as Testimonials;
 
 defined( 'ABSPATH' ) || exit;
@@ -93,6 +94,8 @@ class Plugin {
 			$modules[] = new Meta();
 			$modules[] = new \AJR\SiteCore\CaseStudies\Metabox();
 			$modules[] = new Migration();
+			$modules[] = new CaseStudiesSeo();
+			$modules[] = new \AJR\SiteCore\CaseStudies\StoryIntro();
 		}
 
 		foreach ( $modules as $module ) {

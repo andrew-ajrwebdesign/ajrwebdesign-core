@@ -35,7 +35,15 @@ $lcp_improvement     = Cards::calculate_improvement(
 	$case_meta['metrics']['mobile']['after']['lcp']
 );
 
-$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-case-study-mini-card' ) );
+// Whole-box-clickable everywhere EXCEPT on the post's own single — the
+// title becomes a stretched link (style.css draws the hit area and hover).
+$card_link = get_queried_object_id() !== $case_study_id || ! is_singular( PostType::POST_TYPE )
+	? get_permalink( $case_study_id )
+	: '';
+
+$wrapper_attributes = get_block_wrapper_attributes(
+	array( 'class' => 'ajr-case-study-mini-card' . ( $card_link ? ' ajr-case-study-mini-card--linked' : '' ) )
+);
 ?>
 <article <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="ajr-case-study-mini-card__content">
@@ -44,7 +52,15 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-case-
 		<?php endif; ?>
 
 		<?php if ( $case_title ) : ?>
-			<h3 class="ajr-case-study-mini-card__title"><?php echo esc_html( $case_title ); ?></h3>
+			<h3 class="ajr-case-study-mini-card__title">
+			<?php
+			if ( $card_link ) :
+				?>
+				<a class="ajr-case-study-mini-card__title-link" href="<?php echo esc_url( $card_link ); ?>"><?php echo esc_html( $case_title ); ?></a>
+				<?php
+else :
+	?>
+				<?php echo esc_html( $case_title ); ?><?php endif; ?></h3>
 		<?php endif; ?>
 
 		<?php if ( '' !== $case_meta['summary'] ) : ?>

@@ -237,3 +237,17 @@
 		padding: 7px 10px;
 	}
 }
+
+/* --- v1.5.0: whole-box clickable card (everywhere except the post/s own single) --- */
+.ajr-case-study-mini-card--linked{position:relative;transition:box-shadow .18s ease,transform .18s ease}
+.ajr-case-study-mini-card__title-link{color:inherit;text-decoration:none}
+.ajr-case-study-mini-card__title-link::after{content:"";inset:0;position:absolute;z-index:1}
+.ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{box-shadow:0 22px 44px -14px rgba(15,23,42,.28);transform:translateY(-3px)}
+.ajr-case-study-mini-card--linked:focus-within{outline:2px solid var(--wp--preset--color--primary,#0f766e);outline-offset:2px}
+.ajr-case-study-mini-card--linked .ajr-case-study-mini-card__title-link:focus-visible{outline:none}
+
+/* Standing rule: motion always has a reduced-motion fallback. */
+@media (prefers-reduced-motion: reduce){
+.ajr-case-study-card--linked,.ajr-case-study-mini-card--linked{transition:none}
+.ajr-case-study-card--linked:hover,.ajr-case-study-card--linked:focus-within,.ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{transform:none}
+}
