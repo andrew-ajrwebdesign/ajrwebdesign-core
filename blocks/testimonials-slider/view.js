@@ -32,6 +32,11 @@
 				) + 1
 			);
 
+		// Translated by PHP; %d is the page number. Falls back to English so a
+		// cached render without the attribute still gets a real label.
+		const labelTemplate =
+			dotsWrap.dataset.dotLabel || 'Go to testimonial page %d';
+
 		const dots = [];
 		const buildDots = () => {
 			dotsWrap.textContent = '';
@@ -40,7 +45,10 @@
 				const dot = document.createElement( 'button' );
 				dot.type = 'button';
 				dot.className = 'ajr-tslider__dot';
-				dot.setAttribute( 'aria-label', `${ i + 1 }` );
+				dot.setAttribute(
+					'aria-label',
+					labelTemplate.replace( '%d', `${ i + 1 }` )
+				);
 				dot.addEventListener( 'click', () =>
 					track.scrollTo( {
 						left: i * slideWidth(),
@@ -54,9 +62,17 @@
 
 		const sync = () => {
 			const page = Math.round( track.scrollLeft / slideWidth() );
-			dots.forEach( ( d, i ) =>
-				d.classList.toggle( 'is-active', i === page )
-			);
+			dots.forEach( ( d, i ) => {
+				const active = i === page;
+				d.classList.toggle( 'is-active', active );
+				// The active dot was signalled by colour alone; aria-current
+				// makes the same state available to assistive tech.
+				if ( active ) {
+					d.setAttribute( 'aria-current', 'true' );
+				} else {
+					d.removeAttribute( 'aria-current' );
+				}
+			} );
 		};
 
 		track.addEventListener( 'scroll', sync, { passive: true } );

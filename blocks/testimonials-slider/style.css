@@ -144,21 +144,40 @@
 
 .ajr-tslider__dots {
 	display: flex;
-	gap: 0.5rem;
+	/* Dots are 24px hit targets around a 9px mark, so the visible gap is
+	   this value plus the transparent padding either side. */
+	gap: 0;
 }
 
+/* WCAG 2.2 target size: the button is a 24x24 hit area, the 9px dot is drawn
+   by ::before. Shrinking the button to the mark would fail 2.5.8. */
 .ajr-tslider__dot {
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
+	width: 24px;
+	height: 24px;
+	display: grid;
+	place-items: center;
 	border: none;
 	padding: 0;
-	background: var(--wp--preset--color--border, #e2e8f0);
+	background: none;
 	cursor: pointer;
 }
 
-.ajr-tslider__dot.is-active {
+.ajr-tslider__dot::before {
+	content: "";
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--wp--preset--color--border, #e2e8f0);
+}
+
+.ajr-tslider__dot.is-active::before {
 	background: var(--wp--preset--color--primary, #0f766e);
+}
+
+.ajr-tslider__dot:focus-visible {
+	outline: 2px solid var(--wp--preset--color--primary, #0f766e);
+	outline-offset: -2px;
+	border-radius: 50%;
 }
 
 @media (max-width: 781px) {

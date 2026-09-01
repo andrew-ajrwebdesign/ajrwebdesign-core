@@ -139,9 +139,13 @@ $ajrwd_has_nav = $ajrwd_total > $ajrwd_per_view;
 		<?php } ?>
 	</ul>
 
-	<?php if ( $ajrwd_has_nav ) : ?>
+	<?php
+	if ( $ajrwd_has_nav ) :
+		/* translators: %d: page number within the testimonial slider. Substituted in view.js. */
+		$ajrwd_dot_label = __( 'Go to testimonial page %d', 'ajrwebdesign-core' );
+		?>
 		<div class="ajr-tslider__nav">
-			<div class="ajr-tslider__dots" role="tablist" aria-label="<?php esc_attr_e( 'Testimonial pages', 'ajrwebdesign-core' ); ?>"></div>
+			<div class="ajr-tslider__dots" role="group" aria-label="<?php esc_attr_e( 'Testimonial pages', 'ajrwebdesign-core' ); ?>" data-dot-label="<?php echo esc_attr( $ajrwd_dot_label ); ?>"></div>
 		</div>
 	<?php endif; ?>
 </div>

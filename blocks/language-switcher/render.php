@@ -46,9 +46,25 @@ if ( null === $ajrwd_current ) {
 }
 
 $ajrwd_wrapper = get_block_wrapper_attributes( array( 'class' => 'ajr-lang-switch' ) );
+
+/*
+ * WCAG 2.5.3 label in name: when the language name is visible, the accessible
+ * name has to start with that same text, or speech-input users saying what they
+ * can see ("click English") never reach the control. With names hidden there is
+ * no visible text to match, so the plain purpose label is correct.
+ */
+if ( $ajrwd_show_names && '' !== (string) $ajrwd_current['name'] ) {
+	$ajrwd_summary_label = sprintf(
+		/* translators: %s: name of the currently active language. */
+		__( '%s - choose a language', 'ajrwebdesign-core' ),
+		$ajrwd_current['name']
+	);
+} else {
+	$ajrwd_summary_label = __( 'Choose a language', 'ajrwebdesign-core' );
+}
 ?>
 <details <?php echo $ajrwd_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<summary aria-label="<?php esc_attr_e( 'Choose a language', 'ajrwebdesign-core' ); ?>">
+	<summary aria-label="<?php echo esc_attr( $ajrwd_summary_label ); ?>">
 		<?php if ( $ajrwd_show_flags && ! empty( $ajrwd_current['flag'] ) ) : ?>
 			<img src="<?php echo esc_url( $ajrwd_current['flag'] ); ?>" alt="" width="16" height="11">
 		<?php endif; ?>

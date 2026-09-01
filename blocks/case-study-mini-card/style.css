@@ -144,12 +144,12 @@
 }
 
 .ajr-case-study-mini-card__score-before {
-	color: var(--wp--preset--color--score-red, #ff4e42);
+	color: var(--wp--preset--color--score-red-text, #cc2b1f);
 }
 
 .ajr-case-study-mini-card__improvement-number,
 .ajr-case-study-mini-card__score-after {
-	color: var(--wp--preset--color--score-green, #0cce6b);
+	color: var(--wp--preset--color--score-green-text, #07783f);
 }
 
 .ajr-case-study-mini-card__score-arrow {
@@ -171,7 +171,7 @@
 }
 
 .ajr-case-study-mini-card__improvement-value {
-	color: var(--wp--preset--color--score-green, #0cce6b);
+	color: var(--wp--preset--color--score-green-text, #07783f);
 	font-size: 30px;
 	font-weight: 800;
 	line-height: 1;
