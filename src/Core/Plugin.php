@@ -18,7 +18,7 @@ use AJR\SiteCore\I18n\Hreflang;
 use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
 use AJR\SiteCore\Seo\CaseStudies as CaseStudiesSeo;
-use AJR\SiteCore\Testimonials\PostType as Testimonials;
+use AJR\SiteCore\Testimonials\German as TestimonialsGerman;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -80,7 +80,7 @@ class Plugin {
 			new Strings(),
 			new Hreflang(),
 			new PostsMeta(),
-			new Testimonials(),
+			new TestimonialsGerman(),
 		);
 
 		if ( $this->settings->is_enabled( 'case_studies_cpt' ) ) {
