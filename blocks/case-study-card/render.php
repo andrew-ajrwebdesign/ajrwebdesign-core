@@ -54,10 +54,10 @@ if ( 'hero' === $variant ) {
 	$hero_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-cs-hero' ) );
 	// http/https only: a CTA is a navigation, and the attribute is editable by
 	// anyone who can edit a post carrying the block — no mailto/tel/ftp here.
-	$cta_url         = isset( $attributes['ctaUrl'] ) ? esc_url_raw( $attributes['ctaUrl'], array( 'http', 'https' ) ) : '';
-	$cta_label       = isset( $attributes['ctaLabel'] ) ? (string) $attributes['ctaLabel'] : '';
-	$cta2_url        = isset( $attributes['ctaSecondaryUrl'] ) ? esc_url_raw( $attributes['ctaSecondaryUrl'], array( 'http', 'https' ) ) : '';
-	$cta2_label      = isset( $attributes['ctaSecondaryLabel'] ) ? (string) $attributes['ctaSecondaryLabel'] : '';
+	$cta_url    = isset( $attributes['ctaUrl'] ) ? esc_url_raw( $attributes['ctaUrl'], array( 'http', 'https' ) ) : '';
+	$cta_label  = isset( $attributes['ctaLabel'] ) ? (string) $attributes['ctaLabel'] : '';
+	$cta2_url   = isset( $attributes['ctaSecondaryUrl'] ) ? esc_url_raw( $attributes['ctaSecondaryUrl'], array( 'http', 'https' ) ) : '';
+	$cta2_label = isset( $attributes['ctaSecondaryLabel'] ) ? (string) $attributes['ctaSecondaryLabel'] : '';
 
 	$before_ms = Cards::value_to_ms( $metrics['mobile']['before']['lcp'] );
 	$after_ms  = Cards::value_to_ms( $metrics['mobile']['after']['lcp'] );
