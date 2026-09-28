@@ -11,6 +11,13 @@ GA4 with consent gating and lead tracking, FAQ structured data, the business pro
 application password, and the post breadcrumbs (now WordPress's own `core/breadcrumbs` block,
 styled by the theme). Configure those in **AJR Core** in wp-admin, not here.
 
+### Moved to AJR Core in 1.8.0
+
+Testimonials: the post type (same `ajr_testimonial` key), its rating and source-logo fields
+(now `ajr_testimonial_rating` / `ajr_testimonial_logo_id`) and the slider block (now
+`ajr/testimonials`). This plugin keeps only the German quote and role, swapped in on German
+pages through AJR Core's `ajr_core_testimonial_text` filter.
+
 ## What's inside
 
 ### Blocks (all dynamic, `block.json` + `render.php` + editor controls)
@@ -20,7 +27,6 @@ styled by the theme). Configure those in **AJR Core** in wp-admin, not here.
 | `responsive-image` | Art-directed image: separate desktop/mobile assets, lazy-loading + fetch-priority controls |
 | `case-study-card` | Full case-study showcase: score circles, Core Web Vitals metrics, impact tiles |
 | `case-study-mini-card` | Compact result card with count-up animation |
-| `testimonials-slider` | Scroll-snap slider of testimonials, filterable by service tag |
 | `post-intro` | Styled lead paragraph sourced from post meta |
 | `post-callout` | Highlight box sourced from post meta |
 | `language-aware-nav` | Renders the navigation matching the visitor's Polylang language, resolved by slug convention (`{menuSlug}-{lang}`) — one header/footer part serves every language |
@@ -29,7 +35,7 @@ styled by the theme). Configure those in **AJR Core** in wp-admin, not here.
 ### Modules
 
 - **CaseStudies** — `ajr_case_study` CPT + tag taxonomy, structured REST-exposed meta (metrics, impact), and a legacy-meta migration (`wp ajr-core migrate-case-meta` or one-click from the settings screen)
-- **Testimonials** — testimonial CPT with a German translation panel, service tags and a source logo
+- **Testimonials (German)** — the German quote and role fields and their editor panel; the testimonials themselves are AJR Core's
 - **I18n** — Polylang string registration via the `ajrwebdesign-core-i18n` theme-support contract, and hreflang handling
 - **Compat** — `add_theme_support` contracts so the plugin degrades gracefully on any theme
 
