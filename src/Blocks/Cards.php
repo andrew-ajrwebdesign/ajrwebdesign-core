@@ -53,17 +53,17 @@ class Cards {
 	 * @var array<string,string>
 	 */
 	private const LABELS_DE = array(
-		'Mobile'            => 'Mobil',
-		'Before'            => 'Vorher',
-		'After'             => 'Nachher',
-		'Requests Removed'  => 'Requests entfernt',
-		'Page Size Reduced' => 'Seitengröße reduziert',
-		'Performance Score' => 'Performance-Score',
-		'LCP Improvement'   => 'LCP-Verbesserung',
-		'Case study tags'   => 'Fallstudien-Schlagwörter',
+		'Mobile'              => 'Mobil',
+		'Before'              => 'Vorher',
+		'After'               => 'Nachher',
+		'Requests Removed'    => 'Requests entfernt',
+		'Page Size Reduced'   => 'Seitengröße reduziert',
+		'Performance Score'   => 'Performance-Score',
+		'LCP Improvement'     => 'LCP-Verbesserung',
+		'Case study tags'     => 'Fallstudien-Schlagwörter',
 		'Read the case study' => 'Fallstudie lesen',
-		'Passed'            => 'Bestanden',
-		'Failed'            => 'Nicht bestanden',
+		'Passed'              => 'Bestanden',
+		'Failed'              => 'Nicht bestanden',
 	);
 
 	/**

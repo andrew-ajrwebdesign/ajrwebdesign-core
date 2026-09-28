@@ -40,6 +40,17 @@ if ( in_array( $fetch_priority, array( 'high', 'low' ), true ) ) {
 	$img_attr['fetchpriority'] = $fetch_priority;
 }
 
+/*
+ * An eager image here takes the page's eager slot, so tell core it has. The theme sets
+ * wp_omit_loading_attr_threshold to 1 assuming the hero fills that slot, but this block sets its
+ * own loading attribute and core never counted it — so the NEXT content image also loaded
+ * eagerly on every page, competing with the hero (the LCP image) for mobile bandwidth
+ * (performance review, 2026-09-28).
+ */
+if ( 'eager' === $img_loading && function_exists( 'wp_increase_content_media_count' ) ) {
+	wp_increase_content_media_count();
+}
+
 $desktop_img_html = wp_get_attachment_image( $desktop_image_id, 'full', false, $img_attr );
 if ( ! $desktop_img_html ) {
 	return;

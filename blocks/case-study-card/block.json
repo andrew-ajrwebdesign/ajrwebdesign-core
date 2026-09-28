@@ -2,7 +2,6 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "ajrwebdesign-core/case-study-card",
-	"version": "1.0.0",
 	"title": "Case Study Card",
 	"category": "widgets",
 	"icon": "analytics",

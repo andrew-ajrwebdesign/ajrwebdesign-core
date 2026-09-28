@@ -8,18 +8,15 @@
 namespace AJR\SiteCore\Core;
 
 use AJR\SiteCore\Admin\Settings;
-use AJR\SiteCore\Analytics\GA4;
+use AJR\SiteCore\Blocks\BlockVersion;
 use AJR\SiteCore\Blocks\Registrar;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\Migration;
 use AJR\SiteCore\CaseStudies\PostType;
-use AJR\SiteCore\Comments\Disable as DisableComments;
 use AJR\SiteCore\Compat\ThemeSupport;
 use AJR\SiteCore\I18n\Hreflang;
 use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
-use AJR\SiteCore\Schema\Business;
-use AJR\SiteCore\Schema\Faq;
 use AJR\SiteCore\Seo\CaseStudies as CaseStudiesSeo;
 use AJR\SiteCore\Testimonials\PostType as Testimonials;
 
@@ -76,18 +73,14 @@ class Plugin {
 		$this->settings->register();
 
 		$modules = array(
-			new \AJR\SiteCore\Admin\AgentAccess(),
+			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),
 			new ThemeSupport(),
 			new Strings(),
 			new Hreflang(),
 			new PostsMeta(),
-			new Faq(),
-			new Business(),
-			new DisableComments(),
 			new Testimonials(),
-			new GA4( $this->settings ),
 		);
 
 		if ( $this->settings->is_enabled( 'case_studies_cpt' ) ) {

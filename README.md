@@ -1,8 +1,15 @@
 # AJR Web Design Core
 
-Core functionality plugin for [ajrwebdesign.com](https://ajrwebdesign.com) — the companion plugin to the `ajrwebdesign-theme` FSE theme. Part of the signature stack: clean FSE theme + PSR-4 core plugin + fully customisable custom blocks.
+The site plugin for [ajrwebdesign.com](https://ajrwebdesign.com) — what is unique to this site, running beside the shared **AJR Core** plugin and the `ajrwebdesign-theme` FSE theme. Part of the signature stack: clean FSE theme + AJR Core + a thin site plugin.
 
 **Status: actively maintained** (powers the live site).
+
+### Moved to AJR Core in 1.7.0
+
+GA4 with consent gating and lead tracking, FAQ structured data, the business profile (now one
+`#business` entity inside The SEO Framework's graph), Disable Comments, the tooling (REST)
+application password, and the post breadcrumbs (now WordPress's own `core/breadcrumbs` block,
+styled by the theme). Configure those in **AJR Core** in wp-admin, not here.
 
 ## What's inside
 
@@ -13,16 +20,17 @@ Core functionality plugin for [ajrwebdesign.com](https://ajrwebdesign.com) — t
 | `responsive-image` | Art-directed image: separate desktop/mobile assets, lazy-loading + fetch-priority controls |
 | `case-study-card` | Full case-study showcase: score circles, Core Web Vitals metrics, impact tiles |
 | `case-study-mini-card` | Compact result card with count-up animation |
-| `breadcrumbs` | Language-aware Home › Blog › Category trail for posts |
+| `testimonials-slider` | Scroll-snap slider of testimonials, filterable by service tag |
 | `post-intro` | Styled lead paragraph sourced from post meta |
 | `post-callout` | Highlight box sourced from post meta |
 | `language-aware-nav` | Renders the navigation matching the visitor's Polylang language, resolved by slug convention (`{menuSlug}-{lang}`) — one header/footer part serves every language |
+| `language-switcher` | Links to the current page's translations |
 
 ### Modules
 
 - **CaseStudies** — `ajr_case_study` CPT + tag taxonomy, structured REST-exposed meta (metrics, impact), and a legacy-meta migration (`wp ajr-core migrate-case-meta` or one-click from the settings screen)
-- **Analytics** — consent-gated GA4 (Google Consent Mode v2 defaults to denied; Complianz drives consent updates)
-- **I18n** — Polylang string registration via the `ajrwebdesign-core-i18n` theme-support contract
+- **Testimonials** — testimonial CPT with a German translation panel, service tags and a source logo
+- **I18n** — Polylang string registration via the `ajrwebdesign-core-i18n` theme-support contract, and hreflang handling
 - **Compat** — `add_theme_support` contracts so the plugin degrades gracefully on any theme
 
 ## Development

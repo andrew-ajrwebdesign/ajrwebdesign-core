@@ -17,11 +17,11 @@ if ( ! $callout_post_id || 'post' !== get_post_type( $callout_post_id ) ) {
 	return;
 }
 
-$label = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_LABEL, true );
-$title = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TITLE, true );
-$text  = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TEXT, true );
+$label         = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_LABEL, true );
+$callout_title = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TITLE, true );
+$text          = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TEXT, true );
 
-if ( '' === $label && '' === $title && '' === $text ) {
+if ( '' === $label && '' === $callout_title && '' === $text ) {
 	return;
 }
 
@@ -31,8 +31,8 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'ajr-post-
 	<?php if ( '' !== $label ) : ?>
 		<p class="ajr-post-callout__label"><?php echo esc_html( $label ); ?></p>
 	<?php endif; ?>
-	<?php if ( '' !== $title ) : ?>
-		<p class="ajr-post-callout__title"><?php echo esc_html( $title ); ?></p>
+	<?php if ( '' !== $callout_title ) : ?>
+		<p class="ajr-post-callout__title"><?php echo esc_html( $callout_title ); ?></p>
 	<?php endif; ?>
 	<?php if ( '' !== $text ) : ?>
 		<p class="ajr-post-callout__text"><?php echo esc_html( $text ); ?></p>
