@@ -66,6 +66,8 @@ class Plugin {
 		);
 
 		$modules = array(
+			// Warns in wp-admin when AJR Core's Case studies or Testimonials module is off.
+			new Requirements(),
 			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),

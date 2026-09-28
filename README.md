@@ -25,7 +25,14 @@ Case studies: the post type and tag taxonomy (same `ajr_case_study` / `case_stud
 site's own layer on them — the Core Web Vitals metrics and impact fields, their metabox, the two
 case-study card blocks, the story intro and the case-study SEO tweaks. The settings page (its only
 setting enabled case studies) and the finished legacy-meta migration are gone; the 88 legacy
-`_ajr_case_study_*` rows it read from are still in the database, untouched.
+`_ajr_case_study_*` rows it read from are still in the database, untouched. So is the settings row it
+stored (`ajrwd_core_settings`, which also still holds the pre-1.7.0 GA4 settings); nothing reads
+it any more, and deleting it is a deliberate manual step.
+
+**Deploy order (1.9.0 needs it):** AJR Core 0.12.0 first, then switch its **Case studies** and
+**Testimonials** modules on (AJR Core → Modules), then this plugin. With either module off the
+posts vanish from the admin and their pages 404; wp-admin shows an error notice naming the module
+until it is on.
 
 ## What's inside
 
