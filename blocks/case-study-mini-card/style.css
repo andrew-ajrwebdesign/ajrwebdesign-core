@@ -12,7 +12,7 @@
 	background: var(--wp--preset--color--bg);
 	border: 1px solid var(--wp--preset--color--border);
 	border-radius: var(--wp--custom--radius--md, 12px);
-	box-shadow: var(--wp--preset--shadow--soft, 0 12px 30px -12px rgba(15, 23, 42, 0.18));
+	box-shadow: var(--wp--preset--shadow--soft);
 	display: grid;
 	gap: 22px 28px;
 	grid-template-areas: "content result" "tags tags";
@@ -242,7 +242,7 @@
 .ajr-case-study-mini-card--linked{position:relative;transition:box-shadow .18s ease,transform .18s ease}
 .ajr-case-study-mini-card__title-link{color:inherit;text-decoration:none}
 .ajr-case-study-mini-card__title-link::after{content:"";inset:0;position:absolute;z-index:1}
-.ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{box-shadow:0 22px 44px -14px rgba(15,23,42,.28);transform:translateY(-3px)}
+.ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{box-shadow:0 22px 44px -14px color-mix(in srgb, var(--wp--preset--color--ink) 28%, transparent);transform:translateY(-3px)}
 .ajr-case-study-mini-card--linked:focus-within{outline:2px solid var(--wp--preset--color--primary);outline-offset:2px}
 .ajr-case-study-mini-card--linked .ajr-case-study-mini-card__title-link:focus-visible{outline:none}
 

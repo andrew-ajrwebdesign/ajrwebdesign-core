@@ -50,7 +50,7 @@
 	border: 1px solid var(--wp--preset--color--border);
 	border-top: 3px solid var(--wp--preset--color--primary);
 	border-radius: 0.5rem;
-	box-shadow: var(--wp--custom--shadow--dropdown, 0 14px 34px -14px rgba(15, 23, 42, 0.28));
+	box-shadow: var(--wp--custom--shadow--dropdown);
 	padding: 0.4rem;
 	z-index: 60;
 }
