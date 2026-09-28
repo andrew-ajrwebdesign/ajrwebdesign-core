@@ -7,12 +7,11 @@
 
 namespace AJR\SiteCore\Core;
 
-use AJR\SiteCore\Admin\Settings;
 use AJR\SiteCore\Blocks\BlockVersion;
 use AJR\SiteCore\Blocks\Registrar;
 use AJR\SiteCore\CaseStudies\Meta;
-use AJR\SiteCore\CaseStudies\Migration;
-use AJR\SiteCore\CaseStudies\PostType;
+use AJR\SiteCore\CaseStudies\Metabox;
+use AJR\SiteCore\CaseStudies\StoryIntro;
 use AJR\SiteCore\Compat\ThemeSupport;
 use AJR\SiteCore\I18n\Hreflang;
 use AJR\SiteCore\I18n\Strings;
@@ -26,6 +25,10 @@ defined( 'ABSPATH' ) || exit;
  * Central bootstrap. Instantiates each feature module and calls its
  * register() method. Hooks are never added in constructors so modules
  * stay testable in isolation.
+ *
+ * Since 1.9.0 the plugin has no settings page and no activation routine: its last setting
+ * ("enable case studies") became AJR Core's Case studies module, and AJR Core registers the
+ * post types and owns their rewrite rules.
  */
 class Plugin {
 
@@ -35,13 +38,6 @@ class Plugin {
 	 * @var Plugin|null
 	 */
 	private static ?Plugin $instance = null;
-
-	/**
-	 * Plugin settings, loaded once and injected into modules.
-	 *
-	 * @var Settings
-	 */
-	private Settings $settings;
 
 	/**
 	 * Returns the shared instance.
@@ -69,10 +65,9 @@ class Plugin {
 			}
 		);
 
-		$this->settings = new Settings();
-		$this->settings->register();
-
 		$modules = array(
+			// Warns in wp-admin when AJR Core's Case studies or Testimonials module is off.
+			new Requirements(),
 			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),
@@ -81,35 +76,16 @@ class Plugin {
 			new Hreflang(),
 			new PostsMeta(),
 			new TestimonialsGerman(),
+			// This site's layer on AJR Core's case-study type: Core Web Vitals fields, their
+			// metabox, the case-study SEO tweaks and the story intro.
+			new Meta(),
+			new Metabox(),
+			new CaseStudiesSeo(),
+			new StoryIntro(),
 		);
-
-		if ( $this->settings->is_enabled( 'case_studies_cpt' ) ) {
-			$modules[] = new PostType();
-			$modules[] = new Meta();
-			$modules[] = new \AJR\SiteCore\CaseStudies\Metabox();
-			$modules[] = new Migration();
-			$modules[] = new CaseStudiesSeo();
-			$modules[] = new \AJR\SiteCore\CaseStudies\StoryIntro();
-		}
 
 		foreach ( $modules as $module ) {
 			$module->register();
 		}
-	}
-
-	/**
-	 * Activation routine: seed defaults, register the CPT once, flush rewrites.
-	 */
-	public static function activate(): void {
-		if ( false === get_option( Settings::OPTION ) ) {
-			add_option( Settings::OPTION, Settings::defaults() );
-		}
-
-		// Register the CPT so its rewrite rules exist before flushing.
-		$settings = new Settings();
-		if ( $settings->is_enabled( 'case_studies_cpt' ) ) {
-			( new PostType() )->register_post_type();
-		}
-		flush_rewrite_rules();
 	}
 }

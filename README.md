@@ -18,6 +18,22 @@ Testimonials: the post type (same `ajr_testimonial` key), its rating and source-
 `ajr/testimonials`). This plugin keeps only the German quote and role, swapped in on German
 pages through AJR Core's `ajr_core_testimonial_text` filter.
 
+### Moved to AJR Core in 1.9.0
+
+Case studies: the post type and tag taxonomy (same `ajr_case_study` / `case_study_tag` keys, same
+`/case-studies/` URLs) are registered by AJR Core's Case studies module. This plugin keeps this
+site's own layer on them — the Core Web Vitals metrics and impact fields, their metabox, the two
+case-study card blocks, the story intro and the case-study SEO tweaks. The settings page (its only
+setting enabled case studies) and the finished legacy-meta migration are gone; the 88 legacy
+`_ajr_case_study_*` rows it read from are still in the database, untouched. So is the settings row it
+stored (`ajrwd_core_settings`, which also still holds the pre-1.7.0 GA4 settings); nothing reads
+it any more, and deleting it is a deliberate manual step.
+
+**Deploy order (1.9.0 needs it):** AJR Core 0.12.0 first, then switch its **Case studies** and
+**Testimonials** modules on (AJR Core → Modules), then this plugin. With either module off the
+posts vanish from the admin and their pages 404; wp-admin shows an error notice naming the module
+until it is on.
+
 ## What's inside
 
 ### Blocks (all dynamic, `block.json` + `render.php` + editor controls)
@@ -34,7 +50,7 @@ pages through AJR Core's `ajr_core_testimonial_text` filter.
 
 ### Modules
 
-- **CaseStudies** — `ajr_case_study` CPT + tag taxonomy, structured REST-exposed meta (metrics, impact), and a legacy-meta migration (`wp ajr-core migrate-case-meta` or one-click from the settings screen)
+- **CaseStudies** — this site's layer on AJR Core's case-study type: structured REST-exposed Core Web Vitals meta (metrics, impact) and its metabox, the story intro, and the case-study SEO tweaks
 - **Testimonials (German)** — the German quote and role fields and their editor panel; the testimonials themselves are AJR Core's
 - **I18n** — Polylang string registration via the `ajrwebdesign-core-i18n` theme-support contract, and hreflang handling
 - **Compat** — `add_theme_support` contracts so the plugin degrades gracefully on any theme

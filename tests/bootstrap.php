@@ -101,4 +101,20 @@ function apply_filters( $hook_name, $value, ...$args ) {
 	$cb = $GLOBALS['ajrwd_test_filters'][ $hook_name ] ?? null;
 	return $cb ? $cb( $value, ...$args ) : $value;
 }
+
+// Requirements: registered post types and the current user's capability.
+$GLOBALS['ajrwd_test_post_types'] = array();
+$GLOBALS['ajrwd_test_can']        = false;
+
+function __( $text, $domain = 'default' ) {
+	return $text;
+}
+
+function post_type_exists( $post_type ) {
+	return in_array( $post_type, $GLOBALS['ajrwd_test_post_types'], true );
+}
+
+function current_user_can( $capability ) {
+	return ! empty( $GLOBALS['ajrwd_test_can'] );
+}
 // phpcs:enable
