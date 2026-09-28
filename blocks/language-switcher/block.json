@@ -2,7 +2,6 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "ajrwebdesign-core/language-switcher",
-	"version": "1.0.0",
 	"title": "Language Switcher",
 	"category": "theme",
 	"icon": "translation",

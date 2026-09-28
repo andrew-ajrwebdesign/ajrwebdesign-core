@@ -13,7 +13,7 @@
 	cursor: pointer;
 	font-weight: 600;
 	font-size: 0.92rem;
-	color: var(--wp--preset--color--ink, #0f172a);
+	color: var(--wp--preset--color--ink);
 	padding: 0.45rem 0.6rem;
 	border-radius: 0.4rem;
 }
@@ -23,8 +23,8 @@
 }
 
 .ajr-lang-switch summary:hover {
-	color: var(--wp--preset--color--primary, #0f766e);
-	background-color: var(--wp--preset--color--surface, #f8fafc);
+	color: var(--wp--preset--color--primary);
+	background-color: var(--wp--preset--color--surface);
 }
 
 .ajr-lang-switch__chev {
@@ -46,9 +46,9 @@
 	right: 0;
 	top: calc(100% + 0.5rem);
 	min-width: 10rem;
-	background-color: var(--wp--preset--color--bg, #fff);
-	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
-	border-top: 3px solid var(--wp--preset--color--primary, #0f766e);
+	background-color: var(--wp--preset--color--bg);
+	border: 1px solid var(--wp--preset--color--border);
+	border-top: 3px solid var(--wp--preset--color--primary);
 	border-radius: 0.5rem;
 	box-shadow: var(--wp--custom--shadow--dropdown, 0 14px 34px -14px rgba(15, 23, 42, 0.28));
 	padding: 0.4rem;
@@ -61,13 +61,13 @@
 	gap: 0.55rem;
 	padding: 0.5rem 0.75rem;
 	border-radius: 0.35rem;
-	color: var(--wp--preset--color--ink, #0f172a);
+	color: var(--wp--preset--color--ink);
 	text-decoration: none;
 	font-weight: 600;
 	font-size: 0.92rem;
 }
 
 .ajr-lang-switch__list a:hover {
-	background-color: var(--wp--preset--color--surface, #f8fafc);
-	color: var(--wp--preset--color--primary, #0f766e);
+	background-color: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--primary);
 }

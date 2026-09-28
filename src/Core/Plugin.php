@@ -8,6 +8,7 @@
 namespace AJR\SiteCore\Core;
 
 use AJR\SiteCore\Admin\Settings;
+use AJR\SiteCore\Blocks\BlockVersion;
 use AJR\SiteCore\Blocks\Registrar;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\Migration;
@@ -72,6 +73,7 @@ class Plugin {
 		$this->settings->register();
 
 		$modules = array(
+			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),
 			new ThemeSupport(),

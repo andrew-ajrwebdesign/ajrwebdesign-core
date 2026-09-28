@@ -51,4 +51,8 @@ if ( ! $nav_post ) {
 
 $nav_attrs['ref'] = $nav_post->ID;
 
-echo do_blocks( '<!-- wp:navigation ' . wp_json_encode( $nav_attrs ) . ' /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+/*
+ * serialize_block_attributes(), not wp_json_encode(): it escapes --, <, > and &
+ * so an attribute value containing "-->" cannot close the block comment early.
+ */
+echo do_blocks( '<!-- wp:navigation ' . serialize_block_attributes( $nav_attrs ) . ' /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

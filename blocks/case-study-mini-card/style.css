@@ -9,8 +9,8 @@
 
 .ajr-case-study-mini-card {
 	align-items: stretch;
-	background: var(--wp--preset--color--bg, #fff);
-	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
+	background: var(--wp--preset--color--bg);
+	border: 1px solid var(--wp--preset--color--border);
 	border-radius: var(--wp--custom--radius--md, 12px);
 	box-shadow: var(--wp--preset--shadow--soft, 0 12px 30px -12px rgba(15, 23, 42, 0.18));
 	display: grid;
@@ -38,7 +38,7 @@
 }
 
 .ajr-case-study-mini-card__title {
-	color: var(--wp--preset--color--ink, #0f172a);
+	color: var(--wp--preset--color--ink);
 	font-family: var(--wp--preset--font-family--lora);
 	font-size: clamp(22px, 2vw, 28px);
 	font-weight: 500;
@@ -47,7 +47,7 @@
 }
 
 .ajr-case-study-mini-card__summary {
-	color: var(--wp--preset--color--muted, #64748b);
+	color: var(--wp--preset--color--muted);
 	font-size: 14px;
 	line-height: 1.65;
 	margin: 0;
@@ -66,10 +66,10 @@
 
 .ajr-case-study-mini-card__tag {
 	align-items: center;
-	background: var(--wp--preset--color--accent-tint, #e9f4ec);
+	background: var(--wp--preset--color--accent-tint);
 	border: 0;
 	border-radius: 999px;
-	color: var(--wp--preset--color--accent-dark, #06634c);
+	color: var(--wp--preset--color--accent-dark);
 	display: inline-flex;
 	font-size: 12px;
 	font-weight: 600;
@@ -79,7 +79,7 @@
 }
 
 .ajr-case-study-mini-card__tag-icon {
-	color: var(--wp--preset--color--accent-dark, #06634c);
+	color: var(--wp--preset--color--accent-dark);
 	display: inline-grid;
 	flex: 0 0 16px;
 	height: 16px;
@@ -107,8 +107,8 @@
 }
 
 .ajr-case-study-mini-card__result-inner {
-	background: var(--wp--preset--color--surface, #f8fafc);
-	border: 1px solid var(--wp--preset--color--border, #e2e8f0);
+	background: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
 	border-radius: var(--wp--custom--radius--md, 12px);
 	display: flex;
 	flex-direction: column;
@@ -119,7 +119,7 @@
 }
 
 .ajr-case-study-mini-card__result-label {
-	color: var(--wp--preset--color--accent-dark, #06634c);
+	color: var(--wp--preset--color--accent-dark);
 	font-size: 11px;
 	font-weight: 800;
 	letter-spacing: 0.08em;
@@ -130,7 +130,7 @@
 
 .ajr-case-study-mini-card__score {
 	align-items: center;
-	color: var(--wp--preset--color--ink, #0f172a);
+	color: var(--wp--preset--color--ink);
 	display: inline-flex;
 	font-size: 30px;
 	font-weight: 800;
@@ -144,16 +144,16 @@
 }
 
 .ajr-case-study-mini-card__score-before {
-	color: var(--wp--preset--color--score-red-text, #cc2b1f);
+	color: var(--wp--preset--color--score-red-text);
 }
 
 .ajr-case-study-mini-card__improvement-number,
 .ajr-case-study-mini-card__score-after {
-	color: var(--wp--preset--color--score-green-text, #07783f);
+	color: var(--wp--preset--color--score-green-text);
 }
 
 .ajr-case-study-mini-card__score-arrow {
-	color: var(--wp--preset--color--muted, #64748b);
+	color: var(--wp--preset--color--muted);
 	display: inline-grid;
 	height: 22px;
 	place-items: center;
@@ -171,7 +171,7 @@
 }
 
 .ajr-case-study-mini-card__improvement-value {
-	color: var(--wp--preset--color--score-green-text, #07783f);
+	color: var(--wp--preset--color--score-green-text);
 	font-size: 30px;
 	font-weight: 800;
 	line-height: 1;
@@ -179,14 +179,14 @@
 
 /* Editor preview chrome */
 .ajr-case-study-mini-card-editor__preview {
-	background: var(--wp--preset--color--bg, #fff);
-	border: 1px dashed var(--wp--preset--color--muted-light, #b8c6d6);
+	background: var(--wp--preset--color--bg);
+	border: 1px dashed var(--wp--preset--color--muted-light);
 	border-radius: 12px;
 	padding: 24px;
 }
 
 .ajr-case-study-mini-card-editor__eyebrow {
-	color: var(--wp--preset--color--accent-dark, #06634c);
+	color: var(--wp--preset--color--accent-dark);
 	font-size: 12px;
 	font-weight: 800;
 	letter-spacing: 0.08em;
@@ -243,7 +243,7 @@
 .ajr-case-study-mini-card__title-link{color:inherit;text-decoration:none}
 .ajr-case-study-mini-card__title-link::after{content:"";inset:0;position:absolute;z-index:1}
 .ajr-case-study-mini-card--linked:hover,.ajr-case-study-mini-card--linked:focus-within{box-shadow:0 22px 44px -14px rgba(15,23,42,.28);transform:translateY(-3px)}
-.ajr-case-study-mini-card--linked:focus-within{outline:2px solid var(--wp--preset--color--primary,#0f766e);outline-offset:2px}
+.ajr-case-study-mini-card--linked:focus-within{outline:2px solid var(--wp--preset--color--primary);outline-offset:2px}
 .ajr-case-study-mini-card--linked .ajr-case-study-mini-card__title-link:focus-visible{outline:none}
 
 /* Standing rule: motion always has a reduced-motion fallback. */
@@ -257,11 +257,11 @@
    2px accent-dark outline; hover fills accent-dark with white text, arrow
    slides 4px; full-width on mobile. A span, not a second anchor - the
    whole card is the link. --- */
-.ajr-case-study-mini-card__read{align-items:center;background:transparent;border:2px solid var(--wp--preset--color--accent-dark,#06634c);border-radius:var(--wp--custom--radius--md,12px);color:var(--wp--preset--color--accent-dark,#06634c);display:inline-flex;font-size:var(--wp--preset--font-size--sm,.875rem);font-weight:600;gap:8px;justify-content:center;margin-top:18px;padding:.5rem 1.15rem;transition:background-color .18s ease,color .18s ease;width:fit-content}
+.ajr-case-study-mini-card__read{align-items:center;background:transparent;border:2px solid var(--wp--preset--color--accent-dark);border-radius:var(--wp--custom--radius--md,12px);color:var(--wp--preset--color--accent-dark);display:inline-flex;font-size:var(--wp--preset--font-size--sm,.875rem);font-weight:600;gap:8px;justify-content:center;margin-top:18px;padding:.5rem 1.15rem;transition:background-color .18s ease,color .18s ease;width:fit-content}
 .ajr-case-study-mini-card__read svg{display:block;height:16px;transition:transform .18s ease;width:16px}
-.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read{background-color:var(--wp--preset--color--accent-dark,#06634c);color:var(--wp--preset--color--bg,#fff)}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read{background-color:var(--wp--preset--color--accent-dark);color:var(--wp--preset--color--bg)}
 .ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__read svg,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__read svg{transform:translateX(4px)}
-.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__title-link,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__title-link{color:var(--wp--preset--color--accent-dark,#06634c)}
+.ajr-case-study-mini-card--linked:hover .ajr-case-study-mini-card__title-link,.ajr-case-study-mini-card--linked:focus-within .ajr-case-study-mini-card__title-link{color:var(--wp--preset--color--accent-dark)}
 @media (max-width:781px){
 .ajr-case-study-mini-card__read{width:100%}
 }

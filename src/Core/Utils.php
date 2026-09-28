@@ -39,17 +39,4 @@ class Utils {
 		}
 		return '';
 	}
-
-	/**
-	 * Language-aware home URL (falls back to home_url()).
-	 */
-	public static function home_url(): string {
-		if ( function_exists( 'pll_home_url' ) ) {
-			$url = pll_home_url();
-			if ( is_string( $url ) && '' !== $url ) {
-				return $url;
-			}
-		}
-		return home_url( '/' );
-	}
 }
