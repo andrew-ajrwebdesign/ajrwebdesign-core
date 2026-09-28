@@ -22,12 +22,25 @@ defined( 'ABSPATH' ) || exit;
  */
 class German {
 
+	/**
+	 * AJR Core's testimonial post type. Repeated here rather than read from Core so this plugin
+	 * never fatals if Core is briefly missing (Requires Plugins stops activation, not a deletion).
+	 */
 	public const POST_TYPE = 'ajr_testimonial';
-	public const QUOTE_DE  = 'ajrwd_t_quote_de';
-	public const ROLE_DE   = 'ajrwd_t_role_de';
 
 	/**
-	 * Hooks.
+	 * The German quote. Kept under its original folio key: this data never moved.
+	 */
+	public const QUOTE_DE = 'ajrwd_t_quote_de';
+
+	/**
+	 * The German role line ("Inhaber, Acme"). Same reason for the key.
+	 */
+	public const ROLE_DE = 'ajrwd_t_role_de';
+
+	/**
+	 * Register the German fields on init, and the German text swap on AJR Core's filter.
+	 * Hooked here rather than in a constructor, so the class can be tested on its own.
 	 */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_meta' ) );

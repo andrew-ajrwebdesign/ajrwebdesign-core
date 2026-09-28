@@ -5,7 +5,8 @@
 			"match": "assets/admin/case-studies.css",
 			"why": "wp-admin only: the case-study metabox's own screen chrome (#dcdcde, #fff match WordPress admin's greys) and its before/after score labels (#ff4a1c, #39a935). The theme's palette variables are not a dependable input on that admin screen, and the two label colours have no palette equivalent — mapping them would change how the admin looks for no visitor-facing gain. Every front-end stylesheet in this plugin is tokens only (e150741 + the rgba shadows, 2026-09-28).",
 			"on": "2026-09-28",
-			"expiresAtVersion": "1.7.0"
+			"expiresAtVersion": "1.8.0",
+			"review": "Renewed at 1.8.0 (2026-09-28): assets/admin/case-studies.css unchanged in this release; every front-end stylesheet remains tokens only."
 		}
 	]
 }
