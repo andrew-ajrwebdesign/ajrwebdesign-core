@@ -29,6 +29,14 @@ class StoryIntro {
 	public const MARKER = 'cs-story-intro';
 
 	/**
+	 * Eyebrows of jobs that are shown the way a site build is (screenshots and a
+	 * scorecard) but were not a build, so keep their own line in intro_for().
+	 *
+	 * @var string[]
+	 */
+	protected const SHOWN_AS_BUILD = array( 'SITE CARE' );
+
+	/**
 	 * Hooks the paragraph render filter.
 	 */
 	public function register(): void {
@@ -49,9 +57,27 @@ class StoryIntro {
 			'MEMBERSHIP' => __( 'Members log in every day — but Google and every prospect only ever see the logged-out site.', 'ajrwebdesign-core' ),
 			'PUBLISHING' => __( 'A publisher’s articles carry the traffic — and everything the business bolts onto them.', 'ajrwebdesign-core' ),
 			'SITE BUILD' => __( 'A new site has one job: turn a search into an enquiry.', 'ajrwebdesign-core' ),
+			'SITE CARE'  => __( 'Most slow sites do not need a rebuild. They need the right fixes, and someone keeping watch afterwards.', 'ajrwebdesign-core' ),
 		);
 
 		return $map[ $eyebrow ] ?? null;
+	}
+
+	/**
+	 * Which of intro_for()'s lines a case study gets.
+	 *
+	 * A site build is known by its kind and gets the build's line, whatever its
+	 * eyebrow says, unless the eyebrow is one of SHOWN_AS_BUILD. The eyebrow is a
+	 * typed field, so it is compared in capitals and without stray spaces: a
+	 * "Site care " typed by hand must not fall through to "A new site has one job".
+	 *
+	 * @param string $kind    The case study's kind (Meta::KIND).
+	 * @param string $eyebrow The case study's eyebrow (Meta::EYEBROW).
+	 */
+	public static function eyebrow_for( string $kind, string $eyebrow ): string {
+		$eyebrow = strtoupper( trim( $eyebrow ) );
+
+		return Meta::KIND_BUILD === $kind && ! in_array( $eyebrow, self::SHOWN_AS_BUILD, true ) ? 'SITE BUILD' : $eyebrow;
 	}
 
 	/**
@@ -76,11 +102,10 @@ class StoryIntro {
 
 		// A site build is known by its KIND, not by what its eyebrow happens to say:
 		// "Site build", "WEBSITE" or a client's sector must all get the build's line.
+		// The one exception is a job shown as a build that was not one (SHOWN_AS_BUILD):
+		// "A new site has one job" would be untrue on a site somebody else built.
 		$post_id = (int) get_queried_object_id();
-		$eyebrow = Meta::KIND_BUILD === get_post_meta( $post_id, Meta::KIND, true )
-			? 'SITE BUILD'
-			: (string) get_post_meta( $post_id, Meta::EYEBROW, true );
-		$intro   = self::intro_for( $eyebrow );
+		$intro   = self::intro_for( self::eyebrow_for( (string) get_post_meta( $post_id, Meta::KIND, true ), (string) get_post_meta( $post_id, Meta::EYEBROW, true ) ) );
 		if ( null === $intro ) {
 			return $block_content;
 		}

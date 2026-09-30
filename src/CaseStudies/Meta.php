@@ -41,7 +41,10 @@ class Meta {
 	/**
 	 * The site-build fields, one object: live URL, results intro, PageSpeed
 	 * scores, comparison rows, headline facts and the source line; and, since
-	 * 1.11.0, the "what changed" rows and the "what was delivered" list.
+	 * 1.11.0, the "what changed" rows and the "what was delivered" list. Since
+	 * 1.14.0 also a results heading and a line under the scores, both optional:
+	 * a speed or care job is shown the same way but was not a build, and is
+	 * measured against where it started (see Blocks\Build).
 	 */
 	public const BUILD = 'ajrwd_cs_build';
 
@@ -284,6 +287,10 @@ class Meta {
 		return array(
 			'url'             => '',
 			'intro'           => '',
+			// Optional wording for a job that was not a build (1.14.0).
+			'results_title'   => '',
+			'scores_note'     => '',
+			'scores_note_de'  => '',
 			'scores'          => array(
 				'mobile'  => $device,
 				'desktop' => $device,
@@ -337,7 +344,7 @@ class Meta {
 		if ( isset( $value['url'] ) && is_scalar( $value['url'] ) ) {
 			$clean['url'] = esc_url_raw( trim( (string) $value['url'] ), array( 'http', 'https' ) );
 		}
-		foreach ( array( 'compare_title', 'source', 'changes_title' ) as $key ) {
+		foreach ( array( 'compare_title', 'source', 'changes_title', 'results_title', 'scores_note', 'scores_note_de' ) as $key ) {
 			$clean[ $key ] = self::row_text( $value[ $key ] ?? '' );
 		}
 		foreach ( array( 'intro', 'changes_intro', 'delivered_intro' ) as $key ) {

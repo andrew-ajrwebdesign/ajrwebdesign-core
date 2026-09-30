@@ -98,6 +98,29 @@ scored" (`ajrwd_cs_build[agentic]`).
 ⛔ Enter what PageSpeed Insights reports for the live site on the day (request the
 `AGENTIC_BROWSING` category). Leave both fields empty when it was not measured.
 
+### A speed or care job, shown as a build (1.14.0)
+
+A job on a site somebody else built (speed work, ongoing care) can use the "Site build" kind, so
+it gets the same page: screenshots, a scorecard, "What changed", "What was delivered". Three
+things keep it honest:
+
+- **Results heading** (`ajrwd_cs_build[results_title]`): its own heading in place of "The build
+  at a glance".
+- **Line under the scores** (`scores_note`, `scores_note_de`): what the scores are, in place of
+  "Google PageSpeed · mobile" on the card and in the hero chip (for example an average of several
+  pages, and what it was before).
+- **Comparison heading**: "Against where it started", with each bar the figure now as a
+  percentage of the figure before.
+
+Enter only the scores the work changed: a ring is printed only for a score that was entered.
+With the type line `SITE CARE` the story's opening line is the care one, not the new-site one
+(`CaseStudies\StoryIntro`). The screenshot strip is labelled "Screenshots of the site" for every
+case study (it said "the finished site").
+
+Also in 1.14.0: the Post Intro and Post Callout blocks print nothing for a post the visitor may
+not see (password, draft, private), and a password-protected post's intro and callout fields are
+left out of its REST response, as a case study's already were.
+
 ## What's inside
 
 ### Blocks (all dynamic, `block.json` + `render.php` + editor controls)

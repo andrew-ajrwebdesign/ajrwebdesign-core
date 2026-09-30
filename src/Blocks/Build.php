@@ -43,6 +43,14 @@ defined( 'ABSPATH' ) || exit;
  *   - delivered() "What was delivered": a checklist
  *   - related()   "More case studies": the next site build, or two audits
  *
+ * NOT ONLY NEW SITES (1.14.0). A speed or care job on a site somebody else
+ * built is shown the same way: screenshots, the scores it reaches now, and
+ * comparison rows against where it started. Three fields keep its wording
+ * honest: a results heading of its own (not "The build at a glance"), a line
+ * under the scores that says what they are, and the comparison heading that was
+ * already there. Leave the categories the work did not touch empty: a ring is
+ * printed only for a score that was entered.
+ *
  * No JavaScript: the screenshot strip is CSS scroll-snap, the rings are a
  * conic-gradient driven by one custom property.
  */
@@ -164,6 +172,26 @@ class Build {
 		}
 
 		return $html . '</div>';
+	}
+
+	/**
+	 * The line that names the scores on the card and in the hero chip: the case
+	 * study's own when it has one, else "Google PageSpeed · mobile".
+	 *
+	 * A speed or care job's score is an average of several pages, set against
+	 * where the site started; its line says so. The German form is its own field,
+	 * because the card is also printed on the German list.
+	 *
+	 * @param array<string,mixed> $build From data().
+	 */
+	public static function scores_note( array $build ): string {
+		$note = (string) ( $build['scores_note'] ?? '' );
+		if ( '' === $note ) {
+			return Cards::ui_label( 'Google PageSpeed · mobile' );
+		}
+		$german = (string) ( $build['scores_note_de'] ?? '' );
+
+		return Cards::is_de() && '' !== $german ? $german : $note;
 	}
 
 	/**
@@ -438,7 +466,7 @@ class Build {
 
 				<?php if ( self::has_scores( $build['scores']['mobile'] ) ) : ?>
 					<div class="ajr-cs-build-chip">
-						<div class="ajr-cs-hero__label"><?php echo esc_html( Cards::ui_label( 'Google PageSpeed · mobile' ) ); ?></div>
+						<div class="ajr-cs-hero__label"><?php echo esc_html( self::scores_note( $build ) ); ?></div>
 						<?php echo self::rings( $build['scores']['mobile'], 'sm', false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php echo self::agentic( $build, 'chip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
@@ -580,7 +608,7 @@ class Build {
 		$html .= '</div>';
 
 		// role="list": list-style:none drops the list semantics in Safari/VoiceOver otherwise.
-		return $html . '<div class="ajr-cs-strip" role="region" tabindex="0" aria-label="' . esc_attr( Cards::ui_label( 'Screenshots of the finished site' ) ) . '"><ul class="ajr-cs-strip__list" role="list">' . $items . '</ul></div>';
+		return $html . '<div class="ajr-cs-strip" role="region" tabindex="0" aria-label="' . esc_attr( Cards::ui_label( 'Screenshots of the site' ) ) . '"><ul class="ajr-cs-strip__list" role="list">' . $items . '</ul></div>';
 	}
 
 	/**
@@ -627,7 +655,7 @@ class Build {
 
 					<?php if ( self::has_scores( $build['scores']['mobile'] ) ) : ?>
 						<?php echo self::rings( $build['scores']['mobile'], 'md' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						<p class="ajr-cs-build-card__note"><?php echo esc_html( Cards::ui_label( 'Google PageSpeed · mobile' ) ); ?></p>
+						<p class="ajr-cs-build-card__note"><?php echo esc_html( self::scores_note( $build ) ); ?></p>
 					<?php endif; ?>
 
 					<?php echo self::agentic( $build, 'badge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

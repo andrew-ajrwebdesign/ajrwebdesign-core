@@ -94,7 +94,8 @@ class BuildCopy {
 	}
 
 	/**
-	 * The heading: "The build at a glance".
+	 * The heading: the case study's own results heading when it has one (a speed
+	 * or care job was not a build), else "The build at a glance".
 	 *
 	 * @param string $block_content Rendered heading HTML.
 	 * @param array  $block         Parsed block.
@@ -102,11 +103,18 @@ class BuildCopy {
 	public function swap_title( $block_content, $block ): string {
 		$block_content = (string) $block_content;
 
-		if ( ! str_contains( (string) ( $block['attrs']['className'] ?? '' ), self::TITLE_MARKER ) || ! $this->build_id() ) {
+		if ( ! str_contains( (string) ( $block['attrs']['className'] ?? '' ), self::TITLE_MARKER ) ) {
 			return $block_content;
 		}
 
-		return self::replace_text( $block_content, self::TAG_HEADING, __( 'The build at a glance', 'ajrwebdesign-core' ) );
+		$post_id = $this->build_id();
+		if ( ! $post_id ) {
+			return $block_content;
+		}
+
+		$title = Build::data( $post_id )['results_title'];
+
+		return self::replace_text( $block_content, self::TAG_HEADING, '' !== $title ? $title : __( 'The build at a glance', 'ajrwebdesign-core' ) );
 	}
 
 	/**

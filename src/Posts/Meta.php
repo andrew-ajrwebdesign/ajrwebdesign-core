@@ -26,6 +26,41 @@ class Meta {
 	 */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_meta' ) );
+		add_filter( 'rest_prepare_post', array( $this, 'hide_protected_meta' ), 10, 3 );
+	}
+
+	/**
+	 * A password-protected post's intro and callout stay behind its password in the REST API.
+	 *
+	 * The post-intro and post-callout blocks print nothing on a protected post (1.14.0), but
+	 * WordPress blanks only the content and excerpt in REST and returns registered meta without
+	 * asking for the password, so the same text was readable at /wp/v2/posts/<id> (security
+	 * review, 2026-09-30). The same guard as CaseStudies\Meta::hide_protected_meta(). Someone
+	 * who may edit the post still gets the fields, so the editor sidebar keeps working.
+	 *
+	 * @param mixed $response The REST response.
+	 * @param mixed $post     The post.
+	 * @param mixed $request  The REST request.
+	 * @return mixed
+	 */
+	public function hide_protected_meta( $response, $post, $request ) {
+		if ( ! $response instanceof \WP_REST_Response || ! $post instanceof \WP_Post ) {
+			return $response;
+		}
+		$context = $request instanceof \WP_REST_Request ? (string) $request->get_param( 'context' ) : 'view';
+		if ( ! post_password_required( $post ) || ( 'edit' === $context && current_user_can( 'edit_post', $post->ID ) ) ) {
+			return $response;
+		}
+
+		$data = $response->get_data();
+		if ( is_array( $data ) && isset( $data['meta'] ) && is_array( $data['meta'] ) ) {
+			foreach ( array( self::INTRO_TEXT, self::CALLOUT_LABEL, self::CALLOUT_TITLE, self::CALLOUT_TEXT ) as $key ) {
+				unset( $data['meta'][ $key ] );
+			}
+			$response->set_data( $data );
+		}
+
+		return $response;
 	}
 
 	/**

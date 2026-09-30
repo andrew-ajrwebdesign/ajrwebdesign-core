@@ -12,6 +12,7 @@ use AJR\SiteCore\Blocks\Cards;
 use AJR\SiteCore\CaseStudies\BuildCopy;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\OptionalBand;
+use AJR\SiteCore\CaseStudies\StoryIntro;
 use AJR\SiteCore\I18n\AttachmentAlt;
 use PHPUnit\Framework\TestCase;
 
@@ -319,6 +320,52 @@ class BuildTest extends TestCase {
 			'<p class="cs-results-intro">Costs $1 \\2 &lt;b&gt;</p>',
 			BuildCopy::replace_text( '<p class="cs-results-intro">Old</p>', BuildCopy::TAG_PARAGRAPH, 'Costs $1 \\2 <b>' )
 		);
+	}
+
+	public function test_a_care_job_words_its_own_heading_and_scores_line(): void {
+		$clean = Meta::sanitize_build(
+			array(
+				'results_title'  => ' The results at a glance <b>',
+				'scores_note'    => 'Mobile speed · was 32',
+				'scores_note_de' => 'Mobiles Tempo · vorher 32',
+			)
+		);
+
+		$this->assertSame( 'The results at a glance', $clean['results_title'] );
+		$this->assertSame( 'Mobile speed · was 32', Build::scores_note( $clean ) );
+
+		$GLOBALS['ajrwd_test_lang'] = 'de';
+		$this->assertSame( 'Mobiles Tempo · vorher 32', Build::scores_note( $clean ) );
+		// No German form entered: the line as written, not the PageSpeed default.
+		$clean['scores_note_de'] = '';
+		$this->assertSame( 'Mobile speed · was 32', Build::scores_note( $clean ) );
+	}
+
+	public function test_the_scores_line_is_pagespeed_mobile_unless_one_is_written(): void {
+		$this->assertSame( 'Google PageSpeed · mobile', Build::scores_note( Meta::empty_build() ) );
+		// A German line alone is not a line: the English one decides.
+		$this->assertSame( 'Google PageSpeed · mobile', Build::scores_note( array( 'scores_note_de' => 'Nur Deutsch' ) ) );
+
+		$GLOBALS['ajrwd_test_lang'] = 'de';
+		$this->assertSame( 'Google PageSpeed · Mobil', Build::scores_note( Meta::empty_build() ) );
+	}
+
+	public function test_a_care_job_has_its_own_opening_line(): void {
+		$care = StoryIntro::intro_for( 'SITE CARE' );
+
+		$this->assertIsString( $care );
+		$this->assertNotSame( StoryIntro::intro_for( 'SITE BUILD' ), $care );
+		$this->assertNull( StoryIntro::intro_for( 'A CLIENT’S SECTOR' ) );
+	}
+
+	public function test_a_build_gets_the_new_site_line_unless_it_is_a_care_job(): void {
+		$this->assertSame( 'SITE BUILD', StoryIntro::eyebrow_for( Meta::KIND_BUILD, 'SITE REBUILD' ) );
+		$this->assertSame( 'SITE BUILD', StoryIntro::eyebrow_for( Meta::KIND_BUILD, '' ) );
+		$this->assertSame( 'SITE CARE', StoryIntro::eyebrow_for( Meta::KIND_BUILD, 'SITE CARE' ) );
+		// Typed by hand: any case, stray spaces. It must not fall through to the new-site line.
+		$this->assertSame( 'SITE CARE', StoryIntro::eyebrow_for( Meta::KIND_BUILD, ' Site care ' ) );
+		// An audit keeps its own eyebrow.
+		$this->assertSame( 'ECOMMERCE', StoryIntro::eyebrow_for( Meta::KIND_AUDIT, 'Ecommerce' ) );
 	}
 
 	public function test_replace_text_refuses_any_other_tag_pattern(): void {

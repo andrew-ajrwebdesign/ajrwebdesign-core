@@ -17,6 +17,13 @@ if ( ! $intro_post_id || 'post' !== get_post_type( $intro_post_id ) ) {
 	return;
 }
 
+// A Query Loop hands this block password-protected posts too, and a draft's ID can reach it:
+// the fields are the post's content, so they follow the post's own visibility.
+// Cards::can_show(): no password to pass, and public, or readable by this visitor.
+if ( ! \AJR\SiteCore\Blocks\Cards::can_show( $intro_post_id ) ) {
+	return;
+}
+
 $intro = (string) get_post_meta( $intro_post_id, Meta::INTRO_TEXT, true );
 if ( '' === trim( $intro ) ) {
 	return;

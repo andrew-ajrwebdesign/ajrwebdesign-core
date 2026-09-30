@@ -74,7 +74,8 @@ class Cards {
 		'Broadband'                        => 'Breitband',
 		'Against a typical WordPress site' => 'Im Vergleich zu einer typischen WordPress-Website',
 		'A look around the site'           => 'Ein Blick auf die Website',
-		'Screenshots of the finished site' => 'Screenshots der fertigen Website',
+		// Not "the finished site": a care job's screenshots show a site somebody else built.
+		'Screenshots of the site'          => 'Screenshots der Website',
 		/* translators: %s: the live site's hostname. */
 		'Visit %s'                         => '%s besuchen',
 		'Start a project like this'        => 'Ein Projekt wie dieses starten',
@@ -315,6 +316,7 @@ class Cards {
 			'core-web-vitals'    => 'core-web-vitals',
 			'caching'            => 'page-size-reduced',
 			'site-build'         => 'device-desktop',
+			'site-care'          => 'device-desktop',
 			'local-seo'          => 'trend-up',
 		);
 		return $map[ $term_slug ] ?? 'core-web-vitals';

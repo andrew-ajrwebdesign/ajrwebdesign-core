@@ -101,10 +101,13 @@ class Metabox {
 		?>
 		<div class="ajr-case-study-meta-section">
 			<h3><?php esc_html_e( 'Site build', 'ajrwebdesign-core' ); ?></h3>
-			<p class="description"><?php esc_html_e( 'Shown when the kind above is “Site build”, in place of the before and after grids below. Empty fields and half-filled rows are left off the page.', 'ajrwebdesign-core' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Shown when the kind above is “Site build”, in place of the before and after grids below. Empty fields and half-filled rows are left off the page. A speed or care job can be shown this way too: fill in only the scores the work changed, and compare against where the site started.', 'ajrwebdesign-core' ); ?></p>
 			<?php
 			$this->field( 'ajrwd_cs_build[url]', __( 'Live site address', 'ajrwebdesign-core' ), $build['url'], 'https://example.com/' );
-			$this->field( 'ajrwd_cs_build[intro]', __( 'Results intro (one line under “The build at a glance”)', 'ajrwebdesign-core' ), $build['intro'], __( 'Google’s own test, run on the live home page a week after launch.', 'ajrwebdesign-core' ) );
+			$this->field( 'ajrwd_cs_build[results_title]', __( 'Results heading (empty: “The build at a glance”. For a speed or care job on a site you did not build, write its own, such as “The results at a glance”)', 'ajrwebdesign-core' ), $build['results_title'], __( 'The build at a glance', 'ajrwebdesign-core' ) );
+			$this->field( 'ajrwd_cs_build[intro]', __( 'Results intro (one line under the results heading)', 'ajrwebdesign-core' ), $build['intro'], __( 'Google’s own test, run on the live home page a week after launch.', 'ajrwebdesign-core' ) );
+			$this->field( 'ajrwd_cs_build[scores_note]', __( 'Line under the scores on the card and in the hero (empty: “Google PageSpeed · mobile”)', 'ajrwebdesign-core' ), $build['scores_note'], __( 'Google PageSpeed · mobile', 'ajrwebdesign-core' ) );
+			$this->field( 'ajrwd_cs_build[scores_note_de]', __( 'The same line in German (used only when the line above is filled in)', 'ajrwebdesign-core' ), $build['scores_note_de'], 'Google PageSpeed · Mobil' );
 			?>
 
 			<h4><?php esc_html_e( 'Google PageSpeed scores (0 to 100)', 'ajrwebdesign-core' ); ?></h4>

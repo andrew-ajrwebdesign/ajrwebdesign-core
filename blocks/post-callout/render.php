@@ -17,6 +17,13 @@ if ( ! $callout_post_id || 'post' !== get_post_type( $callout_post_id ) ) {
 	return;
 }
 
+// A Query Loop hands this block password-protected posts too, and a draft's ID can reach it:
+// the fields are the post's content, so they follow the post's own visibility.
+// Cards::can_show(): no password to pass, and public, or readable by this visitor.
+if ( ! \AJR\SiteCore\Blocks\Cards::can_show( $callout_post_id ) ) {
+	return;
+}
+
 $label         = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_LABEL, true );
 $callout_title = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TITLE, true );
 $text          = (string) get_post_meta( $callout_post_id, Meta::CALLOUT_TEXT, true );
