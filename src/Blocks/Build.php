@@ -35,10 +35,30 @@ defined( 'ABSPATH' ) || exit;
  *   - results()   the single's results band: scorecard, facts, screenshot strip
  *   - card()      everywhere else: one whole-box-clickable card
  *
+ * And three more since 1.11.0, each the inside of one band of the single, asked
+ * for by the block's variant (band()). A band with nothing to show prints
+ * nothing, and CaseStudies\OptionalBand then drops the band around it:
+ *   - changes()   "What changed": up to three improvements, each a figure with an
+ *                 optional before/after bar pair and a note
+ *   - delivered() "What was delivered": a checklist
+ *   - related()   "More case studies": the next site build, or two audits
+ *
  * No JavaScript: the screenshot strip is CSS scroll-snap, the rings are a
  * conic-gradient driven by one custom property.
  */
 class Build {
+
+	/**
+	 * The block variants that print the inside of one optional band of the single.
+	 *
+	 * @var string[]
+	 */
+	public const BAND_VARIANTS = array( 'changes', 'delivered', 'related' );
+
+	/**
+	 * Object-cache key (group `ajrwd_core`) for the newest case studies' IDs.
+	 */
+	protected const RECENT_CACHE_KEY = 'ajrwd_cs_recent';
 
 	/**
 	 * Ring labels that are one word too long for a ring's column on a phone,
@@ -233,8 +253,9 @@ class Build {
 	 * @param array{all:int[],desktop:int[],phone:int[]} $gallery  From gallery().
 	 * @param string                                     $sizes    The browser image's sizes attribute for this layout.
 	 * @param bool                                       $priority True when this is the page's largest image (the single's hero).
+	 * @param bool                                       $lazy     True when the pair is known to sit far down the page (the "more case studies" band).
 	 */
-	public static function devices( array $gallery, string $sizes, bool $priority = false ): string {
+	public static function devices( array $gallery, string $sizes, bool $priority = false, bool $lazy = false ): string {
 		$desktop = $gallery['desktop'][0] ?? 0;
 		if ( ! $desktop ) {
 			return '';
@@ -246,6 +267,11 @@ class Build {
 			// single's largest paint. Everywhere else core decides.
 			$attrs['loading']       = 'eager';
 			$attrs['fetchpriority'] = 'high';
+		} elseif ( $lazy ) {
+			// Core gives the first large image it meets fetchpriority="high". On an
+			// audit's page that was this one, in the second-to-last band: the browser
+			// fetched a below-the-fold screenshot ahead of everything else.
+			$attrs['loading'] = 'lazy';
 		}
 
 		$html = '<div class="ajr-cs-devices">' . self::frame( $desktop, 'ajr-hero-md', $attrs );
@@ -255,7 +281,11 @@ class Build {
 			// The phone is 24% of the pair's width less its 12px border. Claiming more
 			// (25vw) made a phone at 2x fetch the 400px file where the 139px one fits:
 			// 24 KB extra on an image that loads with the hero (perf review, 2026-09-30).
-			$html .= self::phone( $phone, 'medium', array( 'sizes' => '(min-width: 881px) 130px, calc(24vw - 22px)' ) );
+			$phone_attrs = array( 'sizes' => '(min-width: 881px) 130px, calc(24vw - 22px)' );
+			if ( $lazy ) {
+				$phone_attrs['loading'] = 'lazy';
+			}
+			$html .= self::phone( $phone, 'medium', $phone_attrs );
 		}
 
 		return $html . '</div>';
@@ -292,7 +322,7 @@ class Build {
 	 * ("Get results like these" / "View all case studies"). A build keeps the first
 	 * button's address but words it "Start a project like this", and its second
 	 * button goes to the finished site when one is set. The link back to the other
-	 * case studies is then printed at the end of results().
+	 * case studies is then printed by related(), the "More case studies" band.
 	 *
 	 * @param int                 $post_id    Case study ID.
 	 * @param array<string,mixed> $attributes Block attributes (the template's CTA pair; see above).
@@ -435,9 +465,6 @@ class Build {
 			<?php endif; ?>
 
 			<?php echo self::strip( $gallery, $build['url'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-			<?php // The hero's second button goes to the client's site, so this is the page's one link back to the other case studies (SEO review, 2026-09-30: without it a build was a dead end). ?>
-			<p class="ajr-cs-more"><a href="<?php echo esc_url( self::archive_url() ); ?>"><?php echo esc_html( Cards::ui_label( 'View all case studies' ) ); ?></a></p>
 		</div>
 		<?php
 		return (string) ob_get_clean();
@@ -507,18 +534,23 @@ class Build {
 	 * wrapper between the article and that link may be positioned, or the hit
 	 * area shrinks to that wrapper.
 	 *
-	 * @param int $post_id Case study ID.
+	 * @param int  $post_id  Case study ID.
+	 * @param bool $as_block True when the card IS the block's output (it takes the block's
+	 *                       own wrapper attributes). False when it is printed inside another
+	 *                       shape, such as related(): the block's wrapper belongs to that shape,
+	 *                       and taking it twice would apply the block's margin twice.
 	 */
-	public static function card( int $post_id ): string {
+	public static function card( int $post_id, bool $as_block = true ): string {
 		$case_meta = Cards::get_case_meta( $post_id );
 		$build     = self::data( $post_id );
 		$gallery   = self::gallery( $post_id );
 		$title     = '' !== $case_meta['title'] ? $case_meta['title'] : (string) get_the_title( $post_id );
-		$devices   = self::devices( $gallery, '(min-width: 1280px) 620px, (min-width: 800px) calc(55vw - 64px), calc(94vw - 66px)' );
+		// Printed inside another shape, the card is the "more case studies" band: far down the page.
+		$devices = self::devices( $gallery, '(min-width: 1280px) 620px, (min-width: 800px) calc(55vw - 64px), calc(94vw - 66px)', false, ! $as_block );
 
 		ob_start();
 		?>
-		<article <?php echo get_block_wrapper_attributes( array( 'class' => 'ajr-cs-build-card ajr-case-study-card--linked' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<article <?php echo $as_block ? get_block_wrapper_attributes( array( 'class' => 'ajr-cs-build-card ajr-case-study-card--linked' ) ) : 'class="ajr-cs-build-card ajr-case-study-card--linked"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core escapes the wrapper attributes; the other branch is a literal. ?>>
 			<div class="ajr-cs-build-card__inner<?php echo '' === $devices ? ' ajr-cs-build-card__inner--text' : ''; ?>">
 				<?php if ( '' !== $devices ) : ?>
 					<div class="ajr-cs-build-card__media"><?php echo $devices; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
@@ -546,6 +578,250 @@ class Build {
 		</article>
 		<?php
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * "What changed": the improvements the work produced, each shown as a change.
+	 *
+	 * A row is a label and a figure ("2×", "EN + ES"). With a "before" length it
+	 * also draws two bars, before and after, the after bar always full width; the
+	 * bars are decoration for the figure beside them and are hidden from screen
+	 * readers. Counts are the client's to publish, so the fields ask for a change,
+	 * not a number (Andrew, 2026-09-30).
+	 *
+	 * @param int $post_id Case study ID.
+	 */
+	public static function changes( int $post_id ): string {
+		$build = self::data( $post_id );
+		if ( array() === $build['changes'] ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div <?php echo get_block_wrapper_attributes( array( 'class' => 'ajr-cs-changes' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<div class="ajr-cs-changes__intro">
+				<h2 class="wp-block-heading"><?php echo esc_html( '' !== $build['changes_title'] ? $build['changes_title'] : Cards::ui_label( 'What changed' ) ); ?></h2>
+				<?php if ( '' !== $build['changes_intro'] ) : ?>
+					<p class="ajr-cs-changes__text"><?php echo esc_html( $build['changes_intro'] ); ?></p>
+				<?php endif; ?>
+			</div>
+
+			<div class="ajr-cs-changes__rows">
+				<?php foreach ( $build['changes'] as $row ) : ?>
+					<div class="ajr-cs-change">
+						<div class="ajr-cs-change__head">
+							<h3 class="ajr-cs-change__label"><?php echo esc_html( $row['label'] ); ?></h3>
+							<span class="ajr-cs-change__figure"><?php echo esc_html( $row['figure'] ); ?></span>
+						</div>
+						<?php if ( $row['before'] > 0 ) : ?>
+							<div class="ajr-cs-change__bar" aria-hidden="true"><span class="ajr-cs-change__name"><?php echo esc_html( Cards::ui_label( 'Before' ) ); ?></span><span class="ajr-cs-change__track ajr-cs-change__track--before" style="width:<?php echo esc_attr( (string) $row['before'] ); ?>%"></span></div>
+							<div class="ajr-cs-change__bar" aria-hidden="true"><span class="ajr-cs-change__name"><?php echo esc_html( Cards::ui_label( 'After' ) ); ?></span><span class="ajr-cs-change__track ajr-cs-change__track--after"></span></div>
+						<?php endif; ?>
+						<?php if ( '' !== $row['note'] ) : ?>
+							<p class="ajr-cs-change__note"><?php echo esc_html( $row['note'] ); ?></p>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * "What was delivered": a checklist, in the theme's checkmark list style.
+	 *
+	 * @param int $post_id Case study ID.
+	 */
+	public static function delivered( int $post_id ): string {
+		$build = self::data( $post_id );
+		if ( array() === $build['delivered'] ) {
+			return '';
+		}
+
+		$list = '<ul class="wp-block-list is-style-checkmark-list ajr-cs-delivered__list">';
+		foreach ( $build['delivered'] as $item ) {
+			$list .= '<li>' . esc_html( $item ) . '</li>';
+		}
+		$list .= '</ul>';
+
+		// Sent through core's List block, which returns the markup unchanged: a theme
+		// loads its list styles (the checkmarks) only where a List block renders, and
+		// this way the plugin needs to know nothing about the theme's stylesheets.
+		$wrapper = get_block_wrapper_attributes( array( 'class' => 'ajr-cs-delivered' ) );
+		$list    = render_block(
+			array(
+				'blockName'    => 'core/list',
+				'attrs'        => array( 'className' => 'is-style-checkmark-list' ),
+				'innerBlocks'  => array(),
+				'innerHTML'    => $list,
+				'innerContent' => array( $list ),
+			)
+		);
+
+		$html = '<div ' . $wrapper . '>'
+			. '<h2 class="wp-block-heading has-text-align-center">' . esc_html( Cards::ui_label( 'What was delivered' ) ) . '</h2>';
+		if ( '' !== $build['delivered_intro'] ) {
+			$html .= '<p class="ajr-cs-delivered__intro has-text-align-center">' . esc_html( $build['delivered_intro'] ) . '</p>';
+		}
+
+		return $html . $list . '</div>';
+	}
+
+	/**
+	 * The newest published case studies, newest first, as IDs.
+	 *
+	 * One small query, cached until a case study is saved or deleted
+	 * (forget_recent(), hooked in CaseStudies\Meta): the "more case studies" band
+	 * is on every case study's page. Not keyed on core's `posts` stamp, which
+	 * moves on every post-meta write anywhere on the site, the editor's
+	 * heartbeat lock included, so the cache would hardly ever be warm.
+	 *
+	 * @return int[]
+	 */
+	protected static function recent_ids(): array {
+		$key = self::RECENT_CACHE_KEY;
+		$ids = wp_cache_get( $key, 'ajrwd_core' );
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$query = new \WP_Query(
+			array(
+				'post_type'              => PostType::POST_TYPE,
+				'post_status'            => 'publish',
+				'has_password'           => false,
+				'posts_per_page'         => 8,
+				'orderby'                => 'date',
+				'order'                  => 'DESC',
+				'fields'                 => 'ids',
+				'ignore_sticky_posts'    => true,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+			)
+		);
+		$ids   = array_map( 'intval', $query->posts );
+		wp_cache_set( $key, $ids, 'ajrwd_core', HOUR_IN_SECONDS );
+
+		return $ids;
+	}
+
+	/**
+	 * Forgets the cached list of recent case studies. Runs when a case study is
+	 * saved (published, edited, trashed, given a password) or deleted.
+	 */
+	public static function forget_recent(): void {
+		wp_cache_delete( self::RECENT_CACHE_KEY, 'ajrwd_core' );
+
+		// The cached pages that print the "more case studies" band (tagged in related()).
+		do_action( 'litespeed_purge', self::RECENT_CACHE_KEY ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed Cache's own hook.
+	}
+
+	/**
+	 * Which case studies the "more case studies" band shows on one case study's
+	 * page: the newest other site build alone, or, when there is none, the two
+	 * newest other audits. Empty when there is nothing else to show.
+	 *
+	 * The cached list it is given is a shortcut, not the gate. A case study
+	 * unpublished or given a password a moment ago can still be in it (a request
+	 * that was mid-query when the cache was cleared writes the old list back), so
+	 * every candidate is checked here, at the moment it would be printed.
+	 *
+	 * @param int[] $recent  Recent case-study IDs, newest first.
+	 * @param int   $post_id The case study being shown.
+	 * @return int[]
+	 */
+	public static function pick_related( array $recent, int $post_id ): array {
+		$others = array_values(
+			array_filter(
+				array_map( 'intval', $recent ),
+				static fn( int $id ): bool => $id !== $post_id && Cards::can_show( $id )
+			)
+		);
+
+		foreach ( $others as $id ) {
+			if ( self::is_build( $id ) ) {
+				return array( $id );
+			}
+		}
+
+		return array_slice( $others, 0, 2 );
+	}
+
+	/**
+	 * "More case studies": the newest OTHER site build as its card; when there is
+	 * none, the two newest other audits as compact cards. Then the link to all of
+	 * them, which is the page's way back to the rest of the work.
+	 *
+	 * Works on an audit's page too, where it shows the newest build.
+	 *
+	 * @param int $post_id The case study being shown.
+	 */
+	public static function related( int $post_id ): string {
+		$recent = self::recent_ids();
+		if ( array() === $recent ) {
+			return '';
+		}
+
+		// One query for the rows and one for the fields of every candidate, instead of one each.
+		_prime_post_caches( $recent, false, true );
+		$pick = self::pick_related( $recent, $post_id );
+		if ( array() === $pick ) {
+			return '';
+		}
+
+		// Page caches: this page now shows another case study, so it must be cleared when
+		// any case study changes (forget_recent()). Does nothing without LiteSpeed Cache.
+		do_action( 'litespeed_tag_add', self::RECENT_CACHE_KEY ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed Cache's own hook.
+
+		if ( self::is_build( $pick[0] ) ) {
+			$cards = self::card( $pick[0], false );
+			$pair  = false;
+		} else {
+			$cards = '';
+			foreach ( $pick as $id ) {
+				$cards .= render_block(
+					array(
+						'blockName'    => 'ajrwebdesign-core/case-study-mini-card',
+						'attrs'        => array( 'caseStudyId' => $id ),
+						'innerBlocks'  => array(),
+						'innerHTML'    => '',
+						'innerContent' => array(),
+					)
+				);
+			}
+			$pair = true;
+		}
+		if ( '' === trim( $cards ) ) {
+			return '';
+		}
+
+		return '<div ' . get_block_wrapper_attributes( array( 'class' => 'ajr-cs-related' ) ) . '>'
+			. '<h2 class="wp-block-heading has-text-align-center">' . esc_html( Cards::ui_label( 'More case studies' ) ) . '</h2>'
+			. '<div class="ajr-cs-related__list' . ( $pair ? ' ajr-cs-related__list--pair' : '' ) . '">' . $cards . '</div>'
+			. '<p class="ajr-cs-more"><a href="' . esc_url( self::archive_url() ) . '">' . esc_html( Cards::ui_label( 'View all case studies' ) ) . '</a></p>'
+			. '</div>';
+	}
+
+	/**
+	 * The inside of one of the single's optional bands, by the block's variant.
+	 *
+	 * "changes" and "delivered" belong to a site build and print nothing for an
+	 * audit; "related" works for both kinds.
+	 *
+	 * @param int    $post_id Case study ID.
+	 * @param string $variant changes, delivered or related.
+	 */
+	public static function band( int $post_id, string $variant ): string {
+		if ( 'related' === $variant ) {
+			return self::related( $post_id );
+		}
+		if ( ! self::is_build( $post_id ) ) {
+			return '';
+		}
+
+		return 'changes' === $variant ? self::changes( $post_id ) : self::delivered( $post_id );
 	}
 
 	/**

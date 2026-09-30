@@ -160,6 +160,39 @@ class Metabox {
 
 			<?php $this->field( 'ajrwd_cs_build[source]', __( 'Source line (where the numbers come from, and when)', 'ajrwebdesign-core' ), $build['source'], __( 'Scores: Google PageSpeed Insights, 30 September 2026.', 'ajrwebdesign-core' ) ); ?>
 
+			<h4><?php esc_html_e( 'What changed (its own band; up to three rows; leave empty for a brand-new site)', 'ajrwebdesign-core' ); ?></h4>
+			<p class="description"><?php esc_html_e( 'Show a client’s traffic as a change (“2×”, “doubled”), never as their numbers. A row with a “before” length draws two bars: before at that percentage, after at full width.', 'ajrwebdesign-core' ); ?></p>
+			<?php
+			$this->field( 'ajrwd_cs_build[changes_title]', __( 'Heading', 'ajrwebdesign-core' ), $build['changes_title'], __( 'What changed in search', 'ajrwebdesign-core' ) );
+			$this->field( 'ajrwd_cs_build[changes_intro]', __( 'Intro (what was compared, and over which periods)', 'ajrwebdesign-core' ), $build['changes_intro'], __( 'The first month after launch against the three months before it.', 'ajrwebdesign-core' ) );
+			for ( $i = 0; $i < Meta::MAX_CHANGES; $i++ ) :
+				$row = $build['changes'][ $i ] ?? array();
+				?>
+				<div class="ajr-case-study-score-row">
+					<?php
+					$this->field( "ajrwd_cs_build[changes][{$i}][label]", __( 'What changed', 'ajrwebdesign-core' ), (string) ( $row['label'] ?? '' ), __( 'How often Google shows the site', 'ajrwebdesign-core' ) );
+					$this->field( "ajrwd_cs_build[changes][{$i}][figure]", __( 'The change', 'ajrwebdesign-core' ), (string) ( $row['figure'] ?? '' ), '2×' );
+					$this->field( "ajrwd_cs_build[changes][{$i}][before]", __( 'Before bar, % of after (empty: no bars)', 'ajrwebdesign-core' ), ! empty( $row['before'] ) ? (string) $row['before'] : '', '50' );
+					$this->field( "ajrwd_cs_build[changes][{$i}][note]", __( 'Note', 'ajrwebdesign-core' ), (string) ( $row['note'] ?? '' ) );
+					?>
+				</div>
+			<?php endfor; ?>
+
+			<h4><?php esc_html_e( 'What was delivered (its own band)', 'ajrwebdesign-core' ); ?></h4>
+			<?php $this->field( 'ajrwd_cs_build[delivered_intro]', __( 'Intro', 'ajrwebdesign-core' ), $build['delivered_intro'], __( 'Everything below is on the live site today.', 'ajrwebdesign-core' ) ); ?>
+			<p class="ajr-case-study-field">
+				<label for="ajrwd_cs_build_delivered"><strong>
+					<?php
+					printf(
+						/* translators: %d: the most items the list keeps. */
+						esc_html__( 'The list: one item per line, up to %d', 'ajrwebdesign-core' ),
+						(int) Meta::MAX_DELIVERED
+					);
+					?>
+				</strong></label>
+				<textarea id="ajrwd_cs_build_delivered" name="ajrwd_cs_build[delivered]" rows="8" class="widefat"><?php echo esc_textarea( implode( "\n", $build['delivered'] ) ); ?></textarea>
+			</p>
+
 			<h4><?php esc_html_e( 'Screenshots', 'ajrwebdesign-core' ); ?></h4>
 			<p class="description">
 				<?php

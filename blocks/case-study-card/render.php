@@ -44,6 +44,13 @@ if ( ! Cards::can_show( $case_study_id ) ) {
 	return;
 }
 
+// The single's optional bands ("what changed", "what was delivered", "more case
+// studies") are variants of this block too. "More case studies" is for both kinds.
+if ( in_array( $attributes['variant'] ?? 'default', Build::BAND_VARIANTS, true ) ) {
+	echo Build::band( $case_study_id, (string) $attributes['variant'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Build escapes every value it prints.
+	return;
+}
+
 if ( Build::is_build( $case_study_id ) ) {
 	// A site build has no "before", so it has its own three shapes (hero,
 	// results band, card). Same block, same attributes; see Blocks\Build.

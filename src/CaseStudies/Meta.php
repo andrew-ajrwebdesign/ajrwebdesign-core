@@ -7,6 +7,8 @@
 
 namespace AJR\SiteCore\CaseStudies;
 
+use AJR\SiteCore\Blocks\Build;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -38,7 +40,8 @@ class Meta {
 
 	/**
 	 * The site-build fields, one object: live URL, results intro, PageSpeed
-	 * scores, comparison rows, headline facts and the source line.
+	 * scores, comparison rows, headline facts and the source line; and, since
+	 * 1.11.0, the "what changed" rows and the "what was delivered" list.
 	 */
 	public const BUILD = 'ajrwd_cs_build';
 
@@ -74,9 +77,20 @@ class Meta {
 	public const MAX_GALLERY = 8;
 
 	/**
+	 * The most "what changed" rows and "what was delivered" items.
+	 */
+	public const MAX_CHANGES   = 3;
+	public const MAX_DELIVERED = 10;
+
+	/**
 	 * The longest a row's text may be. It is scorecard text, not a paragraph.
 	 */
 	public const MAX_ROW_TEXT = 140;
+
+	/**
+	 * The longest an intro or a note under a row may be: two sentences.
+	 */
+	public const MAX_NOTE_TEXT = 320;
 
 	/**
 	 * The metric keys tracked per device/phase.
@@ -91,6 +105,10 @@ class Meta {
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_meta' ) );
 		add_filter( 'rest_prepare_' . PostType::POST_TYPE, array( $this, 'hide_protected_meta' ), 10, 3 );
+
+		// The "more case studies" band caches which case studies are newest.
+		add_action( 'save_post_' . PostType::POST_TYPE, array( Build::class, 'forget_recent' ), 10, 0 );
+		add_action( 'deleted_post_' . PostType::POST_TYPE, array( Build::class, 'forget_recent' ), 10, 0 );
 	}
 
 	/**
@@ -258,26 +276,32 @@ class Meta {
 	public static function empty_build(): array {
 		$device = array_fill_keys( self::SCORE_KEYS, '' );
 		return array(
-			'url'           => '',
-			'intro'         => '',
-			'scores'        => array(
+			'url'             => '',
+			'intro'           => '',
+			'scores'          => array(
 				'mobile'  => $device,
 				'desktop' => $device,
 			),
-			'compare_title' => '',
-			'compare'       => array(),
-			'facts'         => array(),
-			'source'        => '',
+			'compare_title'   => '',
+			'compare'         => array(),
+			'facts'           => array(),
+			'source'          => '',
+			'changes_title'   => '',
+			'changes_intro'   => '',
+			'changes'         => array(),
+			'delivered_intro' => '',
+			'delivered'       => array(),
 		);
 	}
 
 	/**
 	 * One line of scorecard text: plain, single-line, capped.
 	 *
-	 * @param mixed $value Raw value.
+	 * @param mixed $value  Raw value.
+	 * @param int   $length The cap: MAX_ROW_TEXT for a label or a figure, MAX_NOTE_TEXT for an intro or a note.
 	 */
-	protected static function row_text( $value ): string {
-		return is_scalar( $value ) ? mb_substr( sanitize_text_field( (string) $value ), 0, self::MAX_ROW_TEXT ) : '';
+	protected static function row_text( $value, int $length = self::MAX_ROW_TEXT ): string {
+		return is_scalar( $value ) ? mb_substr( sanitize_text_field( (string) $value ), 0, $length ) : '';
 	}
 
 	/**
@@ -285,7 +309,10 @@ class Meta {
 	 *
 	 * A score is a whole number from 0 to 100 or empty. A comparison row is kept
 	 * only with a label and a value; its bar length is a whole percentage from 0
-	 * (no bar) to 100. A fact is kept only with a value and a label.
+	 * (no bar) to 100. A fact is kept only with a value and a label. A "what
+	 * changed" row is kept only with a label and a figure; its "before" bar is a
+	 * whole percentage of the "after" bar, 0 for no bars. The delivered list is
+	 * plain lines; it arrives as a list, or as the metabox's one-per-line text.
 	 *
 	 * @param mixed $value Raw meta value.
 	 * @return array<string,mixed>
@@ -299,8 +326,41 @@ class Meta {
 		if ( isset( $value['url'] ) && is_scalar( $value['url'] ) ) {
 			$clean['url'] = esc_url_raw( trim( (string) $value['url'] ), array( 'http', 'https' ) );
 		}
-		foreach ( array( 'intro', 'compare_title', 'source' ) as $key ) {
+		foreach ( array( 'compare_title', 'source', 'changes_title' ) as $key ) {
 			$clean[ $key ] = self::row_text( $value[ $key ] ?? '' );
+		}
+		foreach ( array( 'intro', 'changes_intro', 'delivered_intro' ) as $key ) {
+			$clean[ $key ] = self::row_text( $value[ $key ] ?? '', self::MAX_NOTE_TEXT );
+		}
+
+		foreach ( is_array( $value['changes'] ?? null ) ? $value['changes'] : array() as $row ) {
+			if ( ! is_array( $row ) || count( $clean['changes'] ) >= self::MAX_CHANGES ) {
+				continue;
+			}
+			$label  = self::row_text( $row['label'] ?? '' );
+			$figure = self::row_text( $row['figure'] ?? '' );
+			if ( '' === $label || '' === $figure ) {
+				continue;
+			}
+			$before             = isset( $row['before'] ) && is_numeric( $row['before'] ) ? (int) round( (float) $row['before'] ) : 0;
+			$clean['changes'][] = array(
+				'label'  => $label,
+				'figure' => $figure,
+				// How long the "before" bar is, as a percentage of the "after" bar. 0: no bars.
+				'before' => max( 0, min( 100, $before ) ),
+				'note'   => self::row_text( $row['note'] ?? '', self::MAX_NOTE_TEXT ),
+			);
+		}
+
+		$delivered = $value['delivered'] ?? array();
+		if ( is_string( $delivered ) ) {
+			$delivered = preg_split( '/\R/', $delivered, -1, PREG_SPLIT_NO_EMPTY );
+		}
+		foreach ( is_array( $delivered ) ? $delivered : array() as $item ) {
+			$item = self::row_text( $item );
+			if ( '' !== $item && count( $clean['delivered'] ) < self::MAX_DELIVERED ) {
+				$clean['delivered'][] = $item;
+			}
 		}
 
 		foreach ( array( 'mobile', 'desktop' ) as $device ) {

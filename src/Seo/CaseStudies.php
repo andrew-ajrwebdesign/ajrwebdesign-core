@@ -48,6 +48,54 @@ class CaseStudies {
 		add_filter( 'the_seo_framework_description_excerpt', array( $this, 'description_excerpt' ), 10, 2 );
 		add_filter( 'the_seo_framework_sitemap_additional_urls', array( $this, 'sitemap_urls' ) );
 		add_filter( 'the_seo_framework_image_generation_params', array( $this, 'image_params' ), 10, 2 );
+		add_filter( 'the_seo_framework_breadcrumb_list', array( $this, 'breadcrumb_list' ), 10, 2 );
+	}
+
+	/**
+	 * Keeps "Case Studies" in a case study's breadcrumb trail.
+	 *
+	 * The SEO Framework adds that middle crumb only when the post type has an
+	 * archive. Since 1.11.0 the list of case studies is an ordinary page at
+	 * /case-studies/ and the archive is off, so the trail in the page's
+	 * structured data shrank to Home › the case study, and no longer said the
+	 * case studies sit under that page (SEO review, 2026-09-30).
+	 *
+	 * @param mixed $crumbs The crumbs in order: [ 'url' => …, 'name' => … ] each.
+	 * @param mixed $args   TSF query args; null when it is the page being shown.
+	 * @return mixed
+	 */
+	public function breadcrumb_list( $crumbs, $args ) {
+		if ( ! is_array( $crumbs ) || count( $crumbs ) < 2 ) {
+			return $crumbs;
+		}
+
+		if ( null === $args ) {
+			$post_id = is_singular( PostType::POST_TYPE ) ? (int) get_queried_object_id() : 0;
+		} else {
+			$post_id = is_array( $args ) && empty( $args['tax'] ) && empty( $args['pta'] ) && empty( $args['uid'] ) ? (int) ( $args['id'] ?? 0 ) : 0;
+		}
+		if ( ! $post_id || PostType::POST_TYPE !== get_post_type( $post_id ) || get_post_type_archive_link( PostType::POST_TYPE ) ) {
+			return $crumbs;
+		}
+
+		$page = get_page_by_path( 'case-studies' );
+		if ( ! $page || 'publish' !== $page->post_status ) {
+			return $crumbs;
+		}
+
+		array_splice(
+			$crumbs,
+			1,
+			0,
+			array(
+				array(
+					'url'  => (string) get_permalink( $page ),
+					'name' => (string) get_the_title( $page ),
+				),
+			)
+		);
+
+		return $crumbs;
 	}
 
 	/**
