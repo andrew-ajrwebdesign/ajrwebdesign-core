@@ -3,7 +3,7 @@
  * Plugin Name:       AJR Web Design Core
  * Plugin URI:        https://github.com/andrew-ajrwebdesign/ajrwebdesign-core
  * Description:       Site plugin for ajrwebdesign.com — its own blocks, case studies, testimonials and multilingual helpers. Runs alongside AJR Core, which provides the shared features. Companion to the ajrwebdesign-theme FSE theme.
- * Version:           1.10.0
+ * Version:           1.10.1
  * Requires at least: 6.9
  * Requires PHP:      8.0
  * Requires Plugins:  ajr-core

@@ -5,8 +5,8 @@
 			"match": "assets/admin/case-studies.css",
 			"why": "wp-admin only: the case-study metabox's own screen chrome (#dcdcde, #fff match WordPress admin's greys) and its before/after score labels (#ff4a1c, #39a935). The theme's palette variables are not a dependable input on that admin screen, and the two label colours have no palette equivalent — mapping them would change how the admin looks for no visitor-facing gain. Every front-end stylesheet in this plugin is tokens only (e150741 + the rgba shadows, 2026-09-28).",
 			"on": "2026-09-28",
-			"expiresAtVersion": "1.10.0",
-			"review": "Renewed at 1.10.0 (2026-09-30): assets/admin/case-studies.css unchanged in this release and still enqueued by the metabox (src/CaseStudies/Metabox.php). The site-build fields added in 1.10.0 have their own admin stylesheet (assets/admin/case-study-build.css), which has no colour values at all, and the new front-end rules in blocks/case-study-card/style.css are tokens only. Previously renewed at 1.9.0 (2026-09-29) and 1.8.0 (2026-09-28)."
+			"expiresAtVersion": "1.10.1",
+			"review": "Renewed at 1.10.1 (2026-09-30, a CSS-only fix to blocks/case-study-card/style.css; assets/admin/case-studies.css untouched and still enqueued by the metabox). Previously: Renewed at 1.10.0 (2026-09-30): assets/admin/case-studies.css unchanged in this release and still enqueued by the metabox (src/CaseStudies/Metabox.php). The site-build fields added in 1.10.0 have their own admin stylesheet (assets/admin/case-study-build.css), which has no colour values at all, and the new front-end rules in blocks/case-study-card/style.css are tokens only. Previously renewed at 1.9.0 (2026-09-29) and 1.8.0 (2026-09-28)."
 		}
 	]
 }
