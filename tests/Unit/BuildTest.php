@@ -11,6 +11,7 @@ use AJR\SiteCore\Blocks\Build;
 use AJR\SiteCore\Blocks\Cards;
 use AJR\SiteCore\CaseStudies\BuildCopy;
 use AJR\SiteCore\CaseStudies\Meta;
+use AJR\SiteCore\CaseStudies\OptionalBand;
 use AJR\SiteCore\I18n\AttachmentAlt;
 use PHPUnit\Framework\TestCase;
 
@@ -143,10 +144,104 @@ class BuildTest extends TestCase {
 		$this->assertSame( '', $clean['facts'][0]['note'] );
 	}
 
-	public function test_row_text_is_capped(): void {
-		$clean = Meta::sanitize_build( array( 'intro' => str_repeat( 'a', 400 ) ) );
+	public function test_changes_need_a_label_and_a_figure_and_are_capped_at_three(): void {
+		$clean = Meta::sanitize_build(
+			array(
+				'changes' => array(
+					array(
+						'label'  => 'How often Google shows the site',
+						'figure' => '2×',
+						'before' => '48.6',
+						'note'   => '',
+					),
+					array(
+						'label'  => 'No figure, so dropped',
+						'figure' => '',
+					),
+					array(
+						'label'  => 'Answers on page one',
+						'figure' => 'EN + ES',
+						// Nothing entered: no bars, never a sliver.
+					),
+					array(
+						'label'  => 'Clicks',
+						'figure' => '2×',
+						'before' => '400',
+					),
+					array(
+						'label'  => 'A fourth kept row would be one too many',
+						'figure' => 'x',
+					),
+				),
+			)
+		);
 
-		$this->assertSame( Meta::MAX_ROW_TEXT, strlen( $clean['intro'] ) );
+		$this->assertCount( Meta::MAX_CHANGES, $clean['changes'] );
+		$this->assertSame( array( 'label', 'figure', 'before', 'note' ), array_keys( $clean['changes'][0] ) );
+		$this->assertSame( 49, $clean['changes'][0]['before'] );
+		$this->assertSame( 0, $clean['changes'][1]['before'] );
+		$this->assertSame( 100, $clean['changes'][2]['before'] );
+	}
+
+	public function test_delivered_takes_a_list_or_the_metabox_lines(): void {
+		$lines = "A custom block theme\r\n\r\n  Every page in <b>English</b> and Spanish  \nEight practice areas";
+
+		$this->assertSame(
+			array( 'A custom block theme', 'Every page in English and Spanish', 'Eight practice areas' ),
+			Meta::sanitize_build( array( 'delivered' => $lines ) )['delivered']
+		);
+		$this->assertSame(
+			array( 'One', 'Two' ),
+			Meta::sanitize_build( array( 'delivered' => array( 'One', '', array( 'nested' ), 'Two' ) ) )['delivered']
+		);
+		$this->assertCount( Meta::MAX_DELIVERED, Meta::sanitize_build( array( 'delivered' => array_fill( 0, 30, 'Item' ) ) )['delivered'] );
+	}
+
+	public function test_an_intro_may_be_longer_than_a_row(): void {
+		$clean = Meta::sanitize_build(
+			array(
+				'changes_intro' => str_repeat( 'a', 400 ),
+				'changes_title' => str_repeat( 'b', 400 ),
+			)
+		);
+
+		$this->assertSame( Meta::MAX_NOTE_TEXT, strlen( $clean['changes_intro'] ) );
+		$this->assertSame( Meta::MAX_ROW_TEXT, strlen( $clean['changes_title'] ) );
+	}
+
+	public function test_a_band_with_no_block_output_is_empty(): void {
+		$empty  = '<section class="wp-block-group alignfull cs-optional-band has-surface-background-color has-background">' . "\n\n" . '</section>';
+		$filled = '<section class="wp-block-group alignfull cs-optional-band"><div class="ajr-cs-delivered wp-block-ajrwebdesign-core-case-study-card"><h2>What was delivered</h2></div></section>';
+		$card   = '<section class="wp-block-group cs-optional-band"><div class="wp-block-x ajr-cs-related"><div class="ajr-case-study-mini-card"></div></div></section>';
+
+		$this->assertFalse( OptionalBand::has_content( $empty ) );
+		$this->assertTrue( OptionalBand::has_content( $filled ) );
+		$this->assertTrue( OptionalBand::has_content( $card ) );
+
+		$band = new OptionalBand();
+		$this->assertSame( '', $band->drop_if_empty( $empty, array( 'attrs' => array( 'className' => 'cs-optional-band' ) ) ) );
+		$this->assertSame( $filled, $band->drop_if_empty( $filled, array( 'attrs' => array( 'className' => 'cs-optional-band' ) ) ) );
+		// An ordinary group is never touched, empty or not.
+		$this->assertSame( $empty, $band->drop_if_empty( $empty, array( 'attrs' => array( 'className' => 'hero-section' ) ) ) );
+		$this->assertSame( $empty, $band->drop_if_empty( $empty, array( 'attrs' => array() ) ) );
+	}
+
+	public function test_changes_and_delivered_print_nothing_for_an_audit_or_with_no_rows(): void {
+		// An audit: whatever is stored, these two bands are a build's.
+		update_post_meta( 31, Meta::BUILD, array( 'delivered' => array( 'Something' ) ) );
+		$this->assertSame( '', Build::band( 31, 'delivered' ) );
+		$this->assertSame( '', Build::band( 31, 'changes' ) );
+
+		// A build with neither filled in.
+		update_post_meta( 32, Meta::KIND, Meta::KIND_BUILD );
+		$this->assertSame( '', Build::changes( 32 ) );
+		$this->assertSame( '', Build::delivered( 32 ) );
+	}
+
+	public function test_row_text_is_capped(): void {
+		$clean = Meta::sanitize_build( array( 'source' => str_repeat( 'a', 400 ) ) );
+
+		$this->assertSame( Meta::MAX_ROW_TEXT, strlen( $clean['source'] ) );
 	}
 
 	public function test_gallery_accepts_a_list_or_the_metabox_string(): void {
@@ -254,6 +349,34 @@ class BuildTest extends TestCase {
 		$GLOBALS['ajrwd_test_locked'] = array();
 		$GLOBALS['ajrwd_test_public'] = array();
 		$GLOBALS['ajrwd_test_can']    = false;
+	}
+
+	public function test_more_case_studies_picks_the_newest_other_build_or_two_audits_and_never_a_hidden_one(): void {
+		$GLOBALS['ajrwd_test_locked'] = array();
+		$GLOBALS['ajrwd_test_public'] = array( 41, 42, 43, 44 );
+		$GLOBALS['ajrwd_test_can']    = false;
+		update_post_meta( 42, Meta::KIND, Meta::KIND_BUILD );
+		update_post_meta( 44, Meta::KIND, Meta::KIND_BUILD );
+		update_post_meta( 45, Meta::KIND, Meta::KIND_BUILD );
+
+		// On an audit's page: the newest build, alone.
+		$this->assertSame( array( 42 ), Build::pick_related( array( 41, 42, 43, 44 ), 41 ) );
+		// On that build's own page: the next build, never itself.
+		$this->assertSame( array( 44 ), Build::pick_related( array( 41, 42, 43, 44 ), 42 ) );
+		// No other build: the two newest other audits.
+		$this->assertSame( array( 41, 43 ), Build::pick_related( array( 41, 42, 43 ), 42 ) );
+		// Alone: nothing.
+		$this->assertSame( array(), Build::pick_related( array( 41 ), 41 ) );
+
+		// A build that is no longer public (45 is a draft) but still in a stale cached list
+		// is skipped: the list is not the gate.
+		$this->assertSame( array( 42 ), Build::pick_related( array( 45, 41, 42 ), 41 ) );
+		// One behind a password is skipped too.
+		$GLOBALS['ajrwd_test_locked'] = array( 42 );
+		$this->assertSame( array( 44 ), Build::pick_related( array( 42, 43, 44 ), 41 ) );
+
+		$GLOBALS['ajrwd_test_locked'] = array();
+		$GLOBALS['ajrwd_test_public'] = array();
 	}
 
 	public function test_alt_text_is_german_on_german_pages_and_never_empty(): void {

@@ -62,6 +62,25 @@ desktop, up to three rows comparing it with a typical site, and up to four headl
   withheld from a password-protected case study. Its own page still prints the title.
 - No JavaScript was added to the front end: the rings are CSS, the screenshot strip is scroll-snap.
 
+### New in 1.11.0: a fuller case-study page
+
+Three optional bands on the single, each a variant of the same `case-study-card` block sitting
+inside a section the theme owns (`cs-optional-band`). A band with nothing to show prints nothing
+and `CaseStudies\OptionalBand` removes the section around it.
+
+- **What changed** (`variant: changes`): up to three improvements, each a figure ("2×") with an
+  optional before and after bar pair and a note. For a rebuild. ⛔ A client's traffic is shown as
+  a change, never as their numbers.
+- **What was delivered** (`variant: delivered`): a checklist, one item per line in the metabox.
+- **More case studies** (`variant: related`): the newest other site build as its card, or two
+  audits when there is none, and the link to all case studies. Shown on audits too. Every card is
+  checked with `Cards::can_show()` as it is printed: the cached list of recent case studies
+  (cleared when one is saved or deleted) is a shortcut, never the gate. Pages showing the band
+  carry the LiteSpeed tag `ajrwd_cs_recent`, purged on the same events.
+
+Also in 1.11.0: a case study's breadcrumb trail keeps its "Case Studies" level when the list is
+an ordinary page at `/case-studies/` and AJR Core's archive is off (`Seo\CaseStudies`).
+
 ## What's inside
 
 ### Blocks (all dynamic, `block.json` + `render.php` + editor controls)

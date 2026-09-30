@@ -96,9 +96,12 @@
 .ajr-cs-phone{background:var(--wp--preset--color--ink);border:6px solid var(--wp--preset--color--ink);border-radius:28px;box-shadow:var(--wp--preset--shadow--soft);overflow:hidden}
 .ajr-cs-phone img{border-radius:22px}
 
-/* The device pair: the phone overlaps the browser frame's trailing corner. */
+/* The device pair: the phone overlaps the browser frame's trailing corner.
+   151px = the 139px-wide file plus the frame's two 6px borders. On a full-width
+   card 24% came to 7px more than that, and those 7px made a browser skip the
+   139px file for the 400px one: 61 KB for two phones where 15 KB does. */
 .ajr-cs-devices{padding-block-end:8%;padding-inline-end:6%;position:relative}
-.ajr-cs-devices .ajr-cs-phone{inset-block-end:0;inset-inline-end:0;position:absolute;width:24%}
+.ajr-cs-devices .ajr-cs-phone{inset-block-end:0;inset-inline-end:0;max-width:151px;position:absolute;width:24%}
 
 /* Score rings. */
 .ajr-cs-scores{display:grid;gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(4,minmax(0,5.75rem))}
@@ -181,6 +184,40 @@
 .ajr-cs-scores--md{gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(4,minmax(0,5.75rem))}
 .ajr-cs-scores--md .ajr-cs-score{align-items:start;gap:8px;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
 .ajr-cs-scores--md .ajr-cs-ring{--ring:58px}
+}
+
+/* --- v1.11.0: the single's optional bands (Build::changes/delivered/related).
+   Each is the inside of a section the theme owns; these are layout only. --- */
+
+/* What changed: intro left, rows right, a hairline between rows. */
+.ajr-cs-changes{display:grid;gap:var(--wp--preset--spacing--70,4rem);grid-template-columns:5fr 7fr}
+.ajr-cs-changes__intro h2{margin:0}
+.ajr-cs-changes__text{color:var(--wp--preset--color--muted);margin:var(--wp--preset--spacing--30,1rem) 0 0}
+.ajr-cs-change+.ajr-cs-change{border-block-start:1px solid var(--wp--preset--color--border);margin-block-start:var(--wp--preset--spacing--50,2.5rem);padding-block-start:var(--wp--preset--spacing--50,2.5rem)}
+.ajr-cs-change__head{align-items:baseline;display:flex;gap:16px;justify-content:space-between}
+.ajr-cs-change__label{margin:0}
+.ajr-cs-change__figure{color:var(--wp--preset--color--accent-dark);font-family:var(--wp--preset--font-family--lora);font-size:var(--wp--preset--font-size--2-xl,2rem);line-height:1;white-space:nowrap}
+.ajr-cs-change__bar{align-items:center;color:var(--wp--preset--color--muted);display:grid;font-size:var(--wp--preset--font-size--xs,.875rem);gap:12px;grid-template-columns:4.5rem 1fr;margin-block-start:12px}
+.ajr-cs-change__track{border-radius:999px;height:10px}
+.ajr-cs-change__track--before{background:var(--wp--preset--color--muted-light)}
+.ajr-cs-change__track--after{background:var(--wp--preset--color--score-green)}
+.ajr-cs-change__note{color:var(--wp--preset--color--muted);margin:12px 0 0}
+
+/* What was delivered: the theme's checkmark list, two columns. */
+.ajr-cs-delivered h2{margin:0}
+.ajr-cs-delivered__intro{color:var(--wp--preset--color--muted);margin:var(--wp--preset--spacing--30,1rem) 0 0}
+.ajr-cs-delivered__list{column-gap:var(--wp--preset--spacing--60,3rem);columns:2;margin-block:var(--wp--preset--spacing--50,2.5rem) 0}
+.ajr-cs-delivered__list li{break-inside:avoid;margin-block-end:var(--wp--preset--spacing--30,1rem)}
+
+/* More case studies: one build card, or two compact audit cards side by side. */
+.ajr-cs-related h2{margin:0}
+.ajr-cs-related__list{margin-block-start:var(--wp--preset--spacing--50,2.5rem)}
+.ajr-cs-related__list--pair{display:grid;gap:var(--wp--preset--spacing--40,2rem);grid-template-columns:repeat(2,minmax(0,1fr))}
+
+@media(max-width:781px){
+.ajr-cs-changes{gap:var(--wp--preset--spacing--50,2.5rem);grid-template-columns:minmax(0,1fr)}
+.ajr-cs-delivered__list{columns:1}
+.ajr-cs-related__list--pair{grid-template-columns:minmax(0,1fr)}
 }
 
 @media(max-width:880px){

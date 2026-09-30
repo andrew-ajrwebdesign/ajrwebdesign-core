@@ -79,6 +79,9 @@ class Cards {
 		'Visit %s'                         => '%s besuchen',
 		'Start a project like this'        => 'Ein Projekt wie dieses starten',
 		'View all case studies'            => 'Alle Fallstudien ansehen',
+		'What changed'                     => 'Was sich verändert hat',
+		'What was delivered'               => 'Das wurde umgesetzt',
+		'More case studies'                => 'Weitere Fallstudien',
 	);
 
 	/**
