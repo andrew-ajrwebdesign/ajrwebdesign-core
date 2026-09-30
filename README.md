@@ -89,8 +89,11 @@ out of 100. A site build can carry it: two fields in the metabox, "Checks passed
 scored" (`ajrwd_cs_build[agentic]`).
 
 - **Scorecard** (single): a third line under Mobile and Desktop, the figure and one sentence.
-- **Card** and **hero chip**: "Agentic Browsing 4/4", shown only for a full pass. A partial
-  result is stated in the scorecard and is never a badge.
+- **Card**: a dark panel under the rings ("4/4 · Agentic Browsing · Ready for AI assistants"),
+  and a line in the **hero chip**, both shown only for a full pass. A partial result is stated in
+  the scorecard, plainly, and is never a badge.
+- **1.13.0:** the card's panel and the scorecard row of a full pass are dark on the white card,
+  so the result stands out among the scores (it was a small tinted line).
 
 ⛔ Enter what PageSpeed Insights reports for the live site on the day (request the
 `AGENTIC_BROWSING` category). Leave both fields empty when it was not measured.

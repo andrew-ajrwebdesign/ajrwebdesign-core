@@ -83,8 +83,8 @@ class Cards {
 		'What was delivered'               => 'Das wurde umgesetzt',
 		'More case studies'                => 'Weitere Fallstudien',
 		// Google's Agentic Browsing test (Blocks\Build::agentic()). The test's own
-		// name stays in English, as Google prints it, so the figure
-		// ("Agentic Browsing 4/4") has no entry.
+		// name stays in English, as Google prints it, so "Agentic Browsing" and the
+		// chip's "Agentic Browsing 4/4" have no entry.
 		'AI agents'                        => 'KI-Agenten',
 		'Google’s Agentic Browsing test'   => 'Googles Agentic-Browsing-Test',
 		'Ready for AI assistants'          => 'Bereit für KI-Assistenten',

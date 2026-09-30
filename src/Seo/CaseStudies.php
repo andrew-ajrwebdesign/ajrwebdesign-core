@@ -49,6 +49,46 @@ class CaseStudies {
 		add_filter( 'the_seo_framework_sitemap_additional_urls', array( $this, 'sitemap_urls' ) );
 		add_filter( 'the_seo_framework_image_generation_params', array( $this, 'image_params' ), 10, 2 );
 		add_filter( 'the_seo_framework_breadcrumb_list', array( $this, 'breadcrumb_list' ), 10, 2 );
+
+		// WordPress's own embed card and oEmbed answer, which no SEO plugin touches.
+		add_filter( 'embed_thumbnail_id', array( $this, 'embed_thumbnail_id' ) );
+		add_filter( 'oembed_response_data', array( $this, 'oembed_response_data' ), 20, 2 );
+	}
+
+	/**
+	 * Keeps a hidden case study's picture off its embed card.
+	 *
+	 * A case study waiting for its client's yes is published behind a password.
+	 * WordPress still printed its featured image, the client's home page, on
+	 * /case-studies/<name>/embed/: the embed template checks that a thumbnail
+	 * exists, not that the post may be shown (security review, 2026-09-30). The
+	 * same picture is already kept out of the social image by image_params().
+	 *
+	 * @param mixed $thumbnail_id Attachment ID, or false for none.
+	 * @return mixed
+	 */
+	public function embed_thumbnail_id( $thumbnail_id ) {
+		$post = get_post();
+		if ( $post && PostType::POST_TYPE === $post->post_type && ! Cards::can_show( (int) $post->ID ) ) {
+			return false;
+		}
+
+		return $thumbnail_id;
+	}
+
+	/**
+	 * And out of the oEmbed answer other sites and apps ask for.
+	 *
+	 * @param mixed $data The oEmbed response.
+	 * @param mixed $post The post it describes.
+	 * @return mixed
+	 */
+	public function oembed_response_data( $data, $post ) {
+		if ( is_array( $data ) && $post instanceof \WP_Post && PostType::POST_TYPE === $post->post_type && ! Cards::can_show( (int) $post->ID ) ) {
+			unset( $data['thumbnail_url'], $data['thumbnail_width'], $data['thumbnail_height'] );
+		}
+
+		return $data;
 	}
 
 	/**
