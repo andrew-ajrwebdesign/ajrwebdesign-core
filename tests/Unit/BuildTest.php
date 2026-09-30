@@ -379,6 +379,69 @@ class BuildTest extends TestCase {
 		$GLOBALS['ajrwd_test_public'] = array();
 	}
 
+	public function test_agentic_browsing_is_two_small_numbers_and_never_more_passed_than_scored(): void {
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array() )['agentic'] );
+		$this->assertSame( array( 'passed' => 4, 'total' => 4 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => '4', 'total' => '4' ) ) )['agentic'] );
+		$this->assertSame( array( 'passed' => 2, 'total' => 3 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => 2, 'total' => 3 ) ) )['agentic'] );
+		// A pair that cannot be true is a typing slip and shows nothing: capping "4 of 3"
+		// to 3/3 would print a full pass nobody measured.
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => 4, 'total' => 3 ) ) )['agentic'] );
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => 3, 'total' => 400 ) ) )['agentic'] );
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => -2, 'total' => 3 ) ) )['agentic'] );
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => 1, 'total' => 1 ) ) )['agentic'] );
+		$this->assertSame( array( 'passed' => 0, 'total' => 0 ), Meta::sanitize_build( array( 'agentic' => array( 'passed' => '<b>', 'total' => 'x' ) ) )['agentic'] );
+	}
+
+	public function test_agentic_browsing_shows_a_badge_only_for_a_full_pass(): void {
+		$none    = Meta::sanitize_build( array() );
+		$full    = Meta::sanitize_build( array( 'agentic' => array( 'passed' => 4, 'total' => 4 ) ) );
+		$partial = Meta::sanitize_build( array( 'agentic' => array( 'passed' => 2, 'total' => 3 ) ) );
+
+		foreach ( array( 'row', 'pill', 'chip' ) as $shape ) {
+			$this->assertSame( '', Build::agentic( $none, $shape ) );
+		}
+
+		$this->assertStringContainsString( 'Agentic Browsing 4/4', Build::agentic( $full, 'pill' ) );
+		$this->assertStringContainsString( 'Agentic Browsing 4/4', Build::agentic( $full, 'chip' ) );
+		$this->assertStringContainsString( 'All 4 checks passed', Build::agentic( $full, 'row' ) );
+		$this->assertStringContainsString( 'ajr-cs-agentic__figure--full', Build::agentic( $full, 'row' ) );
+
+		// A partial result is stated in the scorecard and is never a badge.
+		$this->assertSame( '', Build::agentic( $partial, 'pill' ) );
+		$this->assertSame( '', Build::agentic( $partial, 'chip' ) );
+		$this->assertStringContainsString( '2 of 3 checks passed', Build::agentic( $partial, 'row' ) );
+		$this->assertStringNotContainsString( '--full', Build::agentic( $partial, 'row' ) );
+	}
+
+	/**
+	 * A label typed with a straight apostrophe where the German map has a curly one, or
+	 * reworded in one file and not the other, silently shows English on German pages.
+	 */
+	public function test_every_card_label_in_the_source_has_a_german_form(): void {
+		// Used in German as they are, so they have no entry on purpose.
+		$same_in_german = array( 'Desktop', 'Agentic Browsing %1$d/%2$d', 'Largest Contentful Paint', 'Core Web Vitals' );
+
+		$root  = dirname( __DIR__, 2 );
+		$files = array_merge( glob( $root . '/src/*/*.php' ), glob( $root . '/blocks/*/render.php' ) );
+		$found = array();
+		foreach ( $files as $file ) {
+			if ( preg_match_all( '/ui_label\(\s*\'([^\']+)\'\s*\)/', (string) file_get_contents( $file ), $matches ) ) {
+				foreach ( $matches[1] as $literal ) {
+					$found[ $literal ] = basename( $file );
+				}
+			}
+		}
+		$this->assertGreaterThan( 20, count( $found ), 'the scan found too few labels to be reading the source' );
+
+		$GLOBALS['ajrwd_test_lang'] = 'de';
+		foreach ( $found as $label => $file ) {
+			if ( in_array( $label, $same_in_german, true ) ) {
+				continue;
+			}
+			$this->assertNotSame( $label, Cards::ui_label( $label ), "“{$label}” ({$file}) has no German form" );
+		}
+	}
+
 	public function test_alt_text_is_german_on_german_pages_and_never_empty(): void {
 		$GLOBALS['ajrwd_test_titles'][20] = 'Home page';
 		$GLOBALS['ajrwd_test_titles'][21] = 'Equipment';
