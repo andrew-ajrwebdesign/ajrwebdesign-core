@@ -82,6 +82,16 @@ class Cards {
 		'What changed'                     => 'Was sich verändert hat',
 		'What was delivered'               => 'Das wurde umgesetzt',
 		'More case studies'                => 'Weitere Fallstudien',
+		// Google's Agentic Browsing test (Blocks\Build::agentic()). The test's own
+		// name stays in English, as Google prints it, so the figure
+		// ("Agentic Browsing 4/4") has no entry.
+		'AI agents'                        => 'KI-Agenten',
+		'Google’s Agentic Browsing test'   => 'Googles Agentic-Browsing-Test',
+		'Ready for AI assistants'          => 'Bereit für KI-Assistenten',
+		/* translators: %d: the number of checks, all of them passed. */
+		'All %d checks passed. AI assistants can read and use this site.' => 'Alle %d Prüfungen bestanden. KI-Assistenten können diese Website lesen und nutzen.',
+		/* translators: 1: checks passed. 2: checks scored. */
+		'%1$d of %2$d checks passed in Google’s test of how well AI assistants can read and use a site.' => '%1$d von %2$d Prüfungen in Googles Test bestanden, der misst, wie gut KI-Assistenten eine Website lesen und nutzen können.',
 	);
 
 	/**

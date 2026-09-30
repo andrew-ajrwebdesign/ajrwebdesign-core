@@ -214,6 +214,22 @@
 .ajr-cs-related__list{margin-block-start:var(--wp--preset--spacing--50,2.5rem)}
 .ajr-cs-related__list--pair{display:grid;gap:var(--wp--preset--spacing--40,2rem);grid-template-columns:repeat(2,minmax(0,1fr))}
 
+/* --- v1.12.0: Google's Agentic Browsing result (Build::agentic). Checks passed
+   out of checks scored, so a figure and a sentence, not a ring. --- */
+
+/* Scorecard row: the figure where the rings sit, the sentence beside it. */
+.ajr-cs-agentic{align-items:center;display:flex;gap:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-agentic__figure{color:var(--wp--preset--color--muted);flex:none;font-family:var(--wp--preset--font-family--lora);font-size:var(--wp--preset--font-size--3-xl,2.25rem);line-height:1}
+.ajr-cs-agentic__figure--full{color:var(--wp--preset--color--score-green-text)}
+.ajr-cs-agentic__text{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--sm,.95rem);margin:0}
+
+/* Card: one line under the rings. Not a link; the card's one link covers it. */
+.ajr-cs-agentic-pill{align-items:baseline;background:var(--wp--preset--color--accent-tint);border-radius:var(--wp--custom--radius--sm,6px);color:var(--wp--preset--color--ink);display:inline-flex;flex-wrap:wrap;font-size:var(--wp--preset--font-size--xs,.875rem);gap:2px 8px;margin:var(--wp--preset--spacing--30,1rem) 0 0;padding:6px 10px}
+.ajr-cs-agentic-pill strong{color:var(--wp--preset--color--score-green-text);font-weight:600}
+
+/* Hero chip: the figure alone, under the four small rings. */
+.ajr-cs-agentic-chip{border-block-start:1px solid var(--wp--preset--color--border);color:var(--wp--preset--color--score-green-text);font-size:12px;font-weight:600;margin-block-start:10px;padding-block-start:8px}
+
 @media(max-width:781px){
 .ajr-cs-changes{gap:var(--wp--preset--spacing--50,2.5rem);grid-template-columns:minmax(0,1fr)}
 .ajr-cs-delivered__list{columns:1}
@@ -223,6 +239,9 @@
 @media(max-width:880px){
 .ajr-cs-hero__floats.ajr-cs-build-art{display:block}
 .ajr-cs-build-chip{inset-inline-start:0}
+/* On a phone the extra line made the chip cover 45% of the screenshot it sits on
+   (30% without it). The same figure is in the scorecard, one band below. */
+.ajr-cs-agentic-chip{display:none}
 }
 @media(max-width:1100px){
 .ajr-cs-device{gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:1fr}

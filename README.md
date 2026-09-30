@@ -81,6 +81,20 @@ and `CaseStudies\OptionalBand` removes the section around it.
 Also in 1.11.0: a case study's breadcrumb trail keeps its "Case Studies" level when the list is
 an ordinary page at `/case-studies/` and AJR Core's archive is off (`Seo\CaseStudies`).
 
+### New in 1.12.0: Agentic Browsing
+
+Google's PageSpeed Insights has a fifth result, Agentic Browsing: whether an AI assistant can
+read and use the page. It reports checks passed out of checks scored (2 to 4 today), not a score
+out of 100. A site build can carry it: two fields in the metabox, "Checks passed" and "Checks
+scored" (`ajrwd_cs_build[agentic]`).
+
+- **Scorecard** (single): a third line under Mobile and Desktop, the figure and one sentence.
+- **Card** and **hero chip**: "Agentic Browsing 4/4", shown only for a full pass. A partial
+  result is stated in the scorecard and is never a badge.
+
+⛔ Enter what PageSpeed Insights reports for the live site on the day (request the
+`AGENTIC_BROWSING` category). Leave both fields empty when it was not measured.
+
 ## What's inside
 
 ### Blocks (all dynamic, `block.json` + `render.php` + editor controls)

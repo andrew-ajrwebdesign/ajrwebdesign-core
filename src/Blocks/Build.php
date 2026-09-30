@@ -167,6 +167,55 @@ class Build {
 	}
 
 	/**
+	 * Google's Agentic Browsing result, in one of three shapes.
+	 *
+	 * Agentic Browsing is the fifth category in PageSpeed Insights: whether an AI
+	 * assistant can read and use the page (a well-formed accessibility tree, a
+	 * page that does not shift, an llms.txt file, and so on). It reports checks
+	 * passed out of checks scored, not a 0 to 100 score, so it is not a ring.
+	 *
+	 *   row   the scorecard's third line, under Mobile and Desktop, with a sentence
+	 *   pill  one line on the card: the figure and "ready for AI assistants"
+	 *   chip  the figure alone, in the hero's score chip
+	 *
+	 * The pill and the chip are a badge, so they show only a full pass. The row
+	 * shows any result with at least one check passed, in plain words.
+	 *
+	 * @param array<string,mixed> $build From data().
+	 * @param string              $shape row, pill or chip.
+	 */
+	public static function agentic( array $build, string $shape ): string {
+		$passed = (int) ( $build['agentic']['passed'] ?? 0 );
+		$total  = (int) ( $build['agentic']['total'] ?? 0 );
+		if ( $total < 1 || $passed < 1 ) {
+			return '';
+		}
+		$full = $passed === $total;
+		/* translators: 1: checks passed. 2: checks scored. */
+		$figure = sprintf( Cards::ui_label( 'Agentic Browsing %1$d/%2$d' ), $passed, $total );
+
+		if ( 'row' !== $shape ) {
+			if ( ! $full ) {
+				return '';
+			}
+			if ( 'chip' === $shape ) {
+				return '<div class="ajr-cs-agentic-chip">' . esc_html( $figure ) . '</div>';
+			}
+			return '<p class="ajr-cs-agentic-pill"><strong>' . esc_html( $figure ) . '</strong> <span>' . esc_html( Cards::ui_label( 'Ready for AI assistants' ) ) . '</span></p>';
+		}
+
+		$text = $full
+			/* translators: %d: the number of checks, all of them passed. */
+			? sprintf( Cards::ui_label( 'All %d checks passed. AI assistants can read and use this site.' ), $total )
+			/* translators: 1: checks passed. 2: checks scored. */
+			: sprintf( Cards::ui_label( '%1$d of %2$d checks passed in Google’s test of how well AI assistants can read and use a site.' ), $passed, $total );
+
+		// The big figure is for the eye; the sentence beside it says the same in words.
+		return '<div class="ajr-cs-device"><div class="ajr-cs-device__head"><div class="ajr-cs-device__name">' . esc_html( Cards::ui_label( 'AI agents' ) ) . '</div><div class="ajr-cs-device__note">' . esc_html( Cards::ui_label( 'Google’s Agentic Browsing test' ) ) . '</div></div>'
+			. '<div class="ajr-cs-agentic"><div class="ajr-cs-agentic__figure' . ( $full ? ' ajr-cs-agentic__figure--full' : '' ) . '" aria-hidden="true">' . esc_html( $passed . '/' . $total ) . '</div><p class="ajr-cs-agentic__text">' . esc_html( $text ) . '</p></div></div>';
+	}
+
+	/**
 	 * The screenshots of a case study that are real image attachments, split by
 	 * shape: landscape for the browser frame, portrait for the phone frame.
 	 *
@@ -384,6 +433,7 @@ class Build {
 					<div class="ajr-cs-build-chip">
 						<div class="ajr-cs-hero__label"><?php echo esc_html( Cards::ui_label( 'Google PageSpeed · mobile' ) ); ?></div>
 						<?php echo self::rings( $build['scores']['mobile'], 'sm', false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo self::agentic( $build, 'chip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -415,6 +465,7 @@ class Build {
 			}
 			$scores .= '<div class="ajr-cs-device"><div class="ajr-cs-device__head"><div class="ajr-cs-device__name">' . esc_html( $text[0] ) . '</div><div class="ajr-cs-device__note">' . esc_html( $text[1] ) . '</div></div>' . $rings . '</div>';
 		}
+		$scores .= self::agentic( $build, 'row' );
 
 		ob_start();
 		?>
@@ -571,6 +622,8 @@ class Build {
 						<?php echo self::rings( $build['scores']['mobile'], 'md' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<p class="ajr-cs-build-card__note"><?php echo esc_html( Cards::ui_label( 'Google PageSpeed · mobile' ) ); ?></p>
 					<?php endif; ?>
+
+					<?php echo self::agentic( $build, 'pill' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 					<span class="ajr-case-study-card__read"><?php echo esc_html( Cards::ui_label( 'Read the case study' ) ); ?> <?php echo Cards::icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				</div>

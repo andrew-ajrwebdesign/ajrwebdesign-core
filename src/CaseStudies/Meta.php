@@ -83,6 +83,12 @@ class Meta {
 	public const MAX_DELIVERED = 10;
 
 	/**
+	 * The most checks Google's Agentic Browsing test has: 7 today, of which it
+	 * scores 2 to 4 and calls the rest "not applicable".
+	 */
+	public const MAX_AGENTIC = 7;
+
+	/**
 	 * The longest a row's text may be. It is scorecard text, not a paragraph.
 	 */
 	public const MAX_ROW_TEXT = 140;
@@ -291,6 +297,11 @@ class Meta {
 			'changes'         => array(),
 			'delivered_intro' => '',
 			'delivered'       => array(),
+			// Google's Agentic Browsing test: how many of the checks it scored the site passed.
+			'agentic'         => array(
+				'passed' => 0,
+				'total'  => 0,
+			),
 		);
 	}
 
@@ -362,6 +373,24 @@ class Meta {
 				$clean['delivered'][] = $item;
 			}
 		}
+
+		// Agentic Browsing: two small whole numbers. Nothing scored, or nothing passed,
+		// means nothing is shown. A pair that cannot be true (more passed than scored,
+		// more scored than the test has checks, or fewer than the two it always scores)
+		// is a typing slip and is dropped whole:
+		// capping it would print "3/3, all checks passed" for a result nobody measured.
+		$agentic = is_array( $value['agentic'] ?? null ) ? $value['agentic'] : array();
+		$total   = isset( $agentic['total'] ) && is_numeric( $agentic['total'] ) ? (int) $agentic['total'] : 0;
+		$passed  = isset( $agentic['passed'] ) && is_numeric( $agentic['passed'] ) ? (int) $agentic['passed'] : 0;
+		if ( $total < 2 || $total > self::MAX_AGENTIC || $passed < 0 || $passed > $total ) {
+			$total  = 0;
+			$passed = 0;
+		}
+
+		$clean['agentic'] = array(
+			'passed' => $passed,
+			'total'  => $total,
+		);
 
 		foreach ( array( 'mobile', 'desktop' ) as $device ) {
 			foreach ( self::SCORE_KEYS as $category ) {

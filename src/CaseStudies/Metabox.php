@@ -128,6 +128,15 @@ class Metabox {
 				</div>
 			<?php endforeach; ?>
 
+			<h4><?php esc_html_e( 'Agentic Browsing (the fifth result in PageSpeed Insights)', 'ajrwebdesign-core' ); ?></h4>
+			<p class="description"><?php esc_html_e( 'How many checks the site passed, and how many Google scored. 4 and 4 shows “Agentic Browsing 4/4” on the card and a line in the scorecard. Leave both empty to show nothing.', 'ajrwebdesign-core' ); ?></p>
+			<div class="ajr-case-study-score-row">
+				<?php
+				$this->field( 'ajrwd_cs_build[agentic][passed]', __( 'Checks passed', 'ajrwebdesign-core' ), $build['agentic']['passed'] ? (string) $build['agentic']['passed'] : '', '4' );
+				$this->field( 'ajrwd_cs_build[agentic][total]', __( 'Checks scored', 'ajrwebdesign-core' ), $build['agentic']['total'] ? (string) $build['agentic']['total'] : '', '4' );
+				?>
+			</div>
+
 			<h4><?php esc_html_e( 'Comparison rows (up to three)', 'ajrwebdesign-core' ); ?></h4>
 			<?php
 			$this->field( 'ajrwd_cs_build[compare_title]', __( 'Heading', 'ajrwebdesign-core' ), $build['compare_title'], __( 'Against a typical WordPress site', 'ajrwebdesign-core' ) );
