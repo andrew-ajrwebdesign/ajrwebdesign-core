@@ -5,8 +5,8 @@
 	"title": "Case Study Card",
 	"category": "widgets",
 	"icon": "analytics",
-	"description": "Full case-study showcase: mobile/desktop score circles, Core Web Vitals metrics, impact tiles, and summary with tags.",
-	"keywords": [ "case study", "results", "performance", "core web vitals" ],
+	"description": "Full case-study showcase. An audit shows mobile/desktop score circles, Core Web Vitals metrics and impact tiles; a site build shows its screenshots and Google PageSpeed scores.",
+	"keywords": [ "case study", "results", "performance", "core web vitals", "site build", "screenshots" ],
 	"textdomain": "ajrwebdesign-core",
 	"attributes": {
 		"caseStudyId": { "type": "number", "default": 0 },

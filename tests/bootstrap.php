@@ -22,6 +22,13 @@ function sanitize_html_class( $classname ) {
 	return preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $classname );
 }
 
+// Enough of esc_url_raw() for the tests: a URL is kept only when its scheme is allowed.
+function esc_url_raw( $url, $protocols = null ) {
+	$url    = trim( (string) $url );
+	$scheme = strtolower( (string) parse_url( $url, PHP_URL_SCHEME ) );
+	return in_array( $scheme, $protocols ?? array( 'http', 'https' ), true ) ? $url : '';
+}
+
 function sanitize_key( $key ) {
 	return preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $key ) );
 }
@@ -110,11 +117,30 @@ function __( $text, $domain = 'default' ) {
 	return $text;
 }
 
+// Registered taxonomies, for Requirements::featured_filter_off().
+$GLOBALS['ajrwd_test_taxonomies'] = array();
+
+function taxonomy_exists( $taxonomy ) {
+	return in_array( $taxonomy, $GLOBALS['ajrwd_test_taxonomies'], true );
+}
+
 function post_type_exists( $post_type ) {
 	return in_array( $post_type, $GLOBALS['ajrwd_test_post_types'], true );
 }
 
 function current_user_can( $capability ) {
 	return ! empty( $GLOBALS['ajrwd_test_can'] );
+}
+
+// Cards::can_show(): post IDs waiting for a password, and post IDs anyone may view.
+$GLOBALS['ajrwd_test_locked'] = array();
+$GLOBALS['ajrwd_test_public'] = array();
+
+function post_password_required( $post = null ) {
+	return in_array( $post, $GLOBALS['ajrwd_test_locked'], true );
+}
+
+function is_post_publicly_viewable( $post = null ) {
+	return in_array( $post, $GLOBALS['ajrwd_test_public'], true );
 }
 // phpcs:enable

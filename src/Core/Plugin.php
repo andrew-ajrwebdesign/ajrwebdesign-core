@@ -9,10 +9,12 @@ namespace AJR\SiteCore\Core;
 
 use AJR\SiteCore\Blocks\BlockVersion;
 use AJR\SiteCore\Blocks\Registrar;
+use AJR\SiteCore\CaseStudies\BuildCopy;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\Metabox;
 use AJR\SiteCore\CaseStudies\StoryIntro;
 use AJR\SiteCore\Compat\ThemeSupport;
+use AJR\SiteCore\I18n\AttachmentAlt;
 use AJR\SiteCore\I18n\Hreflang;
 use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
@@ -74,6 +76,8 @@ class Plugin {
 			new ThemeSupport(),
 			new Strings(),
 			new Hreflang(),
+			// "Alt text (German)" on images, for posts shown in both languages.
+			new AttachmentAlt(),
 			new PostsMeta(),
 			new TestimonialsGerman(),
 			// This site's layer on AJR Core's case-study type: Core Web Vitals fields, their
@@ -82,6 +86,9 @@ class Plugin {
 			new Metabox(),
 			new CaseStudiesSeo(),
 			new StoryIntro(),
+			// The site-build kind of case study: its results-band wording. Its fields are
+			// in Meta and Metabox; Blocks\Build renders it inside the case-study-card block.
+			new BuildCopy(),
 		);
 
 		foreach ( $modules as $module ) {
