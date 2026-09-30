@@ -1,0 +1,44 @@
+/* Case Study Details metabox: the site-build fields.
+   Rows of four (scores, comparison) or three (facts), and the screenshot picker. */
+.ajr-case-study-meta-section h4 {
+	margin: 20px 0 10px;
+}
+
+.ajr-case-study-score-row {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.ajr-case-study-score-row--three {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ajr-case-study-gallery__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 12px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ajr-case-study-gallery__list li {
+	margin: 0;
+}
+
+.ajr-case-study-gallery__list img {
+	display: block;
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	object-position: top;
+	border-radius: 4px;
+}
+
+@media (max-width: 782px) {
+	.ajr-case-study-score-row,
+	.ajr-case-study-score-row--three {
+		grid-template-columns: 1fr;
+	}
+}

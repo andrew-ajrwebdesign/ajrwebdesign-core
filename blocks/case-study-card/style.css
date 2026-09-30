@@ -71,3 +71,124 @@
 .ajr-case-study-card__read,.ajr-case-study-card__read svg{transition:none}
 .ajr-case-study-card--linked:hover .ajr-case-study-card__read svg,.ajr-case-study-card--linked:focus-within .ajr-case-study-card__read svg{transform:none}
 }
+
+/* --- v1.10.0: site-build case studies (Blocks\Build) ---
+   A build has no "before", so it is shown by what the finished site looks like
+   (screenshots in a browser and a phone frame) and what it scores today (the
+   four Google PageSpeed rings, plus rows comparing it with a typical site).
+   Three shapes: the single's hero art, its results band, and the card used
+   everywhere else. Tokens only. No script: the rings are a conic-gradient
+   driven by --score, the screenshot strip is scroll-snap. */
+
+/* Browser and phone frames. */
+.ajr-cs-frame{background:var(--wp--preset--color--bg);border:1px solid var(--wp--preset--color--border);border-radius:var(--wp--custom--radius--md,12px);box-shadow:var(--wp--preset--shadow--soft);overflow:hidden}
+.ajr-cs-frame__bar{align-items:center;background:var(--wp--preset--color--surface);border-block-end:1px solid var(--wp--preset--color--border);display:flex;gap:6px;padding:10px 14px}
+.ajr-cs-frame__bar span{background:var(--wp--preset--color--border);border-radius:50%;height:9px;width:9px}
+.ajr-cs-frame img,.ajr-cs-phone img{display:block;height:auto;width:100%}
+.ajr-cs-phone{background:var(--wp--preset--color--ink);border:6px solid var(--wp--preset--color--ink);border-radius:28px;box-shadow:var(--wp--preset--shadow--soft);overflow:hidden}
+.ajr-cs-phone img{border-radius:22px}
+
+/* The device pair: the phone overlaps the browser frame's trailing corner. */
+.ajr-cs-devices{padding-block-end:8%;padding-inline-end:6%;position:relative}
+.ajr-cs-devices .ajr-cs-phone{inset-block-end:0;inset-inline-end:0;position:absolute;width:24%}
+
+/* Score rings. */
+.ajr-cs-scores{display:grid;gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(4,minmax(0,5.75rem))}
+.ajr-cs-score{display:grid;gap:8px;justify-items:center;min-width:0;text-align:center}
+.ajr-cs-ring{--ring:72px;--score:0;background:radial-gradient(closest-side,var(--wp--preset--color--bg) 82%,transparent 83% 100%),conic-gradient(var(--ring-color) calc(var(--score)*1%),var(--wp--preset--color--border) 0);border-radius:50%;display:grid;font-size:calc(var(--ring)*.34);font-weight:600;height:var(--ring);line-height:1;place-items:center;width:var(--ring)}
+.ajr-cs-ring--good{--ring-color:var(--wp--preset--color--score-green);color:var(--wp--preset--color--score-green-text)}
+.ajr-cs-ring--fair{--ring-color:var(--wp--preset--color--warning);color:var(--wp--preset--color--ink)}
+.ajr-cs-ring--poor{--ring-color:var(--wp--preset--color--score-red);color:var(--wp--preset--color--score-red-text)}
+/* A label can be one long word in a narrow column. "Barrierefreiheit" carries a soft hyphen (Build::SOFT_BREAKS); anything else breaks as a last resort rather than running into its neighbour. */
+.ajr-cs-score__label{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);line-height:1.3;max-width:100%;overflow-wrap:anywhere}
+/* The card's rings sit two to a row with the label beside each ring, which fits every
+   label at every card width. Four in a row, label beneath, only once the card is wide
+   enough for the longest label to stay on one line (the container query below). */
+.ajr-cs-scores--md{gap:12px var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(2,minmax(0,1fr))}
+.ajr-cs-scores--md .ajr-cs-score{align-items:center;gap:10px;grid-template-columns:auto minmax(0,1fr);justify-items:start;text-align:start}
+.ajr-cs-scores--md .ajr-cs-ring{--ring:48px}
+.ajr-cs-scores--sm{gap:10px;grid-template-columns:repeat(4,auto);justify-content:start}
+.ajr-cs-scores--sm .ajr-cs-ring{--ring:44px}
+
+/* Hero art (single): the device pair with a chip of the mobile scores. */
+.ajr-cs-hero__floats.ajr-cs-build-art{min-height:0}
+.ajr-cs-build-art .ajr-cs-devices{z-index:1}
+.ajr-cs-build-art .ajr-cs-frame{border-color:color-mix(in srgb,var(--wp--preset--color--bg) 16%,transparent)}
+.ajr-cs-build-art .ajr-cs-phone{background:var(--wp--preset--color--dark-lift);border-color:var(--wp--preset--color--dark-lift)}
+.ajr-cs-build-chip{background:var(--wp--preset--color--bg);border-radius:var(--wp--custom--radius--md,12px);box-shadow:0 18px 40px -18px color-mix(in srgb,var(--wp--preset--color--ink) 45%,transparent);inset-block-end:2%;inset-inline-start:-4%;padding:14px 18px;position:absolute;z-index:2}
+
+/* Results band (single): scorecard, facts, source line, screenshot strip. */
+.ajr-cs-scorecard{background:var(--wp--preset--color--bg);border:1px solid var(--wp--preset--color--border);border-radius:var(--wp--custom--radius--lg,20px);box-shadow:var(--wp--preset--shadow--soft);display:grid;gap:var(--wp--preset--spacing--60,3rem);grid-template-columns:7fr 5fr;padding:var(--wp--preset--spacing--50,2.5rem)}
+.ajr-cs-scorecard--single{grid-template-columns:1fr}
+.ajr-cs-scorecard__scores{align-self:center}
+.ajr-cs-device{align-items:center;display:grid;gap:var(--wp--preset--spacing--40,2rem);grid-template-columns:6rem 1fr}
+.ajr-cs-device+.ajr-cs-device{border-block-start:1px solid var(--wp--preset--color--border);margin-block-start:var(--wp--preset--spacing--40,2rem);padding-block-start:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-device__name{color:var(--wp--preset--color--ink);font-weight:600}
+.ajr-cs-device__note{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);line-height:1.4}
+.ajr-cs-compare__title{margin:0 0 var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-cmp+.ajr-cs-cmp{margin-block-start:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-cmp__head{align-items:baseline;display:flex;font-size:var(--wp--preset--font-size--sm,.875rem);gap:12px;justify-content:space-between}
+.ajr-cs-cmp__head strong{color:var(--wp--preset--color--accent-dark);font-family:var(--wp--preset--font-family--lora);font-size:var(--wp--preset--font-size--xl,1.5rem);font-weight:400}
+.ajr-cs-cmp__bar{border-radius:999px;height:8px;margin-block-start:8px}
+.ajr-cs-cmp__bar--this{background:var(--wp--preset--color--score-green)}
+.ajr-cs-cmp__bar--typical{background:var(--wp--preset--color--muted-light)}
+.ajr-cs-cmp__note{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);margin:6px 0 0}
+.ajr-cs-facts{border-block:1px solid var(--wp--preset--color--border);display:grid;grid-auto-columns:minmax(0,1fr);grid-auto-flow:column;margin:var(--wp--preset--spacing--40,2rem) 0 0}
+.ajr-cs-fact{display:flex;flex-direction:column;padding:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-fact+.ajr-cs-fact{border-inline-start:1px solid var(--wp--preset--color--border)}
+.ajr-cs-fact__value{color:var(--wp--preset--color--accent-dark);font-family:var(--wp--preset--font-family--lora);font-size:var(--wp--preset--font-size--2-xl,2rem);line-height:1.1;margin:0;order:-1}
+.ajr-cs-fact__label{color:var(--wp--preset--color--ink);font-size:var(--wp--preset--font-size--sm,.875rem);font-weight:600;margin-block-start:6px}
+.ajr-cs-fact__note{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);margin:2px 0 0}
+.ajr-cs-source{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);margin:var(--wp--preset--spacing--30,1rem) 0 0;text-align:center}
+.ajr-cs-strip-head{align-items:baseline;display:flex;gap:16px;justify-content:space-between;margin-block-start:var(--wp--preset--spacing--60,3rem)}
+.ajr-cs-strip-head__title{margin:0}
+.ajr-cs-strip-head__link{font-weight:600;white-space:nowrap}
+.ajr-cs-strip{--shot:clamp(170px,24vw,330px);margin-block-start:var(--wp--preset--spacing--40,2rem);overflow-x:auto;overscroll-behavior-x:contain;padding:4px 4px var(--wp--preset--spacing--30,1rem);scroll-snap-type:x mandatory}
+.ajr-cs-strip:focus-visible{outline:2px solid var(--wp--preset--color--primary);outline-offset:2px}
+.ajr-cs-strip__list{display:flex;gap:var(--wp--preset--spacing--40,2rem);list-style:none;margin:0;padding:0}
+.ajr-cs-strip__item{flex:0 0 auto;margin:0;scroll-snap-align:start}
+.ajr-cs-strip__figure{display:table;margin:0}
+.ajr-cs-strip__caption{caption-side:bottom;color:var(--wp--preset--color--muted);display:table-caption;font-size:var(--wp--preset--font-size--xs,.875rem);padding-block-start:10px}
+.ajr-cs-strip__caption strong{color:var(--wp--preset--color--ink);display:block;font-weight:600}
+.ajr-cs-strip .ajr-cs-frame img{height:var(--shot);width:auto}
+.ajr-cs-strip .ajr-cs-phone img{height:calc(var(--shot) + 20px);width:auto}
+.ajr-cs-more{font-weight:600;margin:var(--wp--preset--spacing--50,2.5rem) 0 0;text-align:center}
+
+/* The card (archive, featured work, any Query Loop). It lays itself out from
+   its own width, so one card is wide and two side by side stack. */
+.ajr-cs-build-card{background:var(--wp--preset--color--bg);border:1px solid var(--wp--preset--color--border);border-radius:var(--wp--custom--radius--lg,20px);box-shadow:var(--wp--preset--shadow--soft);container-type:inline-size}
+.ajr-cs-build-card__inner{display:grid;gap:var(--wp--preset--spacing--40,2rem);padding:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-build-card .ajr-cs-scores{margin-block-start:18px}
+.ajr-cs-build-card__note{color:var(--wp--preset--color--muted);font-size:var(--wp--preset--font-size--xs,.875rem);margin:10px 0 0}
+@container (min-width:760px){
+.ajr-cs-build-card__inner{align-items:center;gap:var(--wp--preset--spacing--60,3rem);grid-template-columns:7fr 5fr;padding:var(--wp--preset--spacing--50,2.5rem)}
+.ajr-cs-build-card__inner--text{grid-template-columns:1fr}
+}
+@container (min-width:1100px){
+.ajr-cs-scores--md{gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(4,minmax(0,5.75rem))}
+.ajr-cs-scores--md .ajr-cs-score{align-items:start;gap:8px;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+.ajr-cs-scores--md .ajr-cs-ring{--ring:58px}
+}
+
+@media(max-width:880px){
+.ajr-cs-hero__floats.ajr-cs-build-art{display:block}
+.ajr-cs-build-chip{inset-inline-start:0}
+}
+@media(max-width:1100px){
+.ajr-cs-device{gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:1fr}
+}
+@media(max-width:781px){
+.ajr-cs-scorecard{gap:var(--wp--preset--spacing--50,2.5rem);grid-template-columns:1fr;padding:var(--wp--preset--spacing--40,2rem)}
+.ajr-cs-facts{grid-auto-flow:row;grid-template-columns:1fr 1fr}
+.ajr-cs-fact{padding-inline:var(--wp--preset--spacing--30,1rem)}
+.ajr-cs-fact:nth-child(odd){border-inline-start:0}
+.ajr-cs-fact:nth-child(n+3){border-block-start:1px solid var(--wp--preset--color--border)}
+}
+/* Phones: four of the scorecard's rings in a row leave each label about 70px, too
+   narrow for "Performance" at the smallest type step. Two to a row, label beside the
+   ring, as the card does. */
+@media(max-width:480px){
+.ajr-cs-scorecard .ajr-cs-scores{gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.ajr-cs-scorecard .ajr-cs-score{align-items:center;gap:10px;grid-template-columns:auto minmax(0,1fr);justify-items:start;text-align:start}
+.ajr-cs-scorecard .ajr-cs-ring{--ring:48px}
+}

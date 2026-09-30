@@ -47,6 +47,38 @@ class CaseStudies {
 	public function register(): void {
 		add_filter( 'the_seo_framework_description_excerpt', array( $this, 'description_excerpt' ), 10, 2 );
 		add_filter( 'the_seo_framework_sitemap_additional_urls', array( $this, 'sitemap_urls' ) );
+		add_filter( 'the_seo_framework_image_generation_params', array( $this, 'image_params' ), 10, 2 );
+	}
+
+	/**
+	 * Keeps a hidden case study's pictures out of its social image.
+	 *
+	 * The SEO Framework fills og:image from the featured image, then from the
+	 * content. For a case study waiting for its password that put the client's
+	 * home-page screenshot in the page's head (found by the password test,
+	 * 2026-09-30). With nothing to look in, TSF falls back to the site's own
+	 * social image.
+	 *
+	 * @param mixed $params Image generation parameters (size, multi, cbs, fallback).
+	 * @param mixed $args   TSF query args; null when it is the page being shown.
+	 * @return mixed
+	 */
+	public function image_params( $params, $args ) {
+		if ( ! is_array( $params ) ) {
+			return $params;
+		}
+
+		if ( null === $args ) {
+			$post_id = is_singular( PostType::POST_TYPE ) ? (int) get_queried_object_id() : 0;
+		} else {
+			$post_id = is_array( $args ) && empty( $args['tax'] ) && empty( $args['pta'] ) ? (int) ( $args['id'] ?? 0 ) : 0;
+		}
+
+		if ( $post_id && PostType::POST_TYPE === get_post_type( $post_id ) && ! Cards::can_show( $post_id ) ) {
+			$params['cbs'] = array();
+		}
+
+		return $params;
 	}
 
 	/**
@@ -82,6 +114,11 @@ class CaseStudies {
 			return $excerpt;
 		}
 
+		// A case study waiting for its password keeps its summary behind it.
+		if ( ! Cards::can_show( $post_id ) ) {
+			return $excerpt;
+		}
+
 		$summary = (string) ( Cards::get_case_meta( $post_id )['summary'] ?? '' );
 
 		return '' !== $summary ? $summary : $excerpt;
@@ -113,6 +150,8 @@ class CaseStudies {
 			array(
 				'post_type'              => PostType::POST_TYPE,
 				'post_status'            => 'publish',
+				// A password-protected case study is not for search engines yet.
+				'has_password'           => false,
 				'posts_per_page'         => self::SITEMAP_CAP,
 				'orderby'                => 'modified',
 				'order'                  => 'DESC',

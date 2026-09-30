@@ -48,6 +48,7 @@ class StoryIntro {
 			'LOCAL SEO'  => __( 'For a local service business, being found and being fast are the same job.', 'ajrwebdesign-core' ),
 			'MEMBERSHIP' => __( 'Members log in every day — but Google and every prospect only ever see the logged-out site.', 'ajrwebdesign-core' ),
 			'PUBLISHING' => __( 'A publisher’s articles carry the traffic — and everything the business bolts onto them.', 'ajrwebdesign-core' ),
+			'SITE BUILD' => __( 'A new site has one job: turn a search into an enquiry.', 'ajrwebdesign-core' ),
 		);
 
 		return $map[ $eyebrow ] ?? null;
@@ -68,7 +69,17 @@ class StoryIntro {
 			return $block_content;
 		}
 
-		$eyebrow = (string) get_post_meta( get_queried_object_id(), 'ajrwd_cs_eyebrow', true );
+		// Behind a password the theme's generic line stands: the type is a field too.
+		if ( ! \AJR\SiteCore\Blocks\Cards::can_show( (int) get_queried_object_id() ) ) {
+			return $block_content;
+		}
+
+		// A site build is known by its KIND, not by what its eyebrow happens to say:
+		// "Site build", "WEBSITE" or a client's sector must all get the build's line.
+		$post_id = (int) get_queried_object_id();
+		$eyebrow = Meta::KIND_BUILD === get_post_meta( $post_id, Meta::KIND, true )
+			? 'SITE BUILD'
+			: (string) get_post_meta( $post_id, Meta::EYEBROW, true );
 		$intro   = self::intro_for( $eyebrow );
 		if ( null === $intro ) {
 			return $block_content;

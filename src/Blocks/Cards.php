@@ -53,24 +53,82 @@ class Cards {
 	 * @var array<string,string>
 	 */
 	private const LABELS_DE = array(
-		'Mobile'              => 'Mobil',
-		'Before'              => 'Vorher',
-		'After'               => 'Nachher',
-		'Requests Removed'    => 'Requests entfernt',
-		'Page Size Reduced'   => 'Seitengröße reduziert',
-		'Performance Score'   => 'Performance-Score',
-		'LCP Improvement'     => 'LCP-Verbesserung',
-		'Case study tags'     => 'Fallstudien-Schlagwörter',
-		'Read the case study' => 'Fallstudie lesen',
-		'Passed'              => 'Bestanden',
-		'Failed'              => 'Nicht bestanden',
+		'Mobile'                           => 'Mobil',
+		'Before'                           => 'Vorher',
+		'After'                            => 'Nachher',
+		'Requests Removed'                 => 'Requests entfernt',
+		'Page Size Reduced'                => 'Seitengröße reduziert',
+		'Performance Score'                => 'Performance-Score',
+		'LCP Improvement'                  => 'LCP-Verbesserung',
+		'Case study tags'                  => 'Fallstudien-Schlagwörter',
+		'Read the case study'              => 'Fallstudie lesen',
+		'Passed'                           => 'Bestanden',
+		'Failed'                           => 'Nicht bestanden',
+		// Site-build case studies (Blocks\Build). "Performance", "SEO" and
+		// "Desktop" are used as they are in German.
+		'Accessibility'                    => 'Barrierefreiheit',
+		'Best practices'                   => 'Best Practices',
+		'%1$s: %2$s out of 100'            => '%1$s: %2$s von 100',
+		'Google PageSpeed · mobile'        => 'Google PageSpeed · Mobil',
+		'Mid-range phone, slow 4G'         => 'Mittelklasse-Smartphone, langsames 4G',
+		'Broadband'                        => 'Breitband',
+		'Against a typical WordPress site' => 'Im Vergleich zu einer typischen WordPress-Website',
+		'A look around the site'           => 'Ein Blick auf die Website',
+		'Screenshots of the finished site' => 'Screenshots der fertigen Website',
+		/* translators: %s: the live site's hostname. */
+		'Visit %s'                         => '%s besuchen',
+		'Start a project like this'        => 'Ein Projekt wie dieses starten',
+		'View all case studies'            => 'Alle Fallstudien ansehen',
 	);
+
+	/**
+	 * Tag slugs that pick case studies for a listing and are never printed as a pill.
+	 *
+	 * @var string[]
+	 */
+	public const HIDDEN_TAGS = array( 'featured' );
 
 	/**
 	 * Whether the current request renders a German page.
 	 */
 	public static function is_de(): bool {
 		return 'de' === Utils::current_language();
+	}
+
+	/**
+	 * Whether a case study's details may be printed for the person looking.
+	 *
+	 * The card blocks take a case study's ID from a block attribute or from a
+	 * Query Loop, and until 1.10.0 checked only that it WAS a case study. So a
+	 * draft, a private one, or one behind a password printed its summary and
+	 * numbers on any page that named it, and a password-protected case study's
+	 * own page showed everything but the story (security review, 2026-09-30).
+	 * That mattered little for an anonymised audit; a site build shows a
+	 * client's address and screenshots, possibly before they have agreed to it.
+	 *
+	 * Shown when it is published for everyone, or when the person looking may
+	 * read it anyway (an editor previewing a draft). Never while it is waiting
+	 * for its password.
+	 *
+	 * @param int $post_id Case study ID.
+	 */
+	public static function can_show( int $post_id ): bool {
+		if ( post_password_required( $post_id ) ) {
+			return false;
+		}
+
+		return is_post_publicly_viewable( $post_id ) || current_user_can( 'read_post', $post_id );
+	}
+
+	/**
+	 * The hero of a password-protected case study's own page: its title and
+	 * nothing else, so the page keeps its one h1 while the summary, numbers
+	 * and screenshots stay behind the password.
+	 *
+	 * @param int $post_id Case study ID.
+	 */
+	public static function locked_hero( int $post_id ): string {
+		return '<div ' . get_block_wrapper_attributes( array( 'class' => 'ajr-cs-hero' ) ) . '><div class="ajr-cs-hero__intro"><h1 class="ajr-cs-hero__title">' . esc_html( get_the_title( $post_id ) ) . '</h1></div></div>';
 	}
 
 	/**
@@ -243,6 +301,8 @@ class Cards {
 			'speed-optimization' => 'gauge',
 			'core-web-vitals'    => 'core-web-vitals',
 			'caching'            => 'page-size-reduced',
+			'site-build'         => 'device-desktop',
+			'local-seo'          => 'trend-up',
 		);
 		return $map[ $term_slug ] ?? 'core-web-vitals';
 	}
@@ -521,6 +581,15 @@ class Cards {
 	public static function render_tags( int $post_id, string $base_class = 'ajr-case-study-mini-card' ): string {
 		$terms = get_the_terms( $post_id, \AJR\SiteCore\CaseStudies\PostType::TAXONOMY );
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return '';
+		}
+		// A tag that only picks case studies for a listing ("featured") says
+		// nothing about the work, so it is never printed as a pill.
+		$terms = array_filter(
+			$terms,
+			static fn( $term ): bool => ! in_array( $term->slug, self::HIDDEN_TAGS, true )
+		);
+		if ( array() === $terms ) {
 			return '';
 		}
 		ob_start();

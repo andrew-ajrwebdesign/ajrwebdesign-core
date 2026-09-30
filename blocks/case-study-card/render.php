@@ -11,6 +11,7 @@
  * @var array $attributes Block attributes.
  */
 
+use AJR\SiteCore\Blocks\Build;
 use AJR\SiteCore\Blocks\Cards;
 use AJR\SiteCore\CaseStudies\PostType;
 
@@ -27,6 +28,26 @@ if ( ! $case_study_id && isset( $block->context['postId'] ) ) {
 	$case_study_id = (int) $block->context['postId'];
 }
 if ( ! $case_study_id || PostType::POST_TYPE !== get_post_type( $case_study_id ) ) {
+	return;
+}
+
+if ( ! Cards::can_show( $case_study_id ) ) {
+	// A draft, a private case study or one behind a password prints nothing on
+	// another page. On its OWN page behind a password the hero still prints the
+	// title, so the page keeps its h1; everything else waits for the password.
+	if ( 'hero' === ( $attributes['variant'] ?? 'default' )
+		&& post_password_required( $case_study_id )
+		&& is_singular( PostType::POST_TYPE )
+		&& get_queried_object_id() === $case_study_id ) {
+		echo Cards::locked_hero( $case_study_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- locked_hero() escapes the title; the wrapper attributes are escaped by core.
+	}
+	return;
+}
+
+if ( Build::is_build( $case_study_id ) ) {
+	// A site build has no "before", so it has its own three shapes (hero,
+	// results band, card). Same block, same attributes; see Blocks\Build.
+	echo Build::render( $case_study_id, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Build escapes every value it prints.
 	return;
 }
 

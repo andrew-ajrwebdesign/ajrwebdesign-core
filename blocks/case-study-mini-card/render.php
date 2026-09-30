@@ -24,6 +24,10 @@ if ( ! $case_study_id && isset( $block->context['postId'] ) ) {
 if ( ! $case_study_id || PostType::POST_TYPE !== get_post_type( $case_study_id ) ) {
 	return;
 }
+// A draft, a private case study or one behind a password prints nothing (Cards::can_show()).
+if ( ! Cards::can_show( $case_study_id ) ) {
+	return;
+}
 
 $case_meta  = Cards::get_case_meta( $case_study_id );
 $case_title = $case_meta['title'];
