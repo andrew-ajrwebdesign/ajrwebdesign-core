@@ -72,6 +72,14 @@
 .ajr-case-study-card--linked:hover .ajr-case-study-card__read svg,.ajr-case-study-card--linked:focus-within .ajr-case-study-card__read svg{transform:none}
 }
 
+/* --- v1.10.1: the audit card on the narrowest phones. Two 80px score circles and the
+   arrow between them need 218px; at 320px the panel had 174px and the page scrolled
+   sideways by 5px. The panel gives up its side padding and the arrow shrinks. --- */
+@media(max-width:360px){
+.ajr-case-study-card__device-panel{padding-inline:0}
+.ajr-case-study-card__flow-arrow{font-size:22px;height:30px;width:30px}
+}
+
 /* --- v1.10.0: site-build case studies (Blocks\Build) ---
    A build has no "before", so it is shown by what the finished site looks like
    (screenshots in a browser and a phone frame) and what it scores today (the
@@ -164,6 +172,11 @@
 .ajr-cs-build-card__inner{align-items:center;gap:var(--wp--preset--spacing--60,3rem);grid-template-columns:7fr 5fr;padding:var(--wp--preset--spacing--50,2.5rem)}
 .ajr-cs-build-card__inner--text{grid-template-columns:1fr}
 }
+/* A narrow card (a phone): the label beside the ring has about 65px, too little for
+   "Performance". The label goes under its ring, still two to a row. */
+@container (max-width:420px){
+.ajr-cs-scores--md .ajr-cs-score{align-items:start;gap:8px;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+}
 @container (min-width:1100px){
 .ajr-cs-scores--md{gap:var(--wp--preset--spacing--30,1rem);grid-template-columns:repeat(4,minmax(0,5.75rem))}
 .ajr-cs-scores--md .ajr-cs-score{align-items:start;gap:8px;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
@@ -185,10 +198,8 @@
 .ajr-cs-fact:nth-child(n+3){border-block-start:1px solid var(--wp--preset--color--border)}
 }
 /* Phones: four of the scorecard's rings in a row leave each label about 70px, too
-   narrow for "Performance" at the smallest type step. Two to a row, label beside the
-   ring, as the card does. */
+   narrow for "Performance" at the smallest type step. Two to a row, label under the
+   ring, so each label has half the card (checked down to 320px). */
 @media(max-width:480px){
-.ajr-cs-scorecard .ajr-cs-scores{gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
-.ajr-cs-scorecard .ajr-cs-score{align-items:center;gap:10px;grid-template-columns:auto minmax(0,1fr);justify-items:start;text-align:start}
-.ajr-cs-scorecard .ajr-cs-ring{--ring:48px}
+.ajr-cs-scorecard .ajr-cs-scores{gap:16px 12px;grid-template-columns:repeat(2,minmax(0,1fr))}
 }
