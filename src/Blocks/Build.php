@@ -174,15 +174,19 @@ class Build {
 	 * page that does not shift, an llms.txt file, and so on). It reports checks
 	 * passed out of checks scored, not a 0 to 100 score, so it is not a ring.
 	 *
-	 *   row   the scorecard's third line, under Mobile and Desktop, with a sentence
-	 *   pill  one line on the card: the figure and "ready for AI assistants"
-	 *   chip  the figure alone, in the hero's score chip
+	 *   row    the scorecard's third line, under Mobile and Desktop, with a sentence
+	 *   badge  a dark panel on the card, under the rings: the figure, the test's
+	 *          name and "ready for AI assistants"
+	 *   chip   the test's name and the figure on one line, in the hero's score chip
 	 *
-	 * The pill and the chip are a badge, so they show only a full pass. The row
-	 * shows any result with at least one check passed, in plain words.
+	 * The badge and the chip show only a full pass. The row shows any result with
+	 * at least one check passed, in plain words; a full pass makes it a dark panel
+	 * too. Dark on a white card is deliberate: Andrew, 2026-09-30, "this is hot
+	 * feature right now and want this showcased", after a first version that was a
+	 * small tinted line under the rings.
 	 *
 	 * @param array<string,mixed> $build From data().
-	 * @param string              $shape row, pill or chip.
+	 * @param string              $shape row, badge or chip.
 	 */
 	public static function agentic( array $build, string $shape ): string {
 		$passed = (int) ( $build['agentic']['passed'] ?? 0 );
@@ -191,17 +195,20 @@ class Build {
 			return '';
 		}
 		$full = $passed === $total;
-		/* translators: 1: checks passed. 2: checks scored. */
-		$figure = sprintf( Cards::ui_label( 'Agentic Browsing %1$d/%2$d' ), $passed, $total );
 
 		if ( 'row' !== $shape ) {
 			if ( ! $full ) {
 				return '';
 			}
 			if ( 'chip' === $shape ) {
-				return '<div class="ajr-cs-agentic-chip">' . esc_html( $figure ) . '</div>';
+				/* translators: 1: checks passed. 2: checks scored. */
+				return '<div class="ajr-cs-agentic-chip">' . esc_html( sprintf( Cards::ui_label( 'Agentic Browsing %1$d/%2$d' ), $passed, $total ) ) . '</div>';
 			}
-			return '<p class="ajr-cs-agentic-pill"><strong>' . esc_html( $figure ) . '</strong> <span>' . esc_html( Cards::ui_label( 'Ready for AI assistants' ) ) . '</span></p>';
+			// Read in order it says "4/4 Agentic Browsing Ready for AI assistants", so nothing
+			// here is hidden from a screen reader. The spaces between the parts are real ones:
+			// the layout is flex, and text read without it would run "4/4Agentic" together.
+			return '<div class="ajr-cs-agentic-badge"><span class="ajr-cs-agentic-badge__figure">' . esc_html( $passed . '/' . $total ) . '</span> '
+				. '<span class="ajr-cs-agentic-badge__text"><strong>' . esc_html( Cards::ui_label( 'Agentic Browsing' ) ) . '</strong> <span>' . esc_html( Cards::ui_label( 'Ready for AI assistants' ) ) . '</span></span></div>';
 		}
 
 		$text = $full
@@ -211,8 +218,8 @@ class Build {
 			: sprintf( Cards::ui_label( '%1$d of %2$d checks passed in Google’s test of how well AI assistants can read and use a site.' ), $passed, $total );
 
 		// The big figure is for the eye; the sentence beside it says the same in words.
-		return '<div class="ajr-cs-device"><div class="ajr-cs-device__head"><div class="ajr-cs-device__name">' . esc_html( Cards::ui_label( 'AI agents' ) ) . '</div><div class="ajr-cs-device__note">' . esc_html( Cards::ui_label( 'Google’s Agentic Browsing test' ) ) . '</div></div>'
-			. '<div class="ajr-cs-agentic"><div class="ajr-cs-agentic__figure' . ( $full ? ' ajr-cs-agentic__figure--full' : '' ) . '" aria-hidden="true">' . esc_html( $passed . '/' . $total ) . '</div><p class="ajr-cs-agentic__text">' . esc_html( $text ) . '</p></div></div>';
+		return '<div class="ajr-cs-device' . ( $full ? ' ajr-cs-device--agents' : '' ) . '"><div class="ajr-cs-device__head"><div class="ajr-cs-device__name">' . esc_html( Cards::ui_label( 'AI agents' ) ) . '</div><div class="ajr-cs-device__note">' . esc_html( Cards::ui_label( 'Google’s Agentic Browsing test' ) ) . '</div></div>'
+			. '<div class="ajr-cs-agentic"><div class="ajr-cs-agentic__figure" aria-hidden="true">' . esc_html( $passed . '/' . $total ) . '</div><p class="ajr-cs-agentic__text">' . esc_html( $text ) . '</p></div></div>';
 	}
 
 	/**
@@ -623,7 +630,7 @@ class Build {
 						<p class="ajr-cs-build-card__note"><?php echo esc_html( Cards::ui_label( 'Google PageSpeed · mobile' ) ); ?></p>
 					<?php endif; ?>
 
-					<?php echo self::agentic( $build, 'pill' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo self::agentic( $build, 'badge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 					<span class="ajr-case-study-card__read"><?php echo esc_html( Cards::ui_label( 'Read the case study' ) ); ?> <?php echo Cards::icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				</div>

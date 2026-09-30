@@ -397,20 +397,26 @@ class BuildTest extends TestCase {
 		$full    = Meta::sanitize_build( array( 'agentic' => array( 'passed' => 4, 'total' => 4 ) ) );
 		$partial = Meta::sanitize_build( array( 'agentic' => array( 'passed' => 2, 'total' => 3 ) ) );
 
-		foreach ( array( 'row', 'pill', 'chip' ) as $shape ) {
+		foreach ( array( 'row', 'badge', 'chip' ) as $shape ) {
 			$this->assertSame( '', Build::agentic( $none, $shape ) );
 		}
 
-		$this->assertStringContainsString( 'Agentic Browsing 4/4', Build::agentic( $full, 'pill' ) );
+		$badge = Build::agentic( $full, 'badge' );
+		$this->assertStringContainsString( '>4/4<', $badge );
+		// Without its layout the badge must still read as separate words.
+		$this->assertSame( '4/4 Agentic Browsing Ready for AI assistants', wp_strip_all_tags( $badge ) );
+		$this->assertStringContainsString( 'Agentic Browsing', $badge );
+		$this->assertStringContainsString( 'Ready for AI assistants', $badge );
 		$this->assertStringContainsString( 'Agentic Browsing 4/4', Build::agentic( $full, 'chip' ) );
 		$this->assertStringContainsString( 'All 4 checks passed', Build::agentic( $full, 'row' ) );
-		$this->assertStringContainsString( 'ajr-cs-agentic__figure--full', Build::agentic( $full, 'row' ) );
+		// A full pass is the highlighted row.
+		$this->assertStringContainsString( 'ajr-cs-device--agents', Build::agentic( $full, 'row' ) );
 
-		// A partial result is stated in the scorecard and is never a badge.
-		$this->assertSame( '', Build::agentic( $partial, 'pill' ) );
+		// A partial result is stated in the scorecard, plainly, and is never a badge.
+		$this->assertSame( '', Build::agentic( $partial, 'badge' ) );
 		$this->assertSame( '', Build::agentic( $partial, 'chip' ) );
 		$this->assertStringContainsString( '2 of 3 checks passed', Build::agentic( $partial, 'row' ) );
-		$this->assertStringNotContainsString( '--full', Build::agentic( $partial, 'row' ) );
+		$this->assertStringNotContainsString( 'ajr-cs-device--agents', Build::agentic( $partial, 'row' ) );
 	}
 
 	/**
@@ -419,7 +425,7 @@ class BuildTest extends TestCase {
 	 */
 	public function test_every_card_label_in_the_source_has_a_german_form(): void {
 		// Used in German as they are, so they have no entry on purpose.
-		$same_in_german = array( 'Desktop', 'Agentic Browsing %1$d/%2$d', 'Largest Contentful Paint', 'Core Web Vitals' );
+		$same_in_german = array( 'Desktop', 'Agentic Browsing', 'Agentic Browsing %1$d/%2$d', 'Largest Contentful Paint', 'Core Web Vitals' );
 
 		$root  = dirname( __DIR__, 2 );
 		$files = array_merge( glob( $root . '/src/*/*.php' ), glob( $root . '/blocks/*/render.php' ) );

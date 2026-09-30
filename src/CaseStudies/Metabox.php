@@ -129,7 +129,7 @@ class Metabox {
 			<?php endforeach; ?>
 
 			<h4><?php esc_html_e( 'Agentic Browsing (the fifth result in PageSpeed Insights)', 'ajrwebdesign-core' ); ?></h4>
-			<p class="description"><?php esc_html_e( 'How many checks the site passed, and how many Google scored. 4 and 4 shows “Agentic Browsing 4/4” on the card and a line in the scorecard. Leave both empty to show nothing.', 'ajrwebdesign-core' ); ?></p>
+			<p class="description"><?php esc_html_e( 'How many checks the site passed, and how many Google scored. 4 and 4 shows a “4/4 Agentic Browsing” panel on the card and in the scorecard. Leave both empty to show nothing.', 'ajrwebdesign-core' ); ?></p>
 			<div class="ajr-case-study-score-row">
 				<?php
 				$this->field( 'ajrwd_cs_build[agentic][passed]', __( 'Checks passed', 'ajrwebdesign-core' ), $build['agentic']['passed'] ? (string) $build['agentic']['passed'] : '', '4' );
