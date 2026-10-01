@@ -200,7 +200,8 @@ class CaseStudies {
 			return;
 		}
 
-		update_option( self::REWRITE_OPTION, $signature );
+		// Not autoloaded: only this admin_init check reads it.
+		update_option( self::REWRITE_OPTION, $signature, false );
 		flush_rewrite_rules( false );
 	}
 

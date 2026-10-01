@@ -761,7 +761,7 @@ class CaseStudiesTest extends TestCase {
 		$this->sanitize_title_mock();
 		WP_Mock::userFunction( 'current_user_can' )->with( 'manage_options' )->andReturn( true );
 		WP_Mock::userFunction( 'get_option' )->with( CaseStudies::REWRITE_OPTION )->andReturn( false, 'case-studies|no-archive' );
-		WP_Mock::userFunction( 'update_option' )->once()->with( CaseStudies::REWRITE_OPTION, 'case-studies|no-archive' );
+		WP_Mock::userFunction( 'update_option' )->once()->with( CaseStudies::REWRITE_OPTION, 'case-studies|no-archive', false );
 		WP_Mock::userFunction( 'flush_rewrite_rules' )->once()->with( false );
 
 		$module = new CaseStudies();
@@ -779,7 +779,7 @@ class CaseStudiesTest extends TestCase {
 		WP_Mock::onFilter( 'ajrwd_case_studies_settings' )->with( CaseStudies::SETTINGS )->reply( [ 'slug' => 'work' ] );
 		WP_Mock::userFunction( 'current_user_can' )->with( 'manage_options' )->andReturn( true );
 		WP_Mock::userFunction( 'get_option' )->with( CaseStudies::REWRITE_OPTION )->andReturn( 'case-studies|no-archive' );
-		WP_Mock::userFunction( 'update_option' )->once()->with( CaseStudies::REWRITE_OPTION, 'work|no-archive' );
+		WP_Mock::userFunction( 'update_option' )->once()->with( CaseStudies::REWRITE_OPTION, 'work|no-archive', false );
 		WP_Mock::userFunction( 'flush_rewrite_rules' )->once();
 
 		( new CaseStudies() )->heal_rewrite_rules();
