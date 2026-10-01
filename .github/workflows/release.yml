@@ -35,7 +35,7 @@ jobs:
           rsync -a ./ dist/ajrwebdesign-core/ \
             --exclude='.git' --exclude='.github' --exclude='.claude' \
             --exclude='node_modules' --exclude='dist' --exclude='*.zip' \
-            --exclude='blocks' --exclude='tests' --exclude='phpunit.xml.dist' \
+            --exclude='/blocks' --exclude='/tests' --exclude='phpunit.xml.dist' --exclude='phpunit-mocked.xml.dist' \
             --exclude='phpcs.xml' --exclude='package.json' --exclude='package-lock.json' \
             --exclude='.env' --exclude='.env.*' --exclude='.gitignore'
 

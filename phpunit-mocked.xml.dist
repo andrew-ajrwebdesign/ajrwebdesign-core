@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WP_Mock suite: the testimonial and case-study classes. See tests/bootstrap-mocked.php for
+     why it is separate from phpunit.xml.dist. Run: vendor/bin/phpunit -c phpunit-mocked.xml.dist -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+	bootstrap="tests/bootstrap-mocked.php"
+	colors="true"
+	failOnWarning="true">
+	<testsuites>
+		<testsuite name="mocked">
+			<directory>tests/Mocked</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

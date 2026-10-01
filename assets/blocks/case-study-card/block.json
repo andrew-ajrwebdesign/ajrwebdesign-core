@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajr/case-study-card",
+	"title": "Case study card",
+	"category": "widgets",
+	"icon": "analytics",
+	"description": "One case study as a card: picture, title, client, summary and results. The whole card links to the case study. Leave the case study unset inside a Query Loop to show each post in the loop.",
+	"keywords": [
+		"case study",
+		"portfolio",
+		"work",
+		"project",
+		"results"
+	],
+	"textdomain": "ajrwebdesign-core",
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"attributes": {
+		"caseStudyId": {
+			"type": "number",
+			"default": 0
+		},
+		"showImage": {
+			"type": "boolean",
+			"default": true
+		},
+		"showResults": {
+			"type": "boolean",
+			"default": true
+		},
+		"headingLevel": {
+			"type": "number",
+			"default": 3
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./editor.js"
+}

@@ -1,12 +1,13 @@
 <?php
 /**
- * German text for testimonials — the one part of testimonials that is this site's own.
+ * German text for testimonials: the bilingual layer on Testimonials\Testimonials.
  *
- * AJR Core owns the testimonial post type, its rating and logo fields and the slider block
- * (1.8.0; until then this plugin registered all of it). What stays here is the bilingual
+ * Testimonials\Testimonials registers the post type, its rating and logo fields and the slider
+ * block (AJR Core did from 1.8.0 until 1.15.0). What stays here is the bilingual
  * single-entry model: one testimonial serves both languages, English in the post itself and
- * German in two fields beside it, used on German pages with English as the fallback. Core
- * exposes `ajr_core_testimonial_text` for exactly this; any other Polylang site can do the same.
+ * German in two fields beside it, used on German pages with English as the fallback.
+ * Testimonials::text() runs the `ajr_core_testimonial_text` filter (name kept from AJR Core)
+ * for exactly this.
  *
  * @package AJR\SiteCore
  */
@@ -23,10 +24,9 @@ defined( 'ABSPATH' ) || exit;
 class German {
 
 	/**
-	 * AJR Core's testimonial post type. Repeated here rather than read from Core so this plugin
-	 * never fatals if Core is briefly missing (Requires Plugins stops activation, not a deletion).
+	 * The testimonial post type (Testimonials\Testimonials::POST_TYPE).
 	 */
-	public const POST_TYPE = 'ajr_testimonial';
+	public const POST_TYPE = Testimonials::POST_TYPE;
 
 	/**
 	 * The German quote. Kept under its original folio key: this data never moved.
@@ -39,7 +39,7 @@ class German {
 	public const ROLE_DE = 'ajrwd_t_role_de';
 
 	/**
-	 * Register the German fields on init, and the German text swap on AJR Core's filter.
+	 * Register the German fields on init, and the German text swap on the slider's filter.
 	 * Hooked here rather than in a constructor, so the class can be tested on its own.
 	 */
 	public function register(): void {
@@ -77,7 +77,7 @@ class German {
 	/**
 	 * On German pages, the German quote and role where they are filled in; English otherwise.
 	 *
-	 * @param array<string,string> $fields  Quote and role as AJR Core would print them.
+	 * @param array<string,string> $fields  Quote and role as the slider would print them.
 	 * @param int                  $post_id Testimonial post ID.
 	 * @return array<string,string>
 	 */

@@ -1,7 +1,7 @@
 /**
  * Editor sidebar panels. Currently: the German translation panel on the
  * Testimonials post type (quote + role fields writing to post meta).
- * The rating and source-logo panels are AJR Core's (1.8.0).
+ * The rating and source-logo panels are assets/editor/testimonial.js (Testimonials\Testimonials).
  */
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
