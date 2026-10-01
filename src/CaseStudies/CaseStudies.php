@@ -636,9 +636,13 @@ class CaseStudies {
 			'post_status'            => 'publish',
 			'has_password'           => false,
 			'posts_per_page'         => self::count( $attributes ),
+			// ID last: several case studies can share an Order and a publish time, and without a final
+			// tiebreak MySQL may return them in a different order from one query plan to the next
+			// (it did when has_password was added, 2026-10-01).
 			'orderby'                => array(
 				'menu_order' => 'ASC',
 				'date'       => 'DESC',
+				'ID'         => 'DESC',
 			),
 			'ignore_sticky_posts'    => true,
 			'no_found_rows'          => true,

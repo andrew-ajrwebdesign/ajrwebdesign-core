@@ -109,18 +109,11 @@ function apply_filters( $hook_name, $value, ...$args ) {
 	return $cb ? $cb( $value, ...$args ) : $value;
 }
 
-// Requirements: registered post types and the current user's capability.
+// The current user's capability, per test.
 $GLOBALS['ajrwd_test_can']        = false;
 
 function __( $text, $domain = 'default' ) {
 	return $text;
-}
-
-// Registered taxonomies, for Requirements::featured_filter_off().
-$GLOBALS['ajrwd_test_taxonomies'] = array();
-
-function taxonomy_exists( $taxonomy ) {
-	return in_array( $taxonomy, $GLOBALS['ajrwd_test_taxonomies'], true );
 }
 
 function current_user_can( $capability ) {
@@ -139,5 +132,3 @@ function is_post_publicly_viewable( $post = null ) {
 	return in_array( $post, $GLOBALS['ajrwd_test_public'], true );
 }
 // phpcs:enable
-
-require __DIR__ . '/fake-ajr-core.php';
