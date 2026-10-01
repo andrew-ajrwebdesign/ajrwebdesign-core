@@ -343,7 +343,7 @@ class TestimonialsTest extends TestCase {
 		$this->assertSame( 'publish', $args['post_status'] );
 		$this->assertFalse( $args['has_password'], 'A testimonial with a password is not shown.' );
 		$this->assertSame( 12, $args['posts_per_page'] );
-		$this->assertSame( [ 'menu_order' => 'ASC', 'date' => 'DESC' ], $args['orderby'] );
+		$this->assertSame( [ 'menu_order' => 'ASC', 'date' => 'DESC', 'ID' => 'DESC' ], $args['orderby'] );
 		$this->assertTrue( $args['no_found_rows'] );
 		$this->assertFalse( $args['update_post_term_cache'] );
 		$this->assertSame( '', $args['lang'] );

@@ -213,7 +213,7 @@ if ( ! class_exists( 'WP_REST_Response' ) ) {
 if ( ! class_exists( 'WP_Block' ) ) {
 	/**
 	 * WP_Block stand-in: name, attributes, context and child instances, which is all
-	 * Blocks\Tabs and Site\Private_Taxonomy_Query read. render() returns $rendered, the HTML a
+	 * CaseStudies\PrivateTagQuery (and its test) reads. render() returns $rendered, the HTML a
 	 * test says this block produces; $renders counts calls, so a test can prove a block is
 	 * rendered once.
 	 */

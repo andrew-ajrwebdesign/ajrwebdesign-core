@@ -421,9 +421,13 @@ class Testimonials {
 			'post_status'            => 'publish',
 			'has_password'           => false,
 			'posts_per_page'         => $count > 0 ? min( $count, self::MAX ) : self::MAX,
+			// ID last: several quotes can share an Order and a publish time, and without a final
+			// tiebreak MySQL may return them in a different order from one query plan to the next
+			// (it did when has_password was added, 2026-10-01).
 			'orderby'                => array(
 				'menu_order' => 'ASC',
 				'date'       => 'DESC',
+				'ID'         => 'DESC',
 			),
 			'no_found_rows'          => true,
 			'update_post_term_cache' => false,

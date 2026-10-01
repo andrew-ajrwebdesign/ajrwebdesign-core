@@ -14,6 +14,7 @@ use AJR\SiteCore\CaseStudies\CaseStudies;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\Metabox;
 use AJR\SiteCore\CaseStudies\OptionalBand;
+use AJR\SiteCore\CaseStudies\PrivateTagQuery;
 use AJR\SiteCore\CaseStudies\StoryIntro;
 use AJR\SiteCore\Compat\ThemeSupport;
 use AJR\SiteCore\I18n\AttachmentAlt;
@@ -73,8 +74,6 @@ class Plugin {
 		);
 
 		$modules = array(
-			// Warns in wp-admin when the Featured Work filter is being ignored.
-			new Requirements(),
 			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
 			new \AJR\SiteCore\Blocks\ImageSizes(),
@@ -87,6 +86,8 @@ class Plugin {
 			// The two content types and their blocks (stand down while AJR Core serves them).
 			new Testimonials(),
 			new CaseStudies(),
+			// Query Loops filtered by case-study tag (Featured Work, the Case Studies lists).
+			new PrivateTagQuery(),
 			new TestimonialsGerman(),
 			// This site's layer on the case-study type: Core Web Vitals fields, their
 			// metabox, the case-study SEO tweaks and the story intro.

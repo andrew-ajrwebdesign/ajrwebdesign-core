@@ -4,6 +4,10 @@ The site plugin for [ajrwebdesign.com](https://ajrwebdesign.com) — what is uni
 
 **Status: actively maintained** (powers the live site).
 
+### 1.16.0: the Query Loop tag filter lives here too
+
+`CaseStudies\PrivateTagQuery` puts back a Query Loop's filter on `case_study_tag`, which core drops because the taxonomy is not public (Featured Work and the Case Studies lists would otherwise list every case study). It was AJR Core's `private_taxonomies` module; Andrew, 2026-10-01: *"query loop only on client so remove from core"*. It stands down while an older AJR Core still has that module on. The `Core\Requirements` warning about that module is gone with it. Testimonial and case-study lists now end their ordering on ID, so quotes that share an Order and a publish time always appear in the same sequence.
+
 ### Back from AJR Core in 1.15.0
 
 Testimonials and case studies are registered by this plugin again (Andrew, 2026-10-01: content
@@ -81,6 +85,7 @@ desktop, up to three rows comparing it with a typical site, and up to four headl
   non-public taxonomy. Switch on **Query Loop: filter by private taxonomies** in AJR Core →
   Modules and list `case_study_tag` in AJR Core → Blocks, or the list shows every case study.
   This plugin shows a warning in wp-admin while that is missing (`Core\Requirements`).
+  *(Superseded in 1.16.0: the filter is this plugin's own, `CaseStudies\PrivateTagQuery`, and the warning is gone.)*
 - **Drafts and passwords.** Both card blocks now print nothing for a case study that is a draft,
   private or waiting for its password (`Cards::can_show()`), and the plugin's REST fields are
   withheld from a password-protected case study. Its own page still prints the title.

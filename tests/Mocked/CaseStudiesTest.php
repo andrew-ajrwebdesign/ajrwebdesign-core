@@ -620,7 +620,7 @@ class CaseStudiesTest extends TestCase {
 		$this->assertSame( 'publish', $args['post_status'] );
 		$this->assertFalse( $args['has_password'] );
 		$this->assertSame( 3, $args['posts_per_page'] );
-		$this->assertSame( [ 'menu_order' => 'ASC', 'date' => 'DESC' ], $args['orderby'] );
+		$this->assertSame( [ 'menu_order' => 'ASC', 'date' => 'DESC', 'ID' => 'DESC' ], $args['orderby'] );
 		$this->assertTrue( $args['no_found_rows'] );
 		$this->assertFalse( $args['update_post_term_cache'] );
 		$this->assertArrayNotHasKey( 'tax_query', $args );
@@ -825,7 +825,7 @@ class CaseStudiesTest extends TestCase {
 
 		WP_Mock::expectActionNotAdded( 'init', [ $module, 'register_post_type' ] );
 		WP_Mock::expectActionNotAdded( 'init', [ $module, 'register_blocks' ] );
-		WP_Mock::expectFilterNotAdded( 'rest_prepare_ajr_case_study', [ $module, 'hide_protected_meta' ] );
+		WP_Mock::expectFilterNotAdded( 'rest_prepare_ajr_case_study', [ $module, 'hide_protected_meta' ], 10, 3 );
 		WP_Mock::expectActionNotAdded( 'admin_init', [ $module, 'heal_rewrite_rules' ] );
 
 		$module->register();
