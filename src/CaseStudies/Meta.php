@@ -132,7 +132,7 @@ class Meta {
 	 *
 	 * WordPress blanks a protected post's content and excerpt in REST but returns registered
 	 * meta without asking for the password, so the summary and the numbers were readable at
-	 * /wp/v2/ajr_case_study/<id> (security review, 2026-09-30). AJR Core does this for its own
+	 * /wp/v2/ajr_case_study/<id> (security review, 2026-09-30). CaseStudies does this for its own
 	 * three fields; this is the same guard for this plugin's. Someone who may edit the case
 	 * study still gets them, so the editor keeps working.
 	 *

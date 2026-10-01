@@ -5,6 +5,7 @@
 	<file>ajrwebdesign-core.php</file>
 	<file>src</file>
 	<file>blocks</file>
+	<file>assets</file>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>

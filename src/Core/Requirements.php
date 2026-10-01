@@ -2,11 +2,9 @@
 /**
  * Requirements — what this plugin needs from AJR Core, and a warning when it is missing.
  *
- * Since 1.8.0 (testimonials) and 1.9.0 (case studies) the post types this plugin layers on are
- * registered by AJR Core, and only while Core's matching module is switched on. `Requires
- * Plugins: ajr-core` guarantees Core is active, not that the modules are on. With a module off,
- * the posts vanish from the admin and every /case-studies/ URL returns 404, silently. This
- * class makes that loud: an admin notice naming the module to switch on.
+ * One thing: the Featured Work list's filter (below). Until 1.15.0 this also warned when Core's
+ * Case studies or Testimonials module was off, because Core registered those types; this plugin
+ * registers them now, so a module being off is the normal state.
  *
  * @package AJR\SiteCore
  */
@@ -14,12 +12,11 @@
 namespace AJR\SiteCore\Core;
 
 use AJR\SiteCore\CaseStudies\PostType;
-use AJR\SiteCore\Testimonials\German;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Warns when AJR Core's modules are off.
+ * Warns when AJR Core is not set up for this site's Featured Work list.
  */
 class Requirements {
 
@@ -28,27 +25,6 @@ class Requirements {
 	 */
 	public function register(): void {
 		add_action( 'admin_notices', array( $this, 'notice' ) );
-	}
-
-	/**
-	 * The AJR Core modules whose post type is not registered, by their name in Core's Modules page.
-	 *
-	 * @return array<int,string>
-	 */
-	public function missing(): array {
-		$modules = array(
-			PostType::POST_TYPE => __( 'Case studies', 'ajrwebdesign-core' ),
-			German::POST_TYPE   => __( 'Testimonials', 'ajrwebdesign-core' ),
-		);
-
-		$missing = array();
-		foreach ( $modules as $post_type => $label ) {
-			if ( ! post_type_exists( $post_type ) ) {
-				$missing[] = $label;
-			}
-		}
-
-		return $missing;
 	}
 
 	/**
@@ -90,21 +66,5 @@ class Requirements {
 				esc_html__( 'The Featured Work list is showing every case study, not only the ones tagged “featured”. WordPress ignores a Query Loop filter on a taxonomy with no public pages. To fix it: switch on “Query Loop: filter by private taxonomies” under AJR Core → Modules, then add case_study_tag to the private taxonomies on AJR Core → Blocks.', 'ajrwebdesign-core' )
 			);
 		}
-
-		$missing = $this->missing();
-		if ( array() === $missing ) {
-			return;
-		}
-
-		printf(
-			'<div class="notice notice-error"><p>%s</p></div>',
-			esc_html(
-				sprintf(
-					/* translators: %s: comma-separated module names, e.g. "Case studies, Testimonials". */
-					__( 'AJR Web Design Core needs these AJR Core modules switched on: %s. Turn them on under AJR Core → Modules. Until then those posts are missing from the admin and their pages return 404.', 'ajrwebdesign-core' ),
-					implode( ', ', $missing )
-				)
-			)
-		);
 	}
 }

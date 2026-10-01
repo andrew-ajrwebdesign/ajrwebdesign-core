@@ -3,7 +3,7 @@
  * Plugin Name:       AJR Web Design Core
  * Plugin URI:        https://github.com/andrew-ajrwebdesign/ajrwebdesign-core
  * Description:       Site plugin for ajrwebdesign.com — its own blocks, case studies, testimonials and multilingual helpers. Runs alongside AJR Core, which provides the shared features. Companion to the ajrwebdesign-theme FSE theme.
- * Version:           1.14.0
+ * Version:           1.15.0
  * Requires at least: 6.9
  * Requires PHP:      8.0
  * Requires Plugins:  ajr-core
@@ -41,6 +41,39 @@ if ( ! is_readable( $ajrwd_core_autoload ) ) {
 	return;
 }
 require_once $ajrwd_core_autoload;
+
+/*
+ * Register the case-study type BEFORE flushing, so the flush includes its /case-studies/ rules.
+ * The other order leaves every case study 404ing until something else flushes. Skipped while an
+ * older AJR Core still registers the type (its own activation and settings watchers own the
+ * rules then).
+ */
+register_activation_hook(
+	__FILE__,
+	static function () {
+		if ( ! \AJR\SiteCore\Core\CoreModules::serves( \AJR\SiteCore\CaseStudies\CaseStudies::CORE_MODULE ) ) {
+			( new \AJR\SiteCore\CaseStudies\CaseStudies() )->register_post_type();
+		}
+		flush_rewrite_rules();
+	}
+);
+
+/*
+ * Deactivated while AJR Core no longer registers case studies, the stored /case-studies/ rules
+ * would outlive the type and send its addresses to the home page with a 200 instead of a 404.
+ * Unregister first so the flush leaves them out. While Core still serves the type, Core's own
+ * registration stands and nothing is unregistered.
+ */
+register_deactivation_hook(
+	__FILE__,
+	static function () {
+		if ( ! \AJR\SiteCore\Core\CoreModules::serves( \AJR\SiteCore\CaseStudies\CaseStudies::CORE_MODULE ) && post_type_exists( \AJR\SiteCore\CaseStudies\CaseStudies::POST_TYPE ) ) {
+			unregister_post_type( \AJR\SiteCore\CaseStudies\CaseStudies::POST_TYPE );
+		}
+		delete_option( \AJR\SiteCore\CaseStudies\CaseStudies::REWRITE_OPTION );
+		flush_rewrite_rules();
+	}
+);
 
 add_action(
 	'plugins_loaded',

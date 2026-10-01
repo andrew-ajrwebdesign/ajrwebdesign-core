@@ -1,0 +1,55 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajr/case-studies",
+	"title": "Case studies",
+	"category": "widgets",
+	"icon": "analytics",
+	"description": "A grid of case study cards from the Case Studies section, pinned ones first. Can be limited to one tag.",
+	"keywords": [
+		"case studies",
+		"portfolio",
+		"work",
+		"projects",
+		"grid"
+	],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"count": {
+			"type": "number",
+			"default": 3
+		},
+		"columns": {
+			"type": "number",
+			"default": 3
+		},
+		"tag": {
+			"type": "string",
+			"default": ""
+		},
+		"showImage": {
+			"type": "boolean",
+			"default": true
+		},
+		"showResults": {
+			"type": "boolean",
+			"default": true
+		},
+		"headingLevel": {
+			"type": "number",
+			"default": 3
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [
+			"wide",
+			"full"
+		],
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./editor.js"
+}

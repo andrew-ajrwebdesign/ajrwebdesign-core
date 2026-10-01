@@ -1,0 +1,41 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ajr/testimonials",
+	"title": "Testimonials",
+	"category": "widgets",
+	"icon": "format-quote",
+	"description": "A slider of client quotes from the Testimonials section: star rating, quote, photo, name, role and source logo. Can be limited to quotes with chosen tags.",
+	"keywords": [ "testimonials", "reviews", "quotes", "slider", "carousel" ],
+	"textdomain": "ajrwebdesign-core",
+	"attributes": {
+		"perView": {
+			"type": "number",
+			"default": 2
+		},
+		"count": {
+			"type": "number",
+			"default": 0
+		},
+		"showRating": {
+			"type": "boolean",
+			"default": true
+		},
+		"tags": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./editor.js"
+}

@@ -10,6 +10,7 @@ namespace AJR\SiteCore\Core;
 use AJR\SiteCore\Blocks\BlockVersion;
 use AJR\SiteCore\Blocks\Registrar;
 use AJR\SiteCore\CaseStudies\BuildCopy;
+use AJR\SiteCore\CaseStudies\CaseStudies;
 use AJR\SiteCore\CaseStudies\Meta;
 use AJR\SiteCore\CaseStudies\Metabox;
 use AJR\SiteCore\CaseStudies\OptionalBand;
@@ -21,6 +22,7 @@ use AJR\SiteCore\I18n\Strings;
 use AJR\SiteCore\Posts\Meta as PostsMeta;
 use AJR\SiteCore\Seo\CaseStudies as CaseStudiesSeo;
 use AJR\SiteCore\Testimonials\German as TestimonialsGerman;
+use AJR\SiteCore\Testimonials\Testimonials;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,9 +31,11 @@ defined( 'ABSPATH' ) || exit;
  * register() method. Hooks are never added in constructors so modules
  * stay testable in isolation.
  *
- * Since 1.9.0 the plugin has no settings page and no activation routine: its last setting
- * ("enable case studies") became AJR Core's Case studies module, and AJR Core registers the
- * post types and owns their rewrite rules.
+ * The plugin has no settings page. Since 1.15.0 it registers this site's two content types
+ * again (testimonials, case studies), which lived in AJR Core from 1.8.0/1.9.0 until Andrew
+ * decided content types belong in each site's own plugin (2026-10-01); while an older AJR Core
+ * still has those modules on, they stand down (Core\CoreModules). The activation hook in the
+ * main plugin file registers the case-study type before flushing rewrite rules.
  */
 class Plugin {
 
@@ -69,7 +73,7 @@ class Plugin {
 		);
 
 		$modules = array(
-			// Warns in wp-admin when AJR Core's Case studies or Testimonials module is off.
+			// Warns in wp-admin when the Featured Work filter is being ignored.
 			new Requirements(),
 			new BlockVersion( AJRWD_CORE_VERSION ),
 			new Registrar(),
@@ -80,8 +84,11 @@ class Plugin {
 			// "Alt text (German)" on images, for posts shown in both languages.
 			new AttachmentAlt(),
 			new PostsMeta(),
+			// The two content types and their blocks (stand down while AJR Core serves them).
+			new Testimonials(),
+			new CaseStudies(),
 			new TestimonialsGerman(),
-			// This site's layer on AJR Core's case-study type: Core Web Vitals fields, their
+			// This site's layer on the case-study type: Core Web Vitals fields, their
 			// metabox, the case-study SEO tweaks and the story intro.
 			new Meta(),
 			new Metabox(),

@@ -4,6 +4,32 @@ The site plugin for [ajrwebdesign.com](https://ajrwebdesign.com) — what is uni
 
 **Status: actively maintained** (powers the live site).
 
+### Back from AJR Core in 1.15.0
+
+Testimonials and case studies are registered by this plugin again (Andrew, 2026-10-01: content
+types belong in each site's own plugin, not in AJR Core). The code is AJR Core 0.15.2's, and every
+key is unchanged — `ajr_testimonial` / `testimonial_tag`, `ajr_case_study` / `case_study_tag`,
+every meta key, the `ajr/testimonials`, `ajr/case-studies` and `ajr/case-study-card` blocks,
+their markup and classes, the `/case-studies/<name>/` addresses and the
+`ajr_core_testimonial_text` filter — so nothing on the site migrates.
+
+- **Safe in either order.** While an older AJR Core still has its *Testimonials* or *Case studies*
+  module switched on, the matching class here registers nothing (`Core\CoreModules`). Deploy this
+  plugin first, then switch those two modules off (AJR Core → Modules) — Core deletes the rewrite
+  rules as it does and they rebuild with the same addresses — then update AJR Core to 0.16.0,
+  which no longer has them.
+- **Settings are constants** (`SETTINGS` on each class): the names, the `case-studies` slug and
+  "no archive" are the values the folio had saved in AJR Core. Change them with the
+  `ajrwd_testimonials_settings` / `ajrwd_case_studies_settings` filters. ⛔ A new slug moves every
+  case study's address: add redirects, and re-save Settings → Permalinks.
+- **Blocks** live in `assets/blocks/` (plain JavaScript, no build step), not `blocks/` + `build/`:
+  `Blocks\Registrar` registers every `build/` block without a render callback.
+- **Tests:** a second PHPUnit suite, `phpunit-mocked.xml.dist` (WP_Mock), carries Core's tests
+  for these classes; `composer test` runs both.
+- The "AJR Core modules are off" admin error from 1.9.0 is gone: off is now the normal state.
+
+The two sections below are history: what 1.8.0 and 1.9.0 moved out, which 1.15.0 brought back.
+
 ### Moved to AJR Core in 1.7.0
 
 GA4 with consent gating and lead tracking, FAQ structured data, the business profile (now one
@@ -29,10 +55,8 @@ setting enabled case studies) and the finished legacy-meta migration are gone; t
 stored (`ajrwd_core_settings`, which also still holds the pre-1.7.0 GA4 settings); nothing reads
 it any more, and deleting it is a deliberate manual step.
 
-**Deploy order (1.9.0 needs it):** AJR Core 0.12.0 first, then switch its **Case studies** and
-**Testimonials** modules on (AJR Core → Modules), then this plugin. With either module off the
-posts vanish from the admin and their pages 404; wp-admin shows an error notice naming the module
-until it is on.
+**Deploy order (1.9.0 only; superseded by 1.15.0 above):** AJR Core 0.12.0 first, then switch its
+**Case studies** and **Testimonials** modules on, then this plugin.
 
 ### New in 1.10.0: site-build case studies
 
@@ -137,8 +161,8 @@ left out of its REST response, as a case study's already were.
 
 ### Modules
 
-- **CaseStudies** — this site's layer on AJR Core's case-study type: structured REST-exposed Core Web Vitals meta (metrics, impact) and its metabox, the site-build fields (kind, scores, comparison rows, facts, screenshots), the story intro, the results-band wording for a build, and the case-study SEO tweaks
-- **Testimonials (German)** — the German quote and role fields and their editor panel; the testimonials themselves are AJR Core's
+- **CaseStudies** — the case-study type, its generic fields and the `ajr/case-studies` / `ajr/case-study-card` blocks (`CaseStudies`), plus this site's layer on it: structured REST-exposed Core Web Vitals meta (metrics, impact) and its metabox, the site-build fields (kind, scores, comparison rows, facts, screenshots), the story intro, the results-band wording for a build, and the case-study SEO tweaks
+- **Testimonials** — the testimonial type, its rating and logo fields and the `ajr/testimonials` slider (`Testimonials`), plus the German quote and role fields and their editor panel (`German`)
 - **I18n** — Polylang string registration via the `ajrwebdesign-core-i18n` theme-support contract, and hreflang handling
 - **Compat** — `add_theme_support` contracts so the plugin degrades gracefully on any theme
 
@@ -149,7 +173,7 @@ composer install   # PHP dependencies + autoloader
 npm install        # block build tooling
 npm run build      # compile blocks/ -> build/
 composer lint      # PHPCS (WordPress Coding Standards)
-composer test      # PHPUnit
+composer test      # PHPUnit: both suites (phpunit.xml.dist + phpunit-mocked.xml.dist)
 ```
 
 Requires WordPress 6.9+ and PHP 8.0+.

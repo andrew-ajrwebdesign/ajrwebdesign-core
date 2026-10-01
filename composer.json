@@ -14,12 +14,16 @@
     "require-dev": {
         "wp-coding-standards/wpcs": "^3.1",
         "phpunit/phpunit": "^9.6",
-        "yoast/phpunit-polyfills": "^2.0"
+        "yoast/phpunit-polyfills": "^2.0",
+        "10up/wp_mock": "^1.0"
     },
     "scripts": {
         "lint": "phpcs",
         "lint:fix": "phpcbf",
-        "test": "phpunit"
+        "test": [
+            "phpunit",
+            "phpunit -c phpunit-mocked.xml.dist"
+        ]
     },
     "config": {
         "optimize-autoloader": true,
